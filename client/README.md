@@ -1,34 +1,29 @@
-## Usage
+# deno-solidjs-ssr-boilerplate
 
-Those templates dependencies are maintained via [pnpm](https://pnpm.io) via `pnpm up -Lri`.
+A boilerplate project template using Deno and SolidJS with EJS-based server-side rendering.
 
-This is the reason you see a `pnpm-lock.yaml`. That being said, any package manager will work. This file can be safely be removed once you clone a template.
+## Overview
+
+This boilerplate is designed for building fast, reactive web applications with Deno as the backend framework and SolidJS for the front end. It includes EJS templating for server-side rendering, providing a straightforward, highly performant setup out of the box.
+
+## Features
+
+- **Deno Backend**: Powered by Deno, with built-in TypeScript support for a secure and fast runtime.
+- **SolidJS**: Uses SolidJS to create reactive and declarative UIs.
+- **Server-Side Rendering (SSR)**: Renders HTML on the server using an `index.ejs` template file.
+- **Pre-configured Scripts**: Ready-to-use development, build, and preview scripts.
+
+## Getting Started
+
+### Prerequisites
+
+- **Deno**: Install Deno by following the [Deno installation guide](https://deno.land/manual/getting_started/installation).
+
+### Installation
+
+Clone the repository and cache dependencies:
 
 ```bash
-$ npm install # or pnpm install or yarn install
-```
-
-### Learn more on the [Solid Website](https://solidjs.com) and come chat with us on our [Discord](https://discord.com/invite/solidjs)
-
-## Available Scripts
-
-In the project directory, you can run:
-
-### `npm run dev` or `npm start`
-
-Runs the app in the development mode.<br>
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
-
-The page will reload if you make edits.<br>
-
-### `npm run build`
-
-Builds the app for production to the `dist` folder.<br>
-It correctly bundles Solid in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.<br>
-Your app is ready to be deployed!
-
-## Deployment
-
-You can deploy the `dist` folder to any static host provider (netlify, surge, now, etc.)
+git clone https://github.com/yourusername/deno-solidjs-ssr-boilerplate.git
+cd deno-solidjs-ssr-boilerplate
+deno run --allow-net --allow-read main.tsdeno cache main.ts
