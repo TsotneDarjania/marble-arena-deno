@@ -3,7 +3,7 @@ import { renderFileToString } from "https://deno.land/x/dejs@0.10.3/mod.ts";
 
 const router = new Router();
 
-// Route for serving dynamic EJS files
+//Marble Arena
 router.get("/", async (ctx) => {
   const html = await renderFileToString(`${Deno.cwd()}/client/dist/index.ejs`, {
     title: "Hello From Deno", // Pass variables if needed
