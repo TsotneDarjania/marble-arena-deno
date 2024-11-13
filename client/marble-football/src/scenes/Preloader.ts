@@ -12,6 +12,7 @@ export default class Preload extends Scene {
 
     // Stadium
     this.load.image("stadiumLines", "image/gameObjects/stadium-lines.png");
+    this.load.image("spectatorLine", "image/gameObjects/spectator-line.png");
 
     // UI
     this.load.image("defaultButton", "image/ui/default-button.png");

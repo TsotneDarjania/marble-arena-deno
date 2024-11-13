@@ -1,11 +1,10 @@
-import {
-  calculatePercentage,
-  calculateStadiumHeight,
-} from "../../../utils/math";
+import Spectators from "./spectators";
 
 export class Stadium extends Phaser.GameObjects.Container {
-  stadiumWidth = calculatePercentage(window.innerWidth, 80);
-  stadiumHeight = calculateStadiumHeight(this.stadiumWidth);
+  stadiumWidth = 1176;
+  stadiumHeight = 599;
+
+  spectators: Spectators;
 
   constructor(scene: Phaser.Scene, x: number, y: number) {
     super(scene, x, y);
@@ -16,10 +15,16 @@ export class Stadium extends Phaser.GameObjects.Container {
 
   init() {
     this.addLines();
+    this.addSpectators();
   }
 
   addLines() {
     const stadiumLines = this.scene.add.image(0, 0, "stadiumLines");
+    stadiumLines.setDisplaySize(this.stadiumWidth, this.stadiumHeight);
     this.add(stadiumLines);
+  }
+
+  addSpectators() {
+    this.spectators = new Spectators(this);
   }
 }

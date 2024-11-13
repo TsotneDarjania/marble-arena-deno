@@ -5,8 +5,6 @@ export default class Match {
   stadium: Stadium;
 
   constructor(public scene: GamePlay) {
-    console.log("Match constructor");
-
     this.addStadium();
   }
 

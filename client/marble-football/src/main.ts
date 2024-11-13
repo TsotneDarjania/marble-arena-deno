@@ -12,6 +12,7 @@ const config: Types.Core.GameConfig = {
   width: window.innerWidth,
   height: window.innerHeight,
   parent: "game-container",
+  antialias: true,
   // backgroundColor: 0x40e02b,
   scale: {
     mode: Phaser.Scale.FIT,

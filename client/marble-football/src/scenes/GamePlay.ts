@@ -18,12 +18,5 @@ export default class GamePlay extends Phaser.Scene {
 
   createMatch() {
     this.match = new Match(this);
-
-    const image = this.add
-      .image(400, 300, "default")
-      .setPipeline("CrowdWavePipeline");
-    image.setDisplaySize(800, 600);
   }
-
-  update() {}
 }
