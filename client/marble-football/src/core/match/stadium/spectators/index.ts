@@ -14,20 +14,46 @@ export default class Spectators {
   rightSpectatorsContainer: Phaser.GameObjects.Container;
   rightSpectators: Array<SpectatorsGroup>;
 
+  topLeftAngleSpectatroContainer: Phaser.GameObjects.Container;
+  topLeftAngleSpectators: Array<SpectatorsGroup>;
+
+  topRightAngleSpectatroContainer: Phaser.GameObjects.Container;
+  topRightAngleSpectators: Array<SpectatorsGroup>;
+
+  bottomLeftAngleSpectatroContainer: Phaser.GameObjects.Container;
+  bottomLeftAngleSpectators: Array<SpectatorsGroup>;
+
+  bottomRightAngleSpectatroContainer: Phaser.GameObjects.Container;
+  bottomRightAngleSpectators: Array<SpectatorsGroup>;
+
+  allSpectators: Array<Array<SpectatorsGroup>>;
+
   constructor(public stadium: Stadium) {
     this.init();
   }
 
   init() {
+    this.allSpectators = [];
+
     this.topSpectators = [];
     this.bottomSpectators = [];
     this.leftSpectators = [];
     this.rightSpectators = [];
+    this.topLeftAngleSpectators = [];
+    this.topRightAngleSpectators = [];
+    this.bottomLeftAngleSpectators = [];
+    this.bottomRightAngleSpectators = [];
 
     this.addTopSpectators();
     this.addBottomSpectators();
     this.addLeftSpectators();
     this.addRightSpectators();
+    this.addTopLeftAngleSpectators();
+    this.addTopRightAngleSpectators();
+    this.addBottomLeftAngleSpectators();
+    this.addBottomRightAngleSpectators();
+
+    this.combineAllSpectators();
   }
 
   addTopSpectators() {
@@ -39,12 +65,13 @@ export default class Spectators {
     let posX = 0;
     let posY = -170;
 
-    for (let i = 1; i < 7; i++) {
+    for (let i = 1; i < 4; i++) {
       const spectatorsGroup = new SpectatorsGroup(
         this.stadium.scene,
         posX,
         posY,
-        5
+        5,
+        "spectatorLine"
       );
       spectatorsGroup.setScale(0.8);
       this.topSpectatorsContainer.add(spectatorsGroup);
@@ -70,12 +97,13 @@ export default class Spectators {
     let posX = 0;
     let posY = 170;
 
-    for (let i = 1; i < 7; i++) {
+    for (let i = 1; i < 4; i++) {
       const spectatorsGroup = new SpectatorsGroup(
         this.stadium.scene,
         posX,
         posY,
-        5
+        5,
+        "spectatorLine"
       );
       spectatorsGroup.setScale(0.8);
       this.bottomSpectatorsContainer.add(spectatorsGroup);
@@ -88,7 +116,7 @@ export default class Spectators {
       }
     }
 
-    this.bottomSpectatorsContainer.setPosition(440, 915);
+    this.bottomSpectatorsContainer.setPosition(440, 715);
     this.bottomSpectatorsContainer.setRotation(3.14159);
     this.stadium.add(this.bottomSpectatorsContainer);
   }
@@ -102,25 +130,22 @@ export default class Spectators {
     let posX = 0;
     let posY = 0;
 
-    for (let i = 1; i < 5; i++) {
+    for (let i = 1; i < 3; i++) {
       const spectatorsGroup = new SpectatorsGroup(
         this.stadium.scene,
         posX,
         posY,
-        5
+        5,
+        "spectatorLine13"
       );
       spectatorsGroup.setScale(0.8);
       this.leftSpectatorsContainer.add(spectatorsGroup);
       this.leftSpectators.push(spectatorsGroup);
 
-      posX += 300;
-      if (i % 2 === 0) {
-        posY += 210;
-        posX = 0;
-      }
+      posY += 210;
     }
 
-    this.leftSpectatorsContainer.setPosition(-970, 307);
+    this.leftSpectatorsContainer.setPosition(-970, 222);
     this.leftSpectatorsContainer.setRotation(-1.5708);
     this.stadium.add(this.leftSpectatorsContainer);
   }
@@ -134,26 +159,160 @@ export default class Spectators {
     let posX = 0;
     let posY = 0;
 
-    for (let i = 1; i < 5; i++) {
+    for (let i = 1; i < 3; i++) {
       const spectatorsGroup = new SpectatorsGroup(
         this.stadium.scene,
         posX,
         posY,
-        5
+        5,
+        "spectatorLine13"
       );
       spectatorsGroup.setScale(0.8);
       this.rightSpectatorsContainer.add(spectatorsGroup);
       this.rightSpectators.push(spectatorsGroup);
 
-      posX += 300;
-      if (i % 2 === 0) {
-        posY += 210;
-        posX = 0;
-      }
+      posY += 210;
     }
 
-    this.rightSpectatorsContainer.setPosition(970, -266);
+    this.rightSpectatorsContainer.setPosition(970, -180);
     this.rightSpectatorsContainer.setRotation(1.5708);
     this.stadium.add(this.rightSpectatorsContainer);
+  }
+
+  addTopLeftAngleSpectators() {
+    this.topLeftAngleSpectatroContainer = this.stadium.scene.add.container(
+      -this.stadium.stadiumWidth / 2,
+      -this.stadium.stadiumHeight / 2
+    );
+
+    let posX = 0;
+    let posY = 0;
+
+    for (let i = 0; i < 2; i++) {
+      const spectatorsGroup = new SpectatorsGroup(
+        this.stadium.scene,
+        posX,
+        posY,
+        5,
+        "spectatorLine"
+      );
+      spectatorsGroup.setScale(0.8);
+      this.topLeftAngleSpectatroContainer.add(spectatorsGroup);
+      this.topLeftAngleSpectators.push(spectatorsGroup);
+
+      posY += 210;
+    }
+
+    this.topLeftAngleSpectatroContainer.setPosition(-900, -455);
+    this.topLeftAngleSpectatroContainer.setRotation(-0.785398);
+    this.stadium.add(this.topLeftAngleSpectatroContainer);
+  }
+
+  addTopRightAngleSpectators() {
+    this.topRightAngleSpectatroContainer = this.stadium.scene.add.container(
+      this.stadium.stadiumWidth / 2,
+      -this.stadium.stadiumHeight / 2
+    );
+
+    let posX = 0;
+    let posY = 0;
+
+    for (let i = 0; i < 2; i++) {
+      const spectatorsGroup = new SpectatorsGroup(
+        this.stadium.scene,
+        posX,
+        posY,
+        5,
+        "spectatorLine"
+      );
+      spectatorsGroup.setScale(0.8);
+      this.topRightAngleSpectatroContainer.add(spectatorsGroup);
+      this.topRightAngleSpectators.push(spectatorsGroup);
+
+      posY += 210;
+    }
+
+    this.topRightAngleSpectatroContainer.setPosition(715, -650);
+    this.topRightAngleSpectatroContainer.setRotation(0.785398);
+    this.stadium.add(this.topRightAngleSpectatroContainer);
+  }
+
+  addBottomLeftAngleSpectators() {
+    this.bottomLeftAngleSpectatroContainer = this.stadium.scene.add.container(
+      -this.stadium.stadiumWidth / 2,
+      this.stadium.stadiumHeight / 2
+    );
+
+    let posX = 0;
+    let posY = 0;
+
+    for (let i = 0; i < 2; i++) {
+      const spectatorsGroup = new SpectatorsGroup(
+        this.stadium.scene,
+        posX,
+        posY,
+        5,
+        "spectatorLine"
+      );
+      spectatorsGroup.setScale(0.8);
+      this.bottomLeftAngleSpectatroContainer.add(spectatorsGroup);
+      this.bottomLeftAngleSpectators.push(spectatorsGroup);
+
+      posY += 210;
+    }
+
+    this.bottomLeftAngleSpectatroContainer.setPosition(-705, 690);
+    this.bottomLeftAngleSpectatroContainer.setRotation(-2.35619);
+    this.stadium.add(this.bottomLeftAngleSpectatroContainer);
+  }
+
+  addBottomRightAngleSpectators() {
+    this.bottomRightAngleSpectatroContainer = this.stadium.scene.add.container(
+      this.stadium.stadiumWidth / 2,
+      this.stadium.stadiumHeight / 2
+    );
+
+    let posX = 0;
+    let posY = 0;
+
+    for (let i = 0; i < 2; i++) {
+      const spectatorsGroup = new SpectatorsGroup(
+        this.stadium.scene,
+        posX,
+        posY,
+        5,
+        "spectatorLine"
+      );
+      spectatorsGroup.setScale(0.8);
+      this.bottomRightAngleSpectatroContainer.add(spectatorsGroup);
+      this.bottomRightAngleSpectators.push(spectatorsGroup);
+
+      posY += 210;
+    }
+
+    this.bottomRightAngleSpectatroContainer.setPosition(907, 497);
+    this.bottomRightAngleSpectatroContainer.setRotation(2.35619);
+    this.stadium.add(this.bottomRightAngleSpectatroContainer);
+  }
+
+  combineAllSpectators() {
+    this.allSpectators = [
+      this.topSpectators,
+      this.bottomSpectators,
+      this.leftSpectators,
+      this.rightSpectators,
+      this.topLeftAngleSpectators,
+      this.topRightAngleSpectators,
+      this.bottomLeftAngleSpectators,
+      this.bottomRightAngleSpectators,
+    ];
+  }
+
+  set fansColor(newColor: number) {
+    this.allSpectators.forEach((spectatorsGroup) => {
+      spectatorsGroup.forEach((spectator) => {
+        spectator.color = newColor;
+      });
+    });
   }
 }
