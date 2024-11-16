@@ -1,5 +1,5 @@
 export default class SpectatorsGroup extends Phaser.GameObjects.Container {
-  image: Phaser.GameObjects.Bob;
+  images: Array<Phaser.GameObjects.Bob>;
 
   constructor(
     scene: Phaser.Scene,
@@ -15,16 +15,20 @@ export default class SpectatorsGroup extends Phaser.GameObjects.Container {
   }
 
   init() {
+    this.images = [];
     const blitter = this.scene.add.blitter(0, 0, this.imageKey);
 
     for (let i = 0; i < this.linesQunatity; i++) {
-      this.image = blitter.create(0, i * 40);
+      const image = blitter.create(0, i * 40);
+      this.images.push(image);
     }
 
     this.add(blitter);
   }
 
   set color(newColor: number) {
-    this.image.setTint(newColor);
+    this.images.forEach((image) => {
+      image.setTint(newColor);
+    });
   }
 }

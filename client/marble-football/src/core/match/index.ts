@@ -6,7 +6,7 @@ export default class Match {
 
   constructor(public scene: GamePlay) {
     this.addStadium();
-    this.setFansColor();
+    this.setFanColors();
   }
 
   addStadium() {
@@ -17,11 +17,15 @@ export default class Match {
     );
   }
 
-  setFansColor() {
-    this.stadium.fansData = {
+  setFanColors() {
+    this.stadium.spectators.fanColors = {
       hostColor: 0x205c5c,
       guestColor: 0x5c205c,
-      hostQuantityPercent: 50,
+      hostQuantityPercent: 45,
     };
+  }
+
+  goalSelebration() {
+    this.stadium.goalSelebration("host");
   }
 }

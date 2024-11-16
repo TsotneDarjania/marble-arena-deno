@@ -23,6 +23,7 @@ export default class Preload extends Scene {
     );
     this.load.image("stadiumBck", "image/gameObjects/stadium-bck.png");
     this.load.image("stadiumLight", "image/gameObjects/stadium-light.png");
+    this.load.image("triangle", "image/gameObjects/triangle.png");
 
     // UI
     this.load.image("defaultButton", "image/ui/default-button.png");

@@ -1,32 +1,21 @@
 import { Stadium } from "..";
+import { getRandomIntNumber } from "../../../../utils/math";
 import SpectatorsGroup from "./spectatorsGroup";
 
 export default class Spectators {
   topSpectatorsContainer: Phaser.GameObjects.Container;
-  topSpectators: Array<SpectatorsGroup>;
-
   bottomSpectatorsContainer: Phaser.GameObjects.Container;
-  bottomSpectators: Array<SpectatorsGroup>;
-
   leftSpectatorsContainer: Phaser.GameObjects.Container;
-  leftSpectators: Array<SpectatorsGroup>;
-
   rightSpectatorsContainer: Phaser.GameObjects.Container;
-  rightSpectators: Array<SpectatorsGroup>;
-
   topLeftAngleSpectatroContainer: Phaser.GameObjects.Container;
-  topLeftAngleSpectators: Array<SpectatorsGroup>;
-
   topRightAngleSpectatroContainer: Phaser.GameObjects.Container;
-  topRightAngleSpectators: Array<SpectatorsGroup>;
-
   bottomLeftAngleSpectatroContainer: Phaser.GameObjects.Container;
-  bottomLeftAngleSpectators: Array<SpectatorsGroup>;
-
   bottomRightAngleSpectatroContainer: Phaser.GameObjects.Container;
-  bottomRightAngleSpectators: Array<SpectatorsGroup>;
 
-  allSpectators: Array<Array<SpectatorsGroup>>;
+  allSpectators: Array<Phaser.GameObjects.Bob>;
+
+  hostTeamSpectators: Array<Phaser.GameObjects.Bob>;
+  guestTeamSpectators: Array<Phaser.GameObjects.Bob>;
 
   constructor(public stadium: Stadium) {
     this.init();
@@ -34,26 +23,17 @@ export default class Spectators {
 
   init() {
     this.allSpectators = [];
-
-    this.topSpectators = [];
-    this.bottomSpectators = [];
-    this.leftSpectators = [];
-    this.rightSpectators = [];
-    this.topLeftAngleSpectators = [];
-    this.topRightAngleSpectators = [];
-    this.bottomLeftAngleSpectators = [];
-    this.bottomRightAngleSpectators = [];
+    this.hostTeamSpectators = [];
+    this.guestTeamSpectators = [];
 
     this.addTopSpectators();
-    this.addBottomSpectators();
-    this.addLeftSpectators();
-    this.addRightSpectators();
-    this.addTopLeftAngleSpectators();
     this.addTopRightAngleSpectators();
-    this.addBottomLeftAngleSpectators();
+    this.addRightSpectators();
     this.addBottomRightAngleSpectators();
-
-    this.combineAllSpectators();
+    this.addBottomSpectators();
+    this.addBottomLeftAngleSpectators();
+    this.addLeftSpectators();
+    this.addTopLeftAngleSpectators();
   }
 
   addTopSpectators() {
@@ -75,7 +55,7 @@ export default class Spectators {
       );
       spectatorsGroup.setScale(0.8);
       this.topSpectatorsContainer.add(spectatorsGroup);
-      this.topSpectators.push(spectatorsGroup);
+      this.allSpectators.push(...spectatorsGroup.images);
 
       posX += 300;
       if (i % 3 === 0) {
@@ -107,7 +87,7 @@ export default class Spectators {
       );
       spectatorsGroup.setScale(0.8);
       this.bottomSpectatorsContainer.add(spectatorsGroup);
-      this.bottomSpectators.push(spectatorsGroup);
+      this.allSpectators.push(...spectatorsGroup.images);
 
       posX += 300;
       if (i % 3 === 0) {
@@ -140,7 +120,7 @@ export default class Spectators {
       );
       spectatorsGroup.setScale(0.8);
       this.leftSpectatorsContainer.add(spectatorsGroup);
-      this.leftSpectators.push(spectatorsGroup);
+      this.allSpectators.push(...spectatorsGroup.images);
 
       posY += 210;
     }
@@ -169,7 +149,7 @@ export default class Spectators {
       );
       spectatorsGroup.setScale(0.8);
       this.rightSpectatorsContainer.add(spectatorsGroup);
-      this.rightSpectators.push(spectatorsGroup);
+      this.allSpectators.push(...spectatorsGroup.images);
 
       posY += 210;
     }
@@ -198,7 +178,7 @@ export default class Spectators {
       );
       spectatorsGroup.setScale(0.8);
       this.topLeftAngleSpectatroContainer.add(spectatorsGroup);
-      this.topLeftAngleSpectators.push(spectatorsGroup);
+      this.allSpectators.push(...spectatorsGroup.images);
 
       posY += 210;
     }
@@ -227,7 +207,7 @@ export default class Spectators {
       );
       spectatorsGroup.setScale(0.8);
       this.topRightAngleSpectatroContainer.add(spectatorsGroup);
-      this.topRightAngleSpectators.push(spectatorsGroup);
+      this.allSpectators.push(...spectatorsGroup.images);
 
       posY += 210;
     }
@@ -256,7 +236,7 @@ export default class Spectators {
       );
       spectatorsGroup.setScale(0.8);
       this.bottomLeftAngleSpectatroContainer.add(spectatorsGroup);
-      this.bottomLeftAngleSpectators.push(spectatorsGroup);
+      this.allSpectators.push(...spectatorsGroup.images);
 
       posY += 210;
     }
@@ -285,7 +265,7 @@ export default class Spectators {
       );
       spectatorsGroup.setScale(0.8);
       this.bottomRightAngleSpectatroContainer.add(spectatorsGroup);
-      this.bottomRightAngleSpectators.push(spectatorsGroup);
+      this.allSpectators.push(...spectatorsGroup.images);
 
       posY += 210;
     }
@@ -295,24 +275,37 @@ export default class Spectators {
     this.stadium.add(this.bottomRightAngleSpectatroContainer);
   }
 
-  combineAllSpectators() {
-    this.allSpectators = [
-      this.topSpectators,
-      this.bottomSpectators,
-      this.leftSpectators,
-      this.rightSpectators,
-      this.topLeftAngleSpectators,
-      this.topRightAngleSpectators,
-      this.bottomLeftAngleSpectators,
-      this.bottomRightAngleSpectators,
-    ];
+  set fanColors(fansData: {
+    hostColor: number;
+    guestColor: number;
+    hostQuantityPercent: number;
+  }) {
+    const HostColorQuantity = Math.floor(
+      (fansData.hostQuantityPercent / 100) * this.allSpectators.length
+    );
+
+    for (let i = 0; i < this.allSpectators.length; i++) {
+      if (i < HostColorQuantity) {
+        this.hostTeamSpectators.push(this.allSpectators[i]);
+        this.allSpectators[i].setTint(fansData.hostColor);
+      } else {
+        this.guestTeamSpectators.push(this.allSpectators[i]);
+        this.allSpectators[i].setTint(fansData.guestColor);
+      }
+    }
   }
 
-  set fansColor(newColor: number) {
-    this.allSpectators.forEach((spectatorsGroup) => {
-      spectatorsGroup.forEach((spectator) => {
-        spectator.color = newColor;
-      });
+  goalSelebration(whoScored: "host" | "guest") {
+    this.stadium.scene.tweens.add({
+      targets:
+        whoScored === "host"
+          ? this.hostTeamSpectators
+          : this.guestTeamSpectators,
+      alpha: 0.5,
+      y: `-=15`,
+      duration: 200,
+      yoyo: true,
+      repeat: 25,
     });
   }
 }

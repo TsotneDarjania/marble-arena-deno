@@ -1,4 +1,5 @@
 import Spectators from "./spectators";
+import StadiumLight from "./stadiumLight";
 
 export class Stadium extends Phaser.GameObjects.Container {
   stadiumWidth = 1176;
@@ -6,7 +7,13 @@ export class Stadium extends Phaser.GameObjects.Container {
 
   spectators: Spectators;
 
-  stadiumLights: Array<Phaser.GameObjects.Image>;
+  light1: StadiumLight;
+  light2: StadiumLight;
+  light3: StadiumLight;
+  light4: StadiumLight;
+  light5: StadiumLight;
+  light6: StadiumLight;
+  light7: StadiumLight;
 
   constructor(scene: Phaser.Scene, x: number, y: number) {
     super(scene, x, y);
@@ -16,8 +23,6 @@ export class Stadium extends Phaser.GameObjects.Container {
   }
 
   init() {
-    this.stadiumLights = [];
-
     this.addBakcground();
     this.addLines();
     this.addSpectators();
@@ -55,72 +60,41 @@ export class Stadium extends Phaser.GameObjects.Container {
   }
 
   addLights() {
-    const light1 = this.scene.add.image(0, -320, "stadiumLight").setScale(1.2);
-    light1.setTint(0x205c5c);
+    this.light1 = new StadiumLight(this.scene, 0, -320);
+    this.add(this.light1);
 
-    this.add(light1);
-    this.stadiumLights.push(light1);
+    this.light2 = new StadiumLight(this.scene, -400, -320);
+    this.add(this.light2);
 
-    const light2 = this.scene.add
-      .image(-400, -320, "stadiumLight")
-      .setScale(1.2);
-    light2.setTint(0x205c5c);
+    this.light3 = new StadiumLight(this.scene, 400, -320);
+    this.add(this.light3);
 
-    this.add(light2);
-    this.stadiumLights.push(light2);
+    this.light4 = new StadiumLight(this.scene, -650, -200);
+    this.light4.setRotation(-0.785398);
+    this.add(this.light4);
 
-    const light3 = this.scene.add
-      .image(400, -320, "stadiumLight")
-      .setScale(1.2);
-    light3.setTint(0x205c5c);
+    this.light5 = new StadiumLight(this.scene, 650, -190);
+    this.light5.setRotation(0.785398);
+    this.add(this.light5);
 
-    this.add(light3);
-    this.stadiumLights.push(light3);
+    this.light6 = new StadiumLight(this.scene, -650, 287);
+    this.light6.setRotation(-2.3736);
+    this.add(this.light6);
 
-    const light4 = this.scene.add
-      .image(-650, -200, "stadiumLight")
-      .setScale(1.2);
-    light4.setTint(0x205c5c);
-    light4.setRotation(-0.785398);
-
-    this.add(light4);
-    this.stadiumLights.push(light4);
-
-    const light5 = this.scene.add
-      .image(650, -190, "stadiumLight")
-      .setScale(1.2);
-    light5.setTint(0x205c5c);
-    light5.setRotation(0.785398);
-
-    this.add(light5);
-    this.stadiumLights.push(light5);
-
-    const light6 = this.scene.add
-      .image(-650, 287, "stadiumLight")
-      .setScale(1.2);
-
-    light6.setTint(0x205c5c);
-    light6.setRotation(-2.3736);
-
-    this.add(light6);
-    this.stadiumLights.push(light6);
-
-    const light7 = this.scene.add.image(650, 277, "stadiumLight").setScale(1.2);
-
-    light7.setTint(0x205c5c);
-    light7.setRotation(2.3736);
-
-    this.add(light7);
-    this.stadiumLights.push(light7);
+    this.light7 = new StadiumLight(this.scene, 650, 277);
+    this.light7.setRotation(2.3736);
+    this.add(this.light7);
   }
 
-  set fansData(fansData: {
-    hostColor: number;
-    guestColor: number;
-    hostQuantityPercent: number;
-  }) {
-    console.log(fansData);
+  goalSelebration(team: "host" | "guest") {
+    this.light1.makeAnimation(false);
+    this.light2.makeAnimation(false);
+    this.light3.makeAnimation(false);
+    this.light4.makeAnimation(true);
+    this.light5.makeAnimation(false);
+    this.light6.makeAnimation(true);
+    this.light7.makeAnimation(false);
 
-    this.spectators.fansColor = fansData.hostColor;
+    this.spectators.goalSelebration(team);
   }
 }
