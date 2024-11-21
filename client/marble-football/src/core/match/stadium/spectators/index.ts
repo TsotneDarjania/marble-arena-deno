@@ -1,8 +1,8 @@
 import { Stadium } from "..";
-import { getRandomIntNumber } from "../../../../utils/math";
+import GamePlay from "../../../../scenes/GamePlay";
 import SpectatorsGroup from "./spectatorsGroup";
 
-export default class Spectators {
+export default class Spectators extends Phaser.GameObjects.Container {
   topSpectatorsContainer: Phaser.GameObjects.Container;
   bottomSpectatorsContainer: Phaser.GameObjects.Container;
   leftSpectatorsContainer: Phaser.GameObjects.Container;
@@ -17,7 +17,8 @@ export default class Spectators {
   hostTeamSpectators: Array<Phaser.GameObjects.Bob>;
   guestTeamSpectators: Array<Phaser.GameObjects.Bob>;
 
-  constructor(public stadium: Stadium) {
+  constructor(public scene: GamePlay, public stadium: Stadium) {
+    super(scene);
     this.init();
   }
 
@@ -65,7 +66,7 @@ export default class Spectators {
     }
 
     this.topSpectatorsContainer.setPosition(-430, -315);
-    this.stadium.add(this.topSpectatorsContainer);
+    this.add(this.topSpectatorsContainer);
   }
 
   addBottomSpectators() {
@@ -98,7 +99,7 @@ export default class Spectators {
 
     this.bottomSpectatorsContainer.setPosition(440, 715);
     this.bottomSpectatorsContainer.setRotation(3.14159);
-    this.stadium.add(this.bottomSpectatorsContainer);
+    this.add(this.bottomSpectatorsContainer);
   }
 
   addLeftSpectators() {
@@ -127,7 +128,7 @@ export default class Spectators {
 
     this.leftSpectatorsContainer.setPosition(-970, 222);
     this.leftSpectatorsContainer.setRotation(-1.5708);
-    this.stadium.add(this.leftSpectatorsContainer);
+    this.add(this.leftSpectatorsContainer);
   }
 
   addRightSpectators() {
@@ -156,7 +157,7 @@ export default class Spectators {
 
     this.rightSpectatorsContainer.setPosition(970, -180);
     this.rightSpectatorsContainer.setRotation(1.5708);
-    this.stadium.add(this.rightSpectatorsContainer);
+    this.add(this.rightSpectatorsContainer);
   }
 
   addTopLeftAngleSpectators() {
@@ -185,7 +186,7 @@ export default class Spectators {
 
     this.topLeftAngleSpectatroContainer.setPosition(-900, -455);
     this.topLeftAngleSpectatroContainer.setRotation(-0.785398);
-    this.stadium.add(this.topLeftAngleSpectatroContainer);
+    this.add(this.topLeftAngleSpectatroContainer);
   }
 
   addTopRightAngleSpectators() {
@@ -214,7 +215,7 @@ export default class Spectators {
 
     this.topRightAngleSpectatroContainer.setPosition(715, -650);
     this.topRightAngleSpectatroContainer.setRotation(0.785398);
-    this.stadium.add(this.topRightAngleSpectatroContainer);
+    this.add(this.topRightAngleSpectatroContainer);
   }
 
   addBottomLeftAngleSpectators() {
@@ -243,7 +244,7 @@ export default class Spectators {
 
     this.bottomLeftAngleSpectatroContainer.setPosition(-705, 690);
     this.bottomLeftAngleSpectatroContainer.setRotation(-2.35619);
-    this.stadium.add(this.bottomLeftAngleSpectatroContainer);
+    this.add(this.bottomLeftAngleSpectatroContainer);
   }
 
   addBottomRightAngleSpectators() {
@@ -272,7 +273,7 @@ export default class Spectators {
 
     this.bottomRightAngleSpectatroContainer.setPosition(907, 497);
     this.bottomRightAngleSpectatroContainer.setRotation(2.35619);
-    this.stadium.add(this.bottomRightAngleSpectatroContainer);
+    this.add(this.bottomRightAngleSpectatroContainer);
   }
 
   set fanColors(fansData: {

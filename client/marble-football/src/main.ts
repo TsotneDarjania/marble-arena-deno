@@ -13,6 +13,12 @@ const config: Types.Core.GameConfig = {
   height: window.innerHeight,
   parent: "game-container",
   antialias: true,
+  physics: {
+    default: "arcade",
+    arcade: {
+      debug: true,
+    },
+  },
   // backgroundColor: 0x40e02b,
   scale: {
     mode: Phaser.Scale.FIT,

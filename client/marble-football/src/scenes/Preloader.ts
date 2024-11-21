@@ -29,6 +29,21 @@ export default class Preload extends Scene {
     this.load.image("defaultButton", "image/ui/default-button.png");
     this.load.image("default", "image/ui/default.png");
     this.load.image("cameraZoomButton", "image/ui/camera-zoom-button.png");
+
+    // Default Team Logos
+    this.load.image(
+      "manchester-city",
+      "image/teamLogos/premierLeague/Manchester-City.png"
+    );
+    this.load.image(
+      "manchester-united",
+      "image/teamLogos/premierLeague/Manchester-United.png"
+    );
+    this.load.image("liverpool", "image/teamLogos/premierLeague/Liverpool.png");
+
+    // GameObjects
+    this.load.image("ball", "image/gameObjects/ball.png");
+    this.load.image("circle", "image/gameObjects/circle.png");
   }
 
   create() {
