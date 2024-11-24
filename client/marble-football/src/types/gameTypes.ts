@@ -1,5 +1,6 @@
 export type TeamDataType = {
   name: string;
+  initials: string;
   logoKey: string;
   formation: "4-4-2" | "4-3-3" | "5-3-2";
 };
@@ -13,4 +14,6 @@ export type GameConfigType = {
     | "experimental";
 };
 
-export type FootballPlayerData = {};
+export type FootballPlayerData = {
+  who: "unkown" | "hostPlayer" | "guestPlayer";
+};

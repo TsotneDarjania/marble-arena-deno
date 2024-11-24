@@ -1,10 +1,16 @@
 import GamePlay from "../../scenes/GamePlay";
-import { TeamDataType } from "../../types/gameTypes";
-import { getRandomIntNumber } from "../../utils/math";
+import {
+  FootballPlayerData,
+  GameConfigType,
+  TeamDataType,
+} from "../../types/gameTypes";
 import { Ball } from "./ball";
 import CollisionDetector from "./collisionDetector";
+import MatchManager from "./mathManager";
 import { Stadium } from "./stadium";
 import Team from "./team";
+import BoardFootballPlayer from "./team/footballplayers/boardFootballPlayer";
+import TimeManager from "./timeManager";
 
 export default class Match {
   stadium: Stadium;
@@ -18,10 +24,15 @@ export default class Match {
 
   collisionDetector: CollisionDetector;
 
+  timer: TimeManager;
+
+  matchManager: MatchManager;
+
   constructor(
     public scene: GamePlay,
     public hostTeamData: TeamDataType,
-    public guestTeamData: TeamDataType
+    public guestTeamData: TeamDataType,
+    public gameConfig: GameConfigType
   ) {
     this.init();
   }
@@ -29,6 +40,7 @@ export default class Match {
   init() {
     this.addStadium();
     this.setFanColors();
+    this.addTimer();
   }
 
   addStadium() {
@@ -88,15 +100,83 @@ export default class Match {
 
     this.addBall();
     this.addTeams();
+    this.setMatchInstanceForFootballers();
     this.addCollisionDetector();
+    this.addMatchManager();
 
     setTimeout(() => {
-      this.ball.kick(getRandomIntNumber(50, 250));
+      this.matchManager.startMatch();
     }, 1000);
   }
 
+  addMatchManager() {
+    this.matchManager = new MatchManager(this);
+  }
+
+  setColliderAndDataToFootballers(
+    footballer: BoardFootballPlayer,
+    data: FootballPlayerData
+  ) {
+    footballer.setMatch = this;
+    footballer.addCollider();
+    footballer.playerData = data;
+  }
+
+  setMatchInstanceForFootballers() {
+    this.hostTeam.boardFootballPlayers.goalKeeper.setMatch = this;
+    this.hostTeam.boardFootballPlayers.defenceColumn.footballers.forEach(
+      (footballer) => {
+        this.setColliderAndDataToFootballers(footballer, {
+          who: "hostPlayer",
+        });
+      }
+    );
+    this.hostTeam.boardFootballPlayers.middleColumn.footballers.forEach(
+      (footballer) => {
+        this.setColliderAndDataToFootballers(footballer, {
+          who: "hostPlayer",
+        });
+      }
+    );
+    this.hostTeam.boardFootballPlayers.attackColumn.footballers.forEach(
+      (footballer) => {
+        this.setColliderAndDataToFootballers(footballer, {
+          who: "hostPlayer",
+        });
+      }
+    );
+
+    this.guestTeam.boardFootballPlayers.goalKeeper.setMatch = this;
+    this.guestTeam.boardFootballPlayers.defenceColumn.footballers.forEach(
+      (footballer) => {
+        this.setColliderAndDataToFootballers(footballer, {
+          who: "guestPlayer",
+        });
+      }
+    );
+    this.guestTeam.boardFootballPlayers.middleColumn.footballers.forEach(
+      (footballer) => {
+        this.setColliderAndDataToFootballers(footballer, {
+          who: "guestPlayer",
+        });
+      }
+    );
+    this.guestTeam.boardFootballPlayers.attackColumn.footballers.forEach(
+      (footballer) => {
+        this.setColliderAndDataToFootballers(footballer, {
+          who: "guestPlayer",
+        });
+      }
+    );
+  }
+
   addBall() {
-    this.ball = new Ball(this.scene, 0, 0, this.stadium);
+    this.ball = new Ball(
+      this.scene,
+      this.scene.game.canvas.width / 2,
+      this.scene.game.canvas.height / 2,
+      this.stadium
+    );
   }
 
   addTeams() {
@@ -104,7 +184,7 @@ export default class Match {
       this.scene,
       this.hostTeamData,
       {
-        mode: "board-football",
+        mode: this.gameConfig.mode,
       },
       this.stadium,
       "left"
@@ -123,5 +203,9 @@ export default class Match {
 
   addCollisionDetector() {
     this.collisionDetector = new CollisionDetector(this.scene, this);
+  }
+
+  addTimer() {
+    this.timer = new TimeManager(this, this.scene);
   }
 }

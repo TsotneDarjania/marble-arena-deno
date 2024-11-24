@@ -29,6 +29,7 @@ export class Stadium extends Phaser.GameObjects.Container {
     scene.add.existing(this);
 
     this.init();
+    this.setDepth(100);
   }
 
   init() {
@@ -42,16 +43,22 @@ export class Stadium extends Phaser.GameObjects.Container {
   }
 
   addBakcground() {
-    const stadiumBck = this.scene.add.image(0, 25, "stadiumBck");
+    const stadiumBck = this.scene.add.image(
+      this.scene.game.canvas.width / 2,
+      this.scene.game.canvas.height / 2,
+      "stadiumBck"
+    );
     stadiumBck.setTint(0x9fa7ab);
     stadiumBck.setScale(0.8);
-    this.add(stadiumBck);
   }
 
   addLines() {
-    const stadiumLines = this.scene.add.image(0, 0, "stadiumLines");
+    const stadiumLines = this.scene.add.image(
+      this.scene.game.canvas.width / 2,
+      this.scene.game.canvas.height / 2,
+      "stadiumLines"
+    );
     stadiumLines.setDisplaySize(this.stadiumWidth, this.stadiumHeight);
-    this.add(stadiumLines);
   }
 
   addSpectators() {

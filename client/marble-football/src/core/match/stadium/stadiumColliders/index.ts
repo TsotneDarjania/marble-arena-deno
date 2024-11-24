@@ -10,6 +10,7 @@ export default class StadiumColliders {
   rightBottomCollider: Phaser.Physics.Arcade.Body;
 
   borderColliders: Phaser.Physics.Arcade.Body[];
+  goalPostColliders: Phaser.Physics.Arcade.Body[];
 
   leftGoalColliders: Phaser.Physics.Arcade.Body[];
   rightGoalColliders: Phaser.Physics.Arcade.Body[];
@@ -24,6 +25,8 @@ export default class StadiumColliders {
   }
 
   addGoalColliders() {
+    this.goalPostColliders = [];
+
     // Left
     this.leftGoalColliders = [];
 
@@ -33,6 +36,8 @@ export default class StadiumColliders {
       60,
       13
     );
+    leftTop.setImmovable(true);
+    this.goalPostColliders.push(leftTop);
 
     const leftBottom = this.scene.physics.add.body(
       this.scene.game.canvas.width / 2 - this.stadium.fieldWidth / 2 - 60,
@@ -40,6 +45,8 @@ export default class StadiumColliders {
       60,
       13
     );
+    leftBottom.setImmovable(true);
+    this.goalPostColliders.push(leftBottom);
 
     const leftBase = this.scene.physics.add.body(
       this.scene.game.canvas.width / 2 - this.stadium.fieldWidth / 2 - 70,
@@ -47,6 +54,8 @@ export default class StadiumColliders {
       13,
       170
     );
+    leftBase.setImmovable(true);
+    this.goalPostColliders.push(leftBase);
 
     this.leftGoalColliders.push(leftTop, leftBottom, leftBase);
 
@@ -59,6 +68,8 @@ export default class StadiumColliders {
       60,
       13
     );
+    rightTop.setImmovable(true);
+    this.goalPostColliders.push(rightTop);
 
     const rightBottom = this.scene.physics.add.body(
       this.scene.game.canvas.width / 2 + this.stadium.fieldWidth / 2,
@@ -66,6 +77,8 @@ export default class StadiumColliders {
       60,
       13
     );
+    leftBottom.setImmovable(true);
+    this.goalPostColliders.push(rightBottom);
 
     const rightBase = this.scene.physics.add.body(
       this.scene.game.canvas.width / 2 + this.stadium.fieldWidth / 2 + 56,
@@ -73,6 +86,8 @@ export default class StadiumColliders {
       13,
       170
     );
+    rightBase.setImmovable(true);
+    this.goalPostColliders.push(rightBase);
 
     this.leftGoalColliders.push(rightTop, rightBottom, rightBase);
   }

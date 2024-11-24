@@ -93,4 +93,10 @@ export default class BoardFootballPlayers {
     this.middleColumn.startMotion();
     this.attackColumn.startMotion();
   }
+
+  stopMotion() {
+    this.defenceColumn.stopMotion();
+    this.middleColumn.stopMotion();
+    this.attackColumn.stopMotion();
+  }
 }

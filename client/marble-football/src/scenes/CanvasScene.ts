@@ -3,6 +3,7 @@ import { CameraController } from "../core";
 import GamePlay from "./GamePlay";
 import { Overlay } from "../uiComponents/overlay";
 import { IntroWindow } from "../uiComponents/introWindow";
+import matchConfig from "../config/matchConfig";
 
 export default class CanvasScene extends Phaser.Scene {
   cameraController: CameraController;
@@ -11,6 +12,10 @@ export default class CanvasScene extends Phaser.Scene {
   gamePlayMenu: Phaser.GameObjects.Container;
   introWindow: IntroWindow;
 
+  timerText: Phaser.GameObjects.Text;
+  hostTeamScoretext: Phaser.GameObjects.Text;
+  guestTeamScoretext: Phaser.GameObjects.Text;
+
   constructor() {
     super("CanvasScene");
   }
@@ -18,6 +23,102 @@ export default class CanvasScene extends Phaser.Scene {
   create() {
     this.addStartOverlay();
     this.createCameraController();
+    this.createIndicators();
+  }
+
+  createIndicators() {
+    // Background
+    this.add
+      .image(this.game.canvas.width / 2, 60, "matchIndicatorBck")
+      .setTint(0x02010d)
+      .setAlpha(0.6);
+
+    // Timer text
+    this.timerText = this.add.text(
+      this.game.canvas.width / 2,
+      this.game.canvas.height - 90,
+      "0",
+      {
+        fontSize: "40px",
+        color: "#F3FFFF",
+        align: "center",
+        strokeThickness: 1,
+        backgroundColor: "#000000",
+      }
+    );
+    this.timerText.setOrigin(0.5);
+
+    // hostTeamLogo
+    this.add.image(
+      this.game.canvas.width / 2 - 158,
+      56,
+      matchConfig.hostTeam.logoKey
+    );
+
+    // guestTeamLogo
+    this.add.image(
+      this.game.canvas.width / 2 + 158,
+      56,
+      matchConfig.guestTeam.logoKey
+    );
+
+    // hostTeamInitials
+    this.add
+      .text(
+        this.game.canvas.width / 2 - 120,
+        60,
+        matchConfig.hostTeam.initials,
+        {
+          fontSize: "35px",
+          color: "#E9FFFF",
+          fontStyle: "bold",
+          strokeThickness: 2,
+          align: "left",
+        }
+      )
+      .setOrigin(0, 0.5);
+
+    //guestTeamInitials
+    this.add
+      .text(
+        this.game.canvas.width / 2 + 120,
+        60,
+        matchConfig.guestTeam.initials,
+        {
+          fontSize: "35px",
+          color: "#E9FFFF",
+          fontStyle: "bold",
+          strokeThickness: 2,
+          align: "right",
+        }
+      )
+      .setOrigin(1, 0.5);
+
+    // hostTeamScore
+    this.hostTeamScoretext = this.add
+      .text(this.game.canvas.width / 2 - 20, 60, "0", {
+        fontSize: "45px",
+        color: "#E9FFFF",
+        fontStyle: "bold",
+        strokeThickness: 2,
+        align: "right",
+      })
+      .setOrigin(1, 0.5);
+
+    this.hostTeamScoretext = this.add
+      .text(this.game.canvas.width / 2 + 50, 60, "0", {
+        fontSize: "45px",
+        color: "#E9FFFF",
+        fontStyle: "bold",
+        strokeThickness: 2,
+        align: "left",
+      })
+      .setOrigin(1, 0.5);
+
+    // HorizontalLine
+    this.add
+      .image(this.game.canvas.width / 2, 60, "default")
+      .setDisplaySize(20, 7);
   }
 
   addStartOverlay() {

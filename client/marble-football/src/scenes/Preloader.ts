@@ -29,6 +29,7 @@ export default class Preload extends Scene {
     this.load.image("defaultButton", "image/ui/default-button.png");
     this.load.image("default", "image/ui/default.png");
     this.load.image("cameraZoomButton", "image/ui/camera-zoom-button.png");
+    this.load.image("matchIndicatorBck", "image/ui/match-indicator-bck.png");
 
     // Default Team Logos
     this.load.image(

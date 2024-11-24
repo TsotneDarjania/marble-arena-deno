@@ -8,6 +8,17 @@ export default class CollisionDetector {
 
   init() {
     this.addDetectorForBallAndStadiumBoards();
+    this.addDetectorForBallAndGoalPosts();
+  }
+
+  addDetectorForBallAndGoalPosts() {
+    this.scene.physics.add.collider(
+      this.match.ball,
+      [...this.match.stadium.stadiumColliders.goalPostColliders],
+      () => {
+        console.log("Goal Posts detect");
+      }
+    );
   }
 
   addDetectorForBallAndStadiumBoards() {
@@ -15,7 +26,7 @@ export default class CollisionDetector {
       this.match.ball,
       [...this.match.stadium.stadiumColliders.borderColliders],
       () => {
-        console.log("Detect");
+        console.log("Stadium Border Detect");
       }
     );
   }

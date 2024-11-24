@@ -4,7 +4,7 @@ import { Stadium } from "../stadium";
 import BoardFootballPlayers from "./core/boardFootballPlayers";
 
 export default class Team {
-  hostBoardFootballPlayers: BoardFootballPlayers;
+  boardFootballPlayers: BoardFootballPlayers;
 
   constructor(
     public scene: GamePlay,
@@ -33,11 +33,19 @@ export default class Team {
   }
 
   private addBoardFootballPlayers() {
-    this.hostBoardFootballPlayers = new BoardFootballPlayers(
+    this.boardFootballPlayers = new BoardFootballPlayers(
       this.scene,
       this.stadium,
       this.teamData,
       this.side
     );
+  }
+
+  startMotion() {
+    this.boardFootballPlayers.startMotion();
+  }
+
+  stopMotion() {
+    this.boardFootballPlayers.startMotion();
   }
 }

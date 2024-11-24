@@ -28,13 +28,18 @@ export default class GamePlay extends Phaser.Scene {
       this,
       {
         name: "Liverpool",
+        initials: "LV",
         logoKey: "liverpool",
         formation: "5-3-2",
       },
       {
         name: "Manchester City",
+        initials: "MC",
         logoKey: "manchester-city",
         formation: "4-4-2",
+      },
+      {
+        mode: "board-football",
       }
     );
   }
