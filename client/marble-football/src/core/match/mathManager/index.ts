@@ -16,6 +16,8 @@ export default class MatchManager {
     this.startTimer();
 
     this.startOponentTeamMotion(this.match.guestTeam);
+    this.match.hostTeam.boardFootballPlayers.goalKeeper.startMotion();
+    this.match.guestTeam.boardFootballPlayers.goalKeeper.startMotion();
   }
 
   makeFirstKick() {
@@ -24,7 +26,7 @@ export default class MatchManager {
         this.match.hostTeam.boardFootballPlayers.middleColumn.footballers;
       const randomFootballer =
         footballers[getRandomIntNumber(0, footballers.length)];
-      this.match.ball.kick(100, {
+      this.match.ball.kick(200, {
         x: randomFootballer.getBounds().centerX,
         y: randomFootballer.getBounds().centerY,
       });
@@ -46,9 +48,11 @@ export default class MatchManager {
   someoneTakeBall(footballer: BoardFootballPlayer) {
     if (footballer.playerData.who === "hostPlayer") {
       this.match.hostTeam.stopMotion();
+      this.match.guestTeam.startMotion();
     }
     if (footballer.playerData.who == "guestPlayer") {
       this.match.guestTeam.stopMotion();
+      this.match.hostTeam.startMotion();
     }
   }
 }

@@ -1,3 +1,5 @@
+import BoardFootballPlayer from "../core/match/team/footballplayers/boardFootballPlayer";
+
 export type TeamDataType = {
   name: string;
   initials: string;
@@ -16,4 +18,7 @@ export type GameConfigType = {
 
 export type FootballPlayerData = {
   who: "unkown" | "hostPlayer" | "guestPlayer";
+  potentialShortPassVariants?: BoardFootballPlayer[];
+  potentialLongPassVariants?: BoardFootballPlayer[];
+  position: "goalKeeper" | "defender" | "middfielder" | "attacker";
 };

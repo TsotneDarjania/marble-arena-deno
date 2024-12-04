@@ -63,7 +63,7 @@ export class Ball extends Phaser.Physics.Arcade.Image {
       targets: this,
       x: footballer.getBounds().centerX,
       y: footballer.getBounds().centerY,
-      duration: 300,
+      duration: 200,
     });
   }
 }

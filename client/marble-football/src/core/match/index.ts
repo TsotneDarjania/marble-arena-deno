@@ -106,6 +106,7 @@ export default class Match {
 
     setTimeout(() => {
       this.matchManager.startMatch();
+      this.stadium.goalSelebration("host");
     }, 1000);
   }
 
@@ -128,6 +129,11 @@ export default class Match {
       (footballer) => {
         this.setColliderAndDataToFootballers(footballer, {
           who: "hostPlayer",
+          potentialShortPassVariants:
+            this.hostTeam.boardFootballPlayers.middleColumn.footballers,
+          potentialLongPassVariants:
+            this.hostTeam.boardFootballPlayers.attackColumn.footballers,
+          position: "defender",
         });
       }
     );
@@ -135,6 +141,9 @@ export default class Match {
       (footballer) => {
         this.setColliderAndDataToFootballers(footballer, {
           who: "hostPlayer",
+          potentialShortPassVariants:
+            this.hostTeam.boardFootballPlayers.attackColumn.footballers,
+          position: "middfielder",
         });
       }
     );
@@ -142,6 +151,7 @@ export default class Match {
       (footballer) => {
         this.setColliderAndDataToFootballers(footballer, {
           who: "hostPlayer",
+          position: "attacker",
         });
       }
     );
@@ -151,6 +161,11 @@ export default class Match {
       (footballer) => {
         this.setColliderAndDataToFootballers(footballer, {
           who: "guestPlayer",
+          potentialShortPassVariants:
+            this.guestTeam.boardFootballPlayers.middleColumn.footballers,
+          potentialLongPassVariants:
+            this.guestTeam.boardFootballPlayers.attackColumn.footballers,
+          position: "defender",
         });
       }
     );
@@ -158,6 +173,9 @@ export default class Match {
       (footballer) => {
         this.setColliderAndDataToFootballers(footballer, {
           who: "guestPlayer",
+          potentialShortPassVariants:
+            this.guestTeam.boardFootballPlayers.attackColumn.footballers,
+          position: "middfielder",
         });
       }
     );
@@ -165,6 +183,7 @@ export default class Match {
       (footballer) => {
         this.setColliderAndDataToFootballers(footballer, {
           who: "guestPlayer",
+          position: "attacker",
         });
       }
     );

@@ -32,7 +32,7 @@ export default class StadiumColliders {
 
     const leftTop = this.scene.physics.add.body(
       this.scene.game.canvas.width / 2 - this.stadium.fieldWidth / 2 - 60,
-      287,
+      this.scene.game.canvas.height / 2 - 85,
       60,
       13
     );
@@ -41,7 +41,7 @@ export default class StadiumColliders {
 
     const leftBottom = this.scene.physics.add.body(
       this.scene.game.canvas.width / 2 - this.stadium.fieldWidth / 2 - 60,
-      445,
+      this.scene.game.canvas.height / 2 + 72,
       60,
       13
     );
@@ -50,7 +50,7 @@ export default class StadiumColliders {
 
     const leftBase = this.scene.physics.add.body(
       this.scene.game.canvas.width / 2 - this.stadium.fieldWidth / 2 - 70,
-      288,
+      this.scene.game.canvas.height / 2 - 85,
       13,
       170
     );
@@ -64,7 +64,7 @@ export default class StadiumColliders {
 
     const rightTop = this.scene.physics.add.body(
       this.scene.game.canvas.width / 2 + this.stadium.fieldWidth / 2,
-      287,
+      this.scene.game.canvas.height / 2 - 85,
       60,
       13
     );
@@ -73,7 +73,7 @@ export default class StadiumColliders {
 
     const rightBottom = this.scene.physics.add.body(
       this.scene.game.canvas.width / 2 + this.stadium.fieldWidth / 2,
-      445,
+      this.scene.game.canvas.height / 2 + 72,
       60,
       13
     );
@@ -82,7 +82,7 @@ export default class StadiumColliders {
 
     const rightBase = this.scene.physics.add.body(
       this.scene.game.canvas.width / 2 + this.stadium.fieldWidth / 2 + 56,
-      288,
+      this.scene.game.canvas.height / 2 - 85,
       13,
       170
     );

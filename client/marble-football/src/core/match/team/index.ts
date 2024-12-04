@@ -46,6 +46,6 @@ export default class Team {
   }
 
   stopMotion() {
-    this.boardFootballPlayers.startMotion();
+    this.boardFootballPlayers.stopMotion();
   }
 }
