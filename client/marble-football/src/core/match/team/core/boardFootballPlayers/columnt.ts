@@ -124,6 +124,11 @@ export class Column extends Phaser.GameObjects.Container {
     this.tween?.pause();
   }
 
+  public reset() {
+    this.tween.destroy();
+    this.setPosition(this.x, 0);
+  }
+
   set distance(distance: number) {
     this.motionDistance = distance;
   }

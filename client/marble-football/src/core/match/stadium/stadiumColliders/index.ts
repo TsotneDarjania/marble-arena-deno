@@ -77,7 +77,7 @@ export default class StadiumColliders {
       60,
       13
     );
-    leftBottom.setImmovable(true);
+    rightBottom.setImmovable(true);
     this.goalPostColliders.push(rightBottom);
 
     const rightBase = this.scene.physics.add.body(

@@ -14,10 +14,23 @@ export default class MatchManager {
     this.makeFirstKick();
     this.startCamerFollow();
     this.startTimer();
+    this.addGoalListeners();
 
     this.startOponentTeamMotion(this.match.guestTeam);
+
     this.match.hostTeam.boardFootballPlayers.goalKeeper.startMotion();
     this.match.guestTeam.boardFootballPlayers.goalKeeper.startMotion();
+
+    this.addEventListeners();
+  }
+
+  addEventListeners() {
+    this.match.stadium.spectators.eventEmitter.on(
+      "FinishGoalSelebration",
+      (data: { whoScored: "host" | "guest" }) => {
+        this.resumeMatch(data.whoScored);
+      }
+    );
   }
 
   makeFirstKick() {
@@ -54,5 +67,92 @@ export default class MatchManager {
       this.match.guestTeam.stopMotion();
       this.match.hostTeam.startMotion();
     }
+  }
+
+  addGoalListeners() {
+    this.match.scene.events.on("update", () => {
+      if (this.matchStatus === "pause") return;
+
+      if (
+        this.match.ball.x >
+        this.match.guestTeam.boardFootballPlayers.goalKeeper.getBounds()
+          .centerX +
+          10
+      ) {
+        this.isGoal("host");
+      }
+
+      if (
+        this.match.ball.x <
+        this.match.hostTeam.boardFootballPlayers.goalKeeper.getBounds()
+          .centerX -
+          10
+      ) {
+        this.isGoal("guest");
+      }
+    });
+  }
+
+  isGoal(whoScored: "host" | "guest") {
+    this.match.timer.stopTimer();
+
+    this.match.hostTeam.stopMotion();
+    this.match.guestTeam.stopMotion();
+
+    this.match.hostTeam.boardFootballPlayers.goalKeeper.stopMotion();
+    this.match.guestTeam.boardFootballPlayers.goalKeeper.stopMotion();
+
+    this.matchStatus = "pause";
+
+    if (whoScored === "host") {
+      this.match.stadium.goalSelebration("host");
+    } else {
+      this.match.stadium.goalSelebration("guest");
+    }
+
+    setTimeout(() => {
+      this.match.ball.stop();
+
+      this.match.ball.startBlinkAnimation(() => {
+        this.resetUfterGoal();
+      });
+    }, 200);
+  }
+
+  resetUfterGoal() {
+    this.match.ball.reset();
+    this.match.hostTeam.reset();
+    this.match.guestTeam.reset();
+  }
+
+  // Resume Ufte Goal
+  resumeMatch(whoScored: "host" | "guest") {
+    this.match.timer.resumeTimer();
+    this.matchStatus = "playing";
+
+    if (whoScored === "host") {
+      this.match.hostTeam.startMotion();
+      const footballers =
+        this.match.guestTeam.boardFootballPlayers.middleColumn.footballers;
+      const { x, y } =
+        footballers[getRandomIntNumber(0, footballers.length - 1)];
+      this.match.ball.kick(200, {
+        x,
+        y,
+      });
+    } else {
+      const footballers =
+        this.match.hostTeam.boardFootballPlayers.middleColumn.footballers;
+      const { x, y } =
+        footballers[getRandomIntNumber(0, footballers.length - 1)];
+      this.match.ball.kick(200, {
+        x,
+        y,
+      });
+      this.match.guestTeam.startMotion();
+    }
+
+    this.match.hostTeam.boardFootballPlayers.goalKeeper.startMotion();
+    this.match.guestTeam.boardFootballPlayers.goalKeeper.startMotion();
   }
 }

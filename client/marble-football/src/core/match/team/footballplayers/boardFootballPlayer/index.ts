@@ -53,13 +53,23 @@ export default class BoardFootballPlayer extends Phaser.GameObjects.Container {
     this.scene.physics.add.overlap(this.match.ball, this.image, () => {
       if (!this.withBall) {
         this.withBall = true;
-        this.takeBall();
+        this.playerData.position === "goalKeeper"
+          ? this.save()
+          : this.takeBall();
       }
     });
   }
 
   set setMatch(match: Match) {
     this.match = match;
+  }
+
+  save() {
+    if (this.match.matchManager.matchStatus !== "playing") return;
+    this.selectorOnn();
+    this.match.ball.stop();
+    this.match.matchManager.someoneTakeBall(this);
+    this.makeDesition();
   }
 
   takeBall() {
@@ -82,6 +92,9 @@ export default class BoardFootballPlayer extends Phaser.GameObjects.Container {
       const changeToMakeShortPass = getRandomIntNumber(0, 100);
 
       switch (this.playerData.position) {
+        case "goalKeeper":
+          this.makePassAsGoalKeeper();
+          break;
         case "defender":
           changeToMakeShortPass > 50
             ? this.makeShortPass()
@@ -98,6 +111,40 @@ export default class BoardFootballPlayer extends Phaser.GameObjects.Container {
       setTimeout(() => {
         this.withBall = false;
       }, 500);
+    }
+  }
+
+  makePassAsGoalKeeper() {
+    if (this.playerData.who === "hostPlayer") {
+      const { x, y } = this.getAnotherFootballerPositions(
+        this.match.hostTeam.boardFootballPlayers.defenceColumn.footballers[
+          getRandomIntNumber(
+            0,
+            this.match.hostTeam.boardFootballPlayers.defenceColumn.footballers!
+              .length - 1
+          )
+        ]
+      );
+
+      this.match.ball.kick(200, {
+        x,
+        y,
+      });
+    } else {
+      const { x, y } = this.getAnotherFootballerPositions(
+        this.match.guestTeam.boardFootballPlayers.defenceColumn.footballers[
+          getRandomIntNumber(
+            0,
+            this.match.hostTeam.boardFootballPlayers.defenceColumn.footballers!
+              .length - 1
+          )
+        ]
+      );
+
+      this.match.ball.kick(200, {
+        x,
+        y,
+      });
     }
   }
 

@@ -41,9 +41,6 @@ export class Ball extends Phaser.Physics.Arcade.Image {
       -this.scene.game.canvas.width / 2,
       -this.scene.game.canvas.height / 2
     );
-
-    // this.stadium.add(this.emitter);
-    // this.stadium.moveAbove(this, this.emitter as Phaser.GameObjects.GameObject);
   }
 
   kick(speed: number, { x, y }: { x: number; y: number }) {
@@ -65,5 +62,25 @@ export class Ball extends Phaser.Physics.Arcade.Image {
       y: footballer.getBounds().centerY,
       duration: 200,
     });
+  }
+
+  startBlinkAnimation(callback: Function) {
+    this.scene.add.tween({
+      targets: this,
+      alpha: 0.3,
+      duration: 500,
+      repeat: 9,
+      onComplete: () => {
+        this.setAlpha(1);
+        callback();
+      },
+    });
+  }
+
+  reset() {
+    this.setPosition(
+      this.scene.game.canvas.width / 2,
+      this.scene.game.canvas.height / 2
+    );
   }
 }

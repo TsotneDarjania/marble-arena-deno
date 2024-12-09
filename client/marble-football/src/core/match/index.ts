@@ -106,7 +106,6 @@ export default class Match {
 
     setTimeout(() => {
       this.matchManager.startMatch();
-      this.stadium.goalSelebration("host");
     }, 1000);
   }
 
@@ -119,12 +118,19 @@ export default class Match {
     data: FootballPlayerData
   ) {
     footballer.setMatch = this;
-    footballer.addCollider();
     footballer.playerData = data;
+    footballer.addCollider();
   }
 
   setMatchInstanceForFootballers() {
     this.hostTeam.boardFootballPlayers.goalKeeper.setMatch = this;
+    this.setColliderAndDataToFootballers(
+      this.hostTeam.boardFootballPlayers.goalKeeper,
+      {
+        who: "hostPlayer",
+        position: "goalKeeper",
+      }
+    );
     this.hostTeam.boardFootballPlayers.defenceColumn.footballers.forEach(
       (footballer) => {
         this.setColliderAndDataToFootballers(footballer, {
@@ -157,6 +163,13 @@ export default class Match {
     );
 
     this.guestTeam.boardFootballPlayers.goalKeeper.setMatch = this;
+    this.setColliderAndDataToFootballers(
+      this.guestTeam.boardFootballPlayers.goalKeeper,
+      {
+        who: "guestPlayer",
+        position: "goalKeeper",
+      }
+    );
     this.guestTeam.boardFootballPlayers.defenceColumn.footballers.forEach(
       (footballer) => {
         this.setColliderAndDataToFootballers(footballer, {

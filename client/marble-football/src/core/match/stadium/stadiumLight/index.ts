@@ -65,7 +65,7 @@ export default class StadiumLight extends Phaser.GameObjects.Container {
       },
       duration: 700,
       yoyo: true,
-      repeat: 6,
+      repeat: 4,
       onComplete: () => {
         this.scene.tweens.add({
           targets: this,

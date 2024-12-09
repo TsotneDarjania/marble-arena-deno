@@ -22,4 +22,18 @@ export default class BoardGoalKeeper extends BoardFootballPlayer {
     // Start fom 50% of the duration
     this.tween.seek(calculatePercentage(50, 1000));
   }
+
+  stopMotion() {
+    this.tween?.pause();
+  }
+
+  reset() {
+    this.tween.destroy();
+
+    const x =
+      this.playerData.who === "hostPlayer"
+        ? -this.match.stadium.fieldWidth / 2 - this.displayWidth / 2
+        : this.match.stadium.fieldWidth / 2 - this.displayWidth / 2;
+    this.setPosition(x, 0);
+  }
 }

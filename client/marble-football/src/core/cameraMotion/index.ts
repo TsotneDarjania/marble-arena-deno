@@ -23,6 +23,16 @@ export default class CameraMotion {
     const closeCameraZoom = this.scene.cameras.main.zoom + 0.4;
 
     this.scene.events.on("update", () => {
+      if (this.scene.match.matchManager.matchStatus === "pause") {
+        this.scene.cameras.main.zoomTo(
+          defaultCameraZoom,
+          6000,
+          "Cubic.easeInOut"
+        );
+
+        return;
+      }
+
       if (ball.x > this.scene.game.canvas.width / 2 + 200) {
         this.scene.cameras.main.zoomTo(
           closeCameraZoom,

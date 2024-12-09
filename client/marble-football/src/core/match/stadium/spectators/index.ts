@@ -1,6 +1,7 @@
 import { Stadium } from "..";
 import GamePlay from "../../../../scenes/GamePlay";
 import SpectatorsGroup from "./spectatorsGroup";
+import { Events } from "phaser";
 
 export default class Spectators extends Phaser.GameObjects.Container {
   topSpectatorsContainer: Phaser.GameObjects.Container;
@@ -16,6 +17,8 @@ export default class Spectators extends Phaser.GameObjects.Container {
 
   hostTeamSpectators: Array<Phaser.GameObjects.Bob>;
   guestTeamSpectators: Array<Phaser.GameObjects.Bob>;
+
+  eventEmitter: Events.EventEmitter;
 
   constructor(public scene: GamePlay, public stadium: Stadium) {
     super(scene);
@@ -35,6 +38,8 @@ export default class Spectators extends Phaser.GameObjects.Container {
     this.addBottomLeftAngleSpectators();
     this.addLeftSpectators();
     this.addTopLeftAngleSpectators();
+
+    this.eventEmitter = new Events.EventEmitter();
   }
 
   addTopSpectators() {
@@ -306,7 +311,10 @@ export default class Spectators extends Phaser.GameObjects.Container {
       y: `-=15`,
       duration: 200,
       yoyo: true,
-      repeat: 25,
+      repeat: 18,
+      onComplete: () => {
+        this.eventEmitter.emit("FinishGoalSelebration", whoScored);
+      },
     });
   }
 }

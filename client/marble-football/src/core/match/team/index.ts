@@ -48,4 +48,12 @@ export default class Team {
   stopMotion() {
     this.boardFootballPlayers.stopMotion();
   }
+
+  public reset() {
+    this.boardFootballPlayers.defenceColumn.reset();
+    this.boardFootballPlayers.middleColumn.reset();
+    this.boardFootballPlayers.attackColumn.reset();
+
+    this.boardFootballPlayers.goalKeeper.reset();
+  }
 }
