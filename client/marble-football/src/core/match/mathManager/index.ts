@@ -1,4 +1,5 @@
 import Match from "..";
+import CanvasScene from "../../../scenes/CanvasScene";
 import { getRandomIntNumber } from "../../../utils/math";
 import Team from "../team";
 import BoardFootballPlayer from "../team/footballplayers/boardFootballPlayer";
@@ -7,6 +8,11 @@ export default class MatchManager {
   teamWhoHasBall: "hostTeam" | "guestTeam" = "hostTeam";
 
   matchStatus: "playing" | "pause" | "finish" = "playing";
+
+  hostScore = 0;
+  guestScore = 0;
+
+  someoneHasBall = false;
 
   constructor(public match: Match) {}
 
@@ -27,8 +33,8 @@ export default class MatchManager {
   addEventListeners() {
     this.match.stadium.spectators.eventEmitter.on(
       "FinishGoalSelebration",
-      (data: { whoScored: "host" | "guest" }) => {
-        this.resumeMatch(data.whoScored);
+      (whoScored: "host" | "guest") => {
+        this.resumeMatch(whoScored);
       }
     );
   }
@@ -106,8 +112,20 @@ export default class MatchManager {
 
     if (whoScored === "host") {
       this.match.stadium.goalSelebration("host");
+
+      this.hostScore++;
+      const canvasScene = this.match.scene.scene.get(
+        "CanvasScene"
+      ) as CanvasScene;
+      canvasScene.hostTeamScoretext.setText(this.hostScore.toString());
     } else {
       this.match.stadium.goalSelebration("guest");
+
+      this.guestScore++;
+      const canvasScene = this.match.scene.scene.get(
+        "CanvasScene"
+      ) as CanvasScene;
+      canvasScene.guestTeamScoretext.setText(this.guestScore.toString());
     }
 
     setTimeout(() => {
@@ -134,25 +152,52 @@ export default class MatchManager {
       this.match.hostTeam.startMotion();
       const footballers =
         this.match.guestTeam.boardFootballPlayers.middleColumn.footballers;
-      const { x, y } =
+      const choosenFootballer =
         footballers[getRandomIntNumber(0, footballers.length - 1)];
       this.match.ball.kick(200, {
-        x,
-        y,
+        x: choosenFootballer.getBounds().centerX,
+        y: choosenFootballer.getBounds().centerY,
       });
     } else {
       const footballers =
         this.match.hostTeam.boardFootballPlayers.middleColumn.footballers;
-      const { x, y } =
+      const choosenFootballer =
         footballers[getRandomIntNumber(0, footballers.length - 1)];
       this.match.ball.kick(200, {
-        x,
-        y,
+        x: choosenFootballer.getBounds().centerX,
+        y: choosenFootballer.getBounds().centerY,
       });
       this.match.guestTeam.startMotion();
     }
 
     this.match.hostTeam.boardFootballPlayers.goalKeeper.startMotion();
     this.match.guestTeam.boardFootballPlayers.goalKeeper.startMotion();
+  }
+
+  stopMatch(
+    reason:
+      | "haltTimeEnd"
+      | "fullTimeEnd"
+      | "firstExtratimeEnd"
+      | "secondExtraTimeEnd"
+  ) {
+    if (this.someoneHasBall === false) {
+      return;
+    }
+
+    this.matchStatus = "pause";
+
+    this.match.timer.stopTimer();
+
+    this.match.ball.stop();
+    this.match.hostTeam.stopMotion();
+    this.match.guestTeam.stopMotion();
+
+    this.match.hostTeam.boardFootballPlayers.goalKeeper.stopMotion();
+    this.match.guestTeam.boardFootballPlayers.goalKeeper.stopMotion();
+
+    switch (reason) {
+      case "haltTimeEnd":
+    }
   }
 }

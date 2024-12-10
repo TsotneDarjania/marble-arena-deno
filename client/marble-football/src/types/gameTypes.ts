@@ -14,6 +14,7 @@ export type GameConfigType = {
     | "new-style"
     | "marble-football"
     | "experimental";
+  withExtraTimes: boolean;
 };
 
 export type FootballPlayerData = {

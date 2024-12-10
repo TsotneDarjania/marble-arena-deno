@@ -215,9 +215,7 @@ export default class Match {
     this.hostTeam = new Team(
       this.scene,
       this.hostTeamData,
-      {
-        mode: this.gameConfig.mode,
-      },
+      this.gameConfig,
       this.stadium,
       "left"
     );
@@ -225,9 +223,7 @@ export default class Match {
     this.guestTeam = new Team(
       this.scene,
       this.guestTeamData,
-      {
-        mode: "board-football",
-      },
+      this.gameConfig,
       this.stadium,
       "right"
     );

@@ -33,7 +33,6 @@ export default class CanvasScene extends Phaser.Scene {
       .setTint(0x02010d)
       .setAlpha(0.6);
 
-    // Timer text
     this.timerText = this.add.text(this.game.canvas.width / 2, 83, "0", {
       fontSize: "25px",
       color: "#F3FFFF",
@@ -99,7 +98,7 @@ export default class CanvasScene extends Phaser.Scene {
       })
       .setOrigin(1, 0.5);
 
-    this.hostTeamScoretext = this.add
+    this.guestTeamScoretext = this.add
       .text(this.game.canvas.width / 2 + 50, 60, "0", {
         fontSize: "45px",
         color: "#E9FFFF",

@@ -53,6 +53,7 @@ export default class BoardFootballPlayer extends Phaser.GameObjects.Container {
     this.scene.physics.add.overlap(this.match.ball, this.image, () => {
       if (!this.withBall) {
         this.withBall = true;
+        this.match.matchManager.someoneHasBall = true;
         this.playerData.position === "goalKeeper"
           ? this.save()
           : this.takeBall();
@@ -86,6 +87,7 @@ export default class BoardFootballPlayer extends Phaser.GameObjects.Container {
   }
 
   makeDesition() {
+    if (this.match.matchManager.matchStatus !== "playing") return;
     this.selectorOff();
 
     if (this.match.matchManager.matchStatus === "playing") {
@@ -107,6 +109,8 @@ export default class BoardFootballPlayer extends Phaser.GameObjects.Container {
           this.shoot();
           break;
       }
+
+      this.match.matchManager.someoneHasBall = false;
 
       setTimeout(() => {
         this.withBall = false;

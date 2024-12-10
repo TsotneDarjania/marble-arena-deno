@@ -104,7 +104,7 @@ export class Column extends Phaser.GameObjects.Container {
 
   startMotion() {
     if (this.tween) {
-      this.tween.resume();
+      this.tween?.resume();
       return;
     }
 
@@ -125,7 +125,7 @@ export class Column extends Phaser.GameObjects.Container {
   }
 
   public reset() {
-    this.tween.destroy();
+    this.tween?.seek(calculatePercentage(50, 1000));
     this.setPosition(this.x, 0);
   }
 
