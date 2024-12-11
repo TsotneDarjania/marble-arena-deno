@@ -164,7 +164,7 @@ export default class MatchManager {
         this.resumeMatch("guest");
         this.match.timer.time = 45;
       }
-    }, 1000);
+    }, 3000);
   }
 
   // Resume Ufte Goal
@@ -205,11 +205,11 @@ export default class MatchManager {
       | "firstExtratimeEnd"
       | "secondExtraTimeEnd"
   ) {
-    this.matchTimeStatus = reason;
-
     if (this.someoneHasBall === false) {
       return;
     }
+
+    this.matchTimeStatus = reason;
 
     this.matchStatus = "pause";
 
