@@ -8,6 +8,12 @@ export default class MatchManager {
   teamWhoHasBall: "hostTeam" | "guestTeam" = "hostTeam";
 
   matchStatus: "playing" | "pause" | "finish" = "playing";
+  matchTimeStatus:
+    | "none"
+    | "haltTimeEnd"
+    | "fullTimeEnd"
+    | "firstExtratimeEnd"
+    | "secondExtraTimeEnd" = "none";
 
   hostScore = 0;
   guestScore = 0;
@@ -65,6 +71,11 @@ export default class MatchManager {
   }
 
   someoneTakeBall(footballer: BoardFootballPlayer) {
+    if (this.matchTimeStatus === "none" && this.match.timer.time >= 45) {
+      this.stopMatch("haltTimeEnd");
+      return;
+    }
+
     if (footballer.playerData.who === "hostPlayer") {
       this.match.hostTeam.stopMotion();
       this.match.guestTeam.startMotion();
@@ -143,6 +154,19 @@ export default class MatchManager {
     this.match.guestTeam.reset();
   }
 
+  resetUfterTimeEnd() {
+    this.match.ball.reset();
+    this.match.hostTeam.reset();
+    this.match.guestTeam.reset();
+
+    setTimeout(() => {
+      if (this.matchTimeStatus === "haltTimeEnd") {
+        this.resumeMatch("guest");
+        this.match.timer.time = 45;
+      }
+    }, 1000);
+  }
+
   // Resume Ufte Goal
   resumeMatch(whoScored: "host" | "guest") {
     this.match.timer.resumeTimer();
@@ -181,6 +205,8 @@ export default class MatchManager {
       | "firstExtratimeEnd"
       | "secondExtraTimeEnd"
   ) {
+    this.matchTimeStatus = reason;
+
     if (this.someoneHasBall === false) {
       return;
     }
@@ -196,8 +222,23 @@ export default class MatchManager {
     this.match.hostTeam.boardFootballPlayers.goalKeeper.stopMotion();
     this.match.guestTeam.boardFootballPlayers.goalKeeper.stopMotion();
 
+    this.match.hostTeam.footballers.forEach((f) => {
+      f.selectorOff();
+    });
+    this.match.guestTeam.footballers.forEach((f) => {
+      f.selectorOff();
+    });
+
     switch (reason) {
       case "haltTimeEnd":
+        setTimeout(() => {
+          this.resetUfterTimeEnd();
+        }, 1500);
+        break;
+      case "fullTimeEnd":
+        setTimeout(() => {
+          this.resetUfterTimeEnd();
+        }, 1500);
     }
   }
 }

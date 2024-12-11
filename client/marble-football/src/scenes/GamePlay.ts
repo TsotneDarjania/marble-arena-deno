@@ -15,7 +15,7 @@ export default class GamePlay extends Phaser.Scene {
   create() {
     // Change the fixedStep to true to make the physics simulation more smooth
     this.physics.world.fixedStep = true;
-    this.physics.world.setFPS(150);
+    this.physics.world.setFPS(4500);
     // Run Canvas Scene simultaneously
     this.scene.launch("CanvasScene");
 

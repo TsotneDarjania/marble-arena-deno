@@ -2,9 +2,11 @@ import GamePlay from "../../../scenes/GamePlay";
 import { GameConfigType, TeamDataType } from "../../../types/gameTypes";
 import { Stadium } from "../stadium";
 import BoardFootballPlayers from "./core/boardFootballPlayers";
+import BoardFootballPlayer from "./footballplayers/boardFootballPlayer";
 
 export default class Team {
   boardFootballPlayers: BoardFootballPlayers;
+  footballers: BoardFootballPlayer[] = [];
 
   constructor(
     public scene: GamePlay,
@@ -18,6 +20,12 @@ export default class Team {
 
   private init() {
     this.addPlayers();
+    this.footballers.push(
+      ...this.boardFootballPlayers.defenceColumn.footballers,
+      ...this.boardFootballPlayers.middleColumn.footballers,
+      ...this.boardFootballPlayers.attackColumn.footballers,
+      this.boardFootballPlayers.goalKeeper
+    );
   }
 
   private addPlayers() {

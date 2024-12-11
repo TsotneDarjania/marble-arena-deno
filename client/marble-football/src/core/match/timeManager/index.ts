@@ -27,8 +27,17 @@ export default class TimeManager {
     const canvasScene = this.scene.scene.get("CanvasScene") as CanvasScene;
     canvasScene.timerText.setText(this.time.toString());
 
-    if (this.time >= 45) {
+    if (this.time >= 45 && this.match.matchManager.matchTimeStatus === "none") {
       this.match.matchManager.stopMatch("haltTimeEnd");
+      return;
+    }
+
+    if (
+      this.time >= 90 &&
+      this.match.matchManager.matchTimeStatus === "fullTimeEnd"
+    ) {
+      this.match.matchManager.stopMatch("fullTimeEnd");
+      return;
     }
   }
 
