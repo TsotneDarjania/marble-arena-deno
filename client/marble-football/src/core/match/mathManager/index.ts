@@ -159,10 +159,24 @@ export default class MatchManager {
     this.match.hostTeam.reset();
     this.match.guestTeam.reset();
 
+    this.match.hostTeam.footballers.forEach((f) => {
+      f.selectorOff();
+      f.withBall = false;
+    });
+    this.match.guestTeam.footballers.forEach((f) => {
+      f.selectorOff();
+      f.withBall = false;
+    });
+
     setTimeout(() => {
       if (this.matchTimeStatus === "haltTimeEnd") {
         this.resumeMatch("guest");
         this.match.timer.time = 45;
+
+        const cavnasScene = this.match.scene.scene.get(
+          "CanvasScene"
+        ) as CanvasScene;
+        cavnasScene.timerText.setText("45");
       }
     }, 3000);
   }
@@ -224,9 +238,11 @@ export default class MatchManager {
 
     this.match.hostTeam.footballers.forEach((f) => {
       f.selectorOff();
+      f.withBall = false;
     });
     this.match.guestTeam.footballers.forEach((f) => {
       f.selectorOff();
+      f.withBall = false;
     });
 
     switch (reason) {

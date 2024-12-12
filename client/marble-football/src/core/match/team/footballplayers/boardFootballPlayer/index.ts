@@ -10,7 +10,7 @@ export default class BoardFootballPlayer extends Phaser.GameObjects.Container {
   image: Phaser.Physics.Arcade.Image;
   selector: Phaser.GameObjects.Image;
   match: Match;
-
+ 
   withBall = false;
 
   playerData: FootballPlayerData;
