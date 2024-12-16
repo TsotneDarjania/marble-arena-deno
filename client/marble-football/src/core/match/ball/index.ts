@@ -20,7 +20,7 @@ export class Ball extends Phaser.Physics.Arcade.Image {
 
     // Enable physics properties
     this.setBounce(0.8);
-    this.setCollideWorldBounds(true);
+    // this.setCollideWorldBounds(true);
     this.addParticles();
 
     this.setDepth(11);

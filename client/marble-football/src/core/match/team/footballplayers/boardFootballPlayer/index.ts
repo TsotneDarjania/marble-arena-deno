@@ -1,3 +1,4 @@
+import { Tweens } from "phaser";
 import Match from "../../..";
 import GamePlay from "../../../../../scenes/GamePlay";
 import {
@@ -10,10 +11,20 @@ export default class BoardFootballPlayer extends Phaser.GameObjects.Container {
   image: Phaser.Physics.Arcade.Image;
   selector: Phaser.GameObjects.Image;
   match: Match;
- 
+
+  freeKickTween: Tweens.Tween;
+
   withBall = false;
 
   playerData: FootballPlayerData;
+
+  isFreeKickBehaviour = false;
+
+  isDeactive = false;
+
+  isFreeKick = false;
+
+  isFreeKickShooter = false;
 
   constructor(
     scene: GamePlay,
@@ -49,10 +60,30 @@ export default class BoardFootballPlayer extends Phaser.GameObjects.Container {
     this.add(this.selector);
   }
 
+  saveFreeKickShoot(playerData: FootballPlayerData) {
+    this.match.matchManager.freeKick.saveFreeKick(
+      playerData.who === "hostPlayer" ? "host" : "guest"
+    );
+  }
+
   addCollider() {
     this.scene.physics.add.overlap(this.match.ball, this.image, () => {
+      if (this.isFreeKickShooter) {
+        this.shoot();
+      }
+      if (this.isFreeKick) {
+        this.saveFreeKickShoot(this.playerData);
+        this.isFreeKick = false;
+        return;
+      }
+      if (this.isDeactive) return;
       if (!this.withBall) {
         this.withBall = true;
+        if (this.isFreeKickBehaviour)
+          this.match.matchManager.prepareFreeKick(
+            this.playerData.position,
+            this.playerData.who
+          );
         this.playerData.position === "goalKeeper"
           ? this.save()
           : this.takeBall();
@@ -65,6 +96,15 @@ export default class BoardFootballPlayer extends Phaser.GameObjects.Container {
   }
 
   save() {
+    if (this.playerData.who === "guestPlayer") {
+      this.match.guestTeam.footballers.forEach((f) => {
+        f.stopFreeKickBehaviour();
+      });
+      this.match.hostTeam.footballers.forEach((f) => {
+        f.stopFreeKickBehaviour();
+      });
+    }
+
     if (this.match.matchManager.matchStatus !== "playing") return;
     this.match.matchManager.someoneHasBall = true;
 
@@ -189,6 +229,7 @@ export default class BoardFootballPlayer extends Phaser.GameObjects.Container {
   }
 
   shoot() {
+    this.isFreeKickShooter = false;
     let x = 0;
     let y =
       this.match.hostTeam.boardFootballPlayers.goalKeeper.getBounds().centerY;
@@ -227,5 +268,44 @@ export default class BoardFootballPlayer extends Phaser.GameObjects.Container {
       alpha: 0,
       duration: 200,
     });
+  }
+
+  public startFreeKickBehaviour() {
+    if (this.isFreeKickBehaviour) return;
+
+    this.isFreeKickBehaviour = true;
+    this.selector.setTint(0xeb1611);
+
+    this.image.alpha = 0.5;
+
+    this.freeKickTween = this.scene.add.tween({
+      targets: this.selector,
+      alpha: 1,
+      duration: 400,
+      repeat: 8,
+      yoyo: true,
+      onComplete: () => {
+        this.stopFreeKickBehaviour();
+      },
+    });
+  }
+
+  stopFreeKickBehaviour() {
+    this.isFreeKickBehaviour = false;
+    this.selector.setTint(0x48f526);
+    this.selector.setAlpha(0);
+    this.image.alpha = 1;
+
+    this.freeKickTween?.destroy();
+  }
+
+  deactive() {
+    this.setAlpha(0);
+    this.isDeactive = true;
+  }
+
+  activate() {
+    this.setAlpha(1);
+    this.isDeactive = false;
   }
 }

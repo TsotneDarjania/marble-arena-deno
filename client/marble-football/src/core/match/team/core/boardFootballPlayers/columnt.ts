@@ -1,7 +1,10 @@
 import { Tweens } from "phaser";
 import GamePlay from "../../../../../scenes/GamePlay";
 import { TeamDataType } from "../../../../../types/gameTypes";
-import { calculatePercentage } from "../../../../../utils/math";
+import {
+  calculatePercentage,
+  getRandomIntNumber,
+} from "../../../../../utils/math";
 import { Stadium } from "../../../stadium";
 import BoardFootballPlayer from "../../footballplayers/boardFootballPlayer";
 
@@ -102,9 +105,18 @@ export class Column extends Phaser.GameObjects.Container {
     }
   }
 
-  startMotion() {
+  startMotion(blockFreeKickBehaviour: boolean = false) {
     if (this.tween) {
       this.tween?.resume();
+
+      if (blockFreeKickBehaviour) return;
+      // Calculate Free Kick Possibility
+      if (getRandomIntNumber(0, 100) > 30) {
+        this.footballers[
+          getRandomIntNumber(0, this.footballers.length - 1)
+        ].startFreeKickBehaviour();
+      }
+
       return;
     }
 
@@ -127,6 +139,11 @@ export class Column extends Phaser.GameObjects.Container {
   public reset() {
     this.tween?.seek(calculatePercentage(50, 1000));
     this.setPosition(this.x, 0);
+
+    this.footballers.forEach((f) => {
+      f.activate();
+      f.isFreeKick = false;
+    });
   }
 
   set distance(distance: number) {

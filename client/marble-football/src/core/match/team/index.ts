@@ -64,4 +64,16 @@ export default class Team {
 
     this.boardFootballPlayers.goalKeeper.reset();
   }
+
+  hideTeam() {
+    this.footballers.forEach((f) => {
+      f.deactive();
+    });
+  }
+
+  showTeam() {
+    this.footballers.forEach((f) => {
+      f.activate();
+    });
+  }
 }
