@@ -57,7 +57,7 @@ export class FreeKickFootballer extends Phaser.GameObjects.Container {
 
       this.role === "wallPlayer"
         ? this.save()
-        : this.match.matchManager.freeKick.shoot();
+        : this.match.matchManager.freeKick!.shoot();
 
       this.alreadyShoot = true;
     });
@@ -80,6 +80,6 @@ export class FreeKickFootballer extends Phaser.GameObjects.Container {
   }
 
   save() {
-    this.match.matchManager.freeKick.saveFreeKick(this.who);
+    this.match.matchManager.freeKick!.saveFreeKick();
   }
 }

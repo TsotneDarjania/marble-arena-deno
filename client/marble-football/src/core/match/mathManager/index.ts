@@ -1,7 +1,8 @@
 import Match from "..";
 import CanvasScene from "../../../scenes/CanvasScene";
 import { getRandomIntNumber } from "../../../utils/math";
-import { FreeKick } from "../matchEvents/kick";
+import { FreeKick } from "../matchEvents/freeKick";
+import { Penalty } from "../matchEvents/penalty";
 import Team from "../team";
 import BoardFootballPlayer from "../team/footballplayers/boardFootballPlayer";
 
@@ -21,7 +22,8 @@ export default class MatchManager {
 
   someoneHasBall = false;
 
-  freeKick: FreeKick;
+  freeKick?: FreeKick;
+  penalty!: Penalty;
 
   isGoalSelebration = false;
 
@@ -197,6 +199,7 @@ export default class MatchManager {
 
   resumeMatchUfterKFreeKickOrPenalty(whoWillStart: "host" | "guest") {
     this.freeKick?.destroy();
+    this.freeKick = undefined;
     this.match.timer.resumeTimer();
     this.matchStatus = "playing";
 
@@ -389,7 +392,12 @@ export default class MatchManager {
     }, 2000);
   }
 
-  makePenalty(who: "unkown" | "hostPlayer" | "guestPlayer") {}
+  makePenalty(who: "unkown" | "hostPlayer" | "guestPlayer") {
+    this.penalty = new Penalty(
+      this.match,
+      who === "hostPlayer" ? "host" : "guest"
+    );
+  }
 
   makeFreeKick(
     who: "unkown" | "hostPlayer" | "guestPlayer",

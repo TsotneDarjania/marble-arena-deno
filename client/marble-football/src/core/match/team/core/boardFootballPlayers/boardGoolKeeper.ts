@@ -11,6 +11,11 @@ export default class BoardGoalKeeper extends BoardFootballPlayer {
   }
 
   startMotion() {
+    if (this.tween) {
+      this.tween?.resume();
+      return;
+    }
+
     this.tween = this.scene.tweens.add({
       targets: this,
       y: { from: -55, to: 46 },
@@ -28,7 +33,7 @@ export default class BoardGoalKeeper extends BoardFootballPlayer {
   }
 
   reset() {
-    this.tween.destroy();
+    this.tween?.reset();
 
     const x =
       this.playerData.who === "hostPlayer"

@@ -7,6 +7,8 @@ export class FreeKick {
   shooterFootballer: FreeKickFootballer;
   wallPlayerTween: Tweens.Tween;
 
+  isAlreadySavedKick = false;
+
   wallPlayer: FreeKickFootballer;
   constructor(
     public match: Match,
@@ -17,6 +19,12 @@ export class FreeKick {
       | "middfielder"
       | "attacker"
   ) {
+    this.wallPlayerTween = match.scene.add.tween({
+      targets: this,
+    });
+
+    this.wallPlayerTween.pause();
+
     match.hostTeam.footballers.forEach((f) => {
       f.stopFreeKickBehaviour();
     });
@@ -169,7 +177,10 @@ export class FreeKick {
     }
   }
 
-  saveFreeKick(whoSaved: "host" | "guest") {
+  saveFreeKick() {
+    if (this.isAlreadySavedKick) return;
+    this.isAlreadySavedKick = true;
+
     this.match.ball.stop();
 
     this.wallPlayerTween?.pause();

@@ -60,10 +60,8 @@ export default class BoardFootballPlayer extends Phaser.GameObjects.Container {
     this.add(this.selector);
   }
 
-  saveFreeKickShoot(playerData: FootballPlayerData) {
-    this.match.matchManager.freeKick.saveFreeKick(
-      playerData.who === "hostPlayer" ? "host" : "guest"
-    );
+  saveFreeKickShoot() {
+    this.match.matchManager.freeKick!.saveFreeKick();
   }
 
   addCollider() {
@@ -72,7 +70,7 @@ export default class BoardFootballPlayer extends Phaser.GameObjects.Container {
         this.shoot();
       }
       if (this.isFreeKick) {
-        this.saveFreeKickShoot(this.playerData);
+        this.saveFreeKickShoot();
         this.isFreeKick = false;
         return;
       }

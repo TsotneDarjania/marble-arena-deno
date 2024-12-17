@@ -27,6 +27,10 @@ export default class CollisionDetector {
       [...this.match.stadium.stadiumColliders.borderColliders],
       () => {
         console.log("Stadium Border Detect");
+
+        if (this.match.matchManager.freeKick !== undefined) {
+          this.match.matchManager.freeKick.saveFreeKick();
+        }
       }
     );
   }
