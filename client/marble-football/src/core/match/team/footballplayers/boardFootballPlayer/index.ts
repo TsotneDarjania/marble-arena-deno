@@ -24,6 +24,8 @@ export default class BoardFootballPlayer extends Phaser.GameObjects.Container {
 
   isFreeKick = false;
 
+  isPenalty = false;
+
   isFreeKickShooter = false;
 
   constructor(
@@ -72,6 +74,11 @@ export default class BoardFootballPlayer extends Phaser.GameObjects.Container {
       if (this.isFreeKick) {
         this.saveFreeKickShoot();
         this.isFreeKick = false;
+        return;
+      }
+      if (this.isPenalty) {
+        this.match.matchManager.penalty!.savePenalty();
+        this.isPenalty = false;
         return;
       }
       if (this.isDeactive) return;

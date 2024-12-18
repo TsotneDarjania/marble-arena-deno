@@ -23,7 +23,7 @@ export default class MatchManager {
   someoneHasBall = false;
 
   freeKick?: FreeKick;
-  penalty!: Penalty;
+  penalty?: Penalty;
 
   isGoalSelebration = false;
 
@@ -165,12 +165,31 @@ export default class MatchManager {
   }
 
   resetUfterGoal() {
+    if (this.penalty !== undefined) {
+      this.penalty.destoy();
+      this.penalty = undefined;
+    }
+
+    this.match.hostTeam.footballers.forEach((f) => {
+      f.stopFreeKickBehaviour();
+    });
+    this.match.guestTeam.footballers.forEach((f) => {
+      f.stopFreeKickBehaviour();
+    });
+
     this.match.ball.reset();
     this.match.hostTeam.reset();
     this.match.guestTeam.reset();
   }
 
   resetUfterTimeEnd() {
+    this.match.hostTeam.footballers.forEach((f) => {
+      f.stopFreeKickBehaviour();
+    });
+    this.match.guestTeam.footballers.forEach((f) => {
+      f.stopFreeKickBehaviour();
+    });
+
     this.match.ball.reset();
     this.match.hostTeam.reset();
     this.match.guestTeam.reset();
@@ -202,6 +221,9 @@ export default class MatchManager {
     this.freeKick = undefined;
     this.match.timer.resumeTimer();
     this.matchStatus = "playing";
+
+    this.penalty?.destoy();
+    this.penalty = undefined;
 
     this.isGoalSelebration = false;
     this.match.hostTeam.boardFootballPlayers.goalKeeper.activate();
