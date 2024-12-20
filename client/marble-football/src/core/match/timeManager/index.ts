@@ -32,6 +32,8 @@ export default class TimeManager {
       return;
     }
 
+    console.log(this.match.matchManager.matchTimeStatus);
+
     if (
       this.time >= 90 &&
       this.match.matchManager.matchTimeStatus === "fullTimeEnd"

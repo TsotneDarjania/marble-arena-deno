@@ -82,6 +82,10 @@ export default class MatchManager {
       this.stopMatch("haltTimeEnd");
       return;
     }
+    if (this.matchTimeStatus === "haltTimeEnd" && this.match.timer.time >= 90) {
+      this.stopMatch("fullTimeEnd");
+      return;
+    }
 
     if (footballer.playerData.who === "hostPlayer") {
       this.match.hostTeam.stopMotion();
@@ -205,13 +209,26 @@ export default class MatchManager {
 
     setTimeout(() => {
       if (this.matchTimeStatus === "haltTimeEnd") {
-        // this.resumeMatch("guest");
+        this.resumeMatch("guest");
         this.match.timer.time = 45;
 
         const cavnasScene = this.match.scene.scene.get(
           "CanvasScene"
         ) as CanvasScene;
         cavnasScene.timerText.setText("45");
+      }
+      if (this.matchTimeStatus === "fullTimeEnd") {
+        // this.resumeMatch("guest");
+
+        if (this.match.gameConfig.withExtraTimes) {
+          this.resumeMatch("host");
+        }
+        this.match.timer.time = 90;
+
+        const cavnasScene = this.match.scene.scene.get(
+          "CanvasScene"
+        ) as CanvasScene;
+        cavnasScene.timerText.setText("90");
       }
     }, 3000);
   }

@@ -11,6 +11,7 @@ const matchConfig = {
     logoKey: "manchester-city",
     formation: "4-4-2",
   },
+  withExtraTimes: false,
 };
 
 export default matchConfig;
