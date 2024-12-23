@@ -68,6 +68,22 @@ export default class BoardFootballPlayer extends Phaser.GameObjects.Container {
 
   addCollider() {
     this.scene.physics.add.overlap(this.match.ball, this.image, () => {
+      if (this.playerData.position === "goalKeeper") {
+        if (this.match.matchManager.isCorner) {
+          this.match.ball.stop();
+          this.match.hostTeam.boardFootballPlayers.goalKeeper.stopMotion();
+          this.match.guestTeam.boardFootballPlayers.goalKeeper.stopMotion();
+
+          setTimeout(() => {
+            this.match.matchManager.resumeMatchUfterKFreeKickOrPenalty(
+              this.playerData.who === "guestPlayer" ? "host" : "guest"
+            );
+          }, 1000);
+        }
+      }
+
+      if (this.match.matchManager.ballGoesForCorner) return;
+
       if (this.isFreeKickShooter) {
         this.shoot();
       }
@@ -123,6 +139,30 @@ export default class BoardFootballPlayer extends Phaser.GameObjects.Container {
     this.match.matchManager.someoneHasBall = true;
     if (this.match.matchManager.matchStatus !== "playing") return;
 
+    // Corner Possibility
+    if (this.playerData.position === "defender") {
+      let cornerIsPossible = true;
+
+      if (this.playerData.who === "hostPlayer") {
+        if (this.match.ball.getBounds().centerX < this.getBounds().centerX) {
+          cornerIsPossible = false;
+        }
+      } else {
+        if (this.match.ball.getBounds().centerX > this.getBounds().centerX) {
+          cornerIsPossible = false;
+        }
+      }
+
+      if (cornerIsPossible) {
+        const isCorner = getRandomIntNumber(0, 100) > 0 ? true : false;
+        if (isCorner) {
+          this.match.matchManager.ballGoesForCorner = true;
+          this.shootBallToCorner();
+          return;
+        }
+      }
+    }
+
     this.selectorOnn();
 
     this.match.ball.stop();
@@ -133,6 +173,34 @@ export default class BoardFootballPlayer extends Phaser.GameObjects.Container {
     setTimeout(() => {
       this.makeDesition();
     }, 300);
+  }
+
+  shootBallToCorner() {
+    let x = 0;
+    let y = 0;
+
+    this.match.hostTeam.footballers.map((f) => {
+      f.stopFreeKickBehaviour();
+    });
+    this.match.guestTeam.footballers.map((f) => {
+      f.stopFreeKickBehaviour();
+    });
+
+    if (this.playerData.who === "hostPlayer") {
+      x =
+        this.match.hostTeam.boardFootballPlayers.goalKeeper.getBounds().centerX;
+    } else {
+      x =
+        this.match.guestTeam.boardFootballPlayers.goalKeeper.getBounds()
+          .centerX;
+    }
+
+    y = this.scene.game.canvas.height / 2;
+
+    const randomY = getRandomIntNumber(200, 230);
+    getRandomIntNumber(0, 100) >= 50 ? (y += randomY) : (y -= randomY);
+
+    this.match.ball.kick(160, { x, y });
   }
 
   makeDesition() {
@@ -287,7 +355,7 @@ export default class BoardFootballPlayer extends Phaser.GameObjects.Container {
       targets: this.selector,
       alpha: 1,
       duration: 400,
-      repeat: 8,
+      repeat: 5,
       yoyo: true,
       onComplete: () => {
         this.stopFreeKickBehaviour();

@@ -33,7 +33,9 @@ export default class BoardGoalKeeper extends BoardFootballPlayer {
   }
 
   reset() {
-    this.tween?.reset();
+    if (this.tween) {
+      this.tween.seek(calculatePercentage(50, 1000));
+    }
 
     const x =
       this.playerData.who === "hostPlayer"

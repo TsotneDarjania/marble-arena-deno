@@ -1,6 +1,7 @@
 import Match from "..";
 import CanvasScene from "../../../scenes/CanvasScene";
 import { getRandomIntNumber } from "../../../utils/math";
+import { Corner } from "../matchEvents/corner";
 import { FreeKick } from "../matchEvents/freeKick";
 import { Penalty } from "../matchEvents/penalty";
 import Team from "../team";
@@ -24,8 +25,13 @@ export default class MatchManager {
 
   freeKick?: FreeKick;
   penalty?: Penalty;
+  corner?: Corner;
 
   isGoalSelebration = false;
+
+  ballGoesForCorner = false;
+
+  isCorner = false;
 
   constructor(public match: Match) {}
 
@@ -73,6 +79,21 @@ export default class MatchManager {
     team.startMotion();
   }
 
+  makeCorner() {
+    if (this.ballGoesForCorner === false) return;
+
+    this.match.ball.stop();
+    this.matchPause();
+
+    this.match.hostTeam.hideTeam();
+    this.match.guestTeam.hideTeam();
+
+    setTimeout(() => {
+      this.corner = new Corner(this.match);
+      this.ballGoesForCorner = false;
+    }, 2000);
+  }
+
   startTimer() {
     this.match.timer.startTimer();
   }
@@ -105,7 +126,7 @@ export default class MatchManager {
         this.match.ball.x >
         this.match.guestTeam.boardFootballPlayers.goalKeeper.getBounds()
           .centerX +
-          10
+          16
       ) {
         this.isGoal("host");
       }
@@ -114,7 +135,7 @@ export default class MatchManager {
         this.match.ball.x <
         this.match.hostTeam.boardFootballPlayers.goalKeeper.getBounds()
           .centerX -
-          10
+          16
       ) {
         this.isGoal("guest");
       }
@@ -169,6 +190,8 @@ export default class MatchManager {
   }
 
   resetUfterGoal() {
+    this.match.collisionDetector.onceForCorner = true;
+    this.ballGoesForCorner = false;
     if (this.penalty !== undefined) {
       this.penalty.destoy();
       this.penalty = undefined;
@@ -187,6 +210,10 @@ export default class MatchManager {
   }
 
   resetUfterTimeEnd() {
+    this.match.collisionDetector.onceForCorner = true;
+
+    this.ballGoesForCorner = false;
+
     this.match.hostTeam.footballers.forEach((f) => {
       f.stopFreeKickBehaviour();
     });
@@ -238,6 +265,9 @@ export default class MatchManager {
     this.freeKick = undefined;
     this.match.timer.resumeTimer();
     this.matchStatus = "playing";
+    this.isCorner = false;
+    this.corner?.destroy();
+    this.corner = undefined;
 
     this.penalty?.destoy();
     this.penalty = undefined;

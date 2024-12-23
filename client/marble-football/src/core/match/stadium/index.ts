@@ -74,7 +74,7 @@ export class Stadium extends Phaser.GameObjects.Container {
       "stadiumSurrounding"
     );
 
-    stadiumSurrounding.setTint(0x06211f);
+    stadiumSurrounding.setTint(0x07211b);
     this.add(stadiumSurrounding);
   }
 

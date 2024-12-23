@@ -111,7 +111,7 @@ export class Column extends Phaser.GameObjects.Container {
 
       if (blockFreeKickBehaviour) return;
       // Calculate Free Kick Possibility
-      if (getRandomIntNumber(0, 100) > 90) {
+      if (getRandomIntNumber(0, 100) > 96) {
         this.footballers[
           getRandomIntNumber(0, this.footballers.length - 1)
         ].startFreeKickBehaviour();
