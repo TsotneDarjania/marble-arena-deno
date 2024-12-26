@@ -75,9 +75,12 @@ export default class BoardFootballPlayer extends Phaser.GameObjects.Container {
           this.match.guestTeam.boardFootballPlayers.goalKeeper.stopMotion();
 
           setTimeout(() => {
-            this.match.matchManager.resumeMatchUfterKFreeKickOrPenalty(
-              this.playerData.who === "guestPlayer" ? "host" : "guest"
-            );
+            if (this.match.matchManager.isCorner) {
+              this.match.matchManager.isCorner = false;
+              this.match.matchManager.resumeMatchUfterKFreeKickOrPenalty(
+                this.playerData.who === "guestPlayer" ? "guest" : "host"
+              );
+            }
           }, 1000);
         }
       }
@@ -154,7 +157,7 @@ export default class BoardFootballPlayer extends Phaser.GameObjects.Container {
       }
 
       if (cornerIsPossible) {
-        const isCorner = getRandomIntNumber(0, 100) > 0 ? true : false;
+        const isCorner = getRandomIntNumber(0, 100) > 80 ? true : false;
         if (isCorner) {
           this.match.matchManager.ballGoesForCorner = true;
           this.shootBallToCorner();

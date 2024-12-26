@@ -121,11 +121,13 @@ export class Corner {
       this.deffender,
       () => {
         if (once) {
-          once = true;
           this.match.ball.stop();
-
           setTimeout(() => {
-            this.reset();
+            if (once) {
+              console.log("RESET UFTER DEFFENDER");
+              once = false;
+              this.reset();
+            }
           }, 1600);
         }
       }
@@ -140,9 +142,10 @@ export class Corner {
         : this.match.hostTeamData.logoKey
     );
 
+    let once_2 = true;
     this.match.scene.physics.add.overlap(this.match.ball, this.attacker, () => {
-      if (once) {
-        once = true;
+      if (once_2) {
+        once_2 = false;
         let x = 0;
         let y =
           this.match.hostTeam.boardFootballPlayers.goalKeeper.getBounds()
@@ -222,6 +225,9 @@ export class Corner {
   }
 
   reset() {
+    this.attacker.destroy();
+    this.deffender.destroy();
+
     this.match.ball.stop();
     this.match.hostTeam.boardFootballPlayers.goalKeeper.stopMotion();
     this.match.guestTeam.boardFootballPlayers.goalKeeper.stopMotion();

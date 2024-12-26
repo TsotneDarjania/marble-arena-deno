@@ -40,7 +40,7 @@ export default class GamePlay extends Phaser.Scene {
       },
       {
         mode: "board-football",
-        withExtraTimes: false,
+        withExtraTimes: true,
       }
     );
   }

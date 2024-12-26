@@ -104,7 +104,15 @@ export default class MatchManager {
       return;
     }
     if (this.matchTimeStatus === "haltTimeEnd" && this.match.timer.time >= 90) {
+      console.log("ME Davamtavre");
       this.stopMatch("fullTimeEnd");
+      return;
+    }
+    if (
+      this.matchTimeStatus === "firstExtratimeEnd" &&
+      this.match.timer.time >= 105
+    ) {
+      this.stopMatch("firstExtratimeEnd");
       return;
     }
 
@@ -236,7 +244,7 @@ export default class MatchManager {
 
     setTimeout(() => {
       if (this.matchTimeStatus === "haltTimeEnd") {
-        this.resumeMatch("guest");
+        this.resumeMatch("host");
         this.match.timer.time = 45;
 
         const cavnasScene = this.match.scene.scene.get(
@@ -248,7 +256,7 @@ export default class MatchManager {
         // this.resumeMatch("guest");
 
         if (this.match.gameConfig.withExtraTimes) {
-          this.resumeMatch("host");
+          this.resumeMatch("guest");
         }
         this.match.timer.time = 90;
 
@@ -354,6 +362,9 @@ export default class MatchManager {
   resumeMatch(whoScored: "host" | "guest") {
     this.match.timer.resumeTimer();
     this.matchStatus = "playing";
+
+    this.isCorner = false;
+    this.corner?.destroy();
 
     this.match.hostTeam.footballers.forEach((f) => {
       f.activate();

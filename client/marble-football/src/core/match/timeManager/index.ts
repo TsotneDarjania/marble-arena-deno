@@ -5,6 +5,9 @@ export default class TimeManager {
   time: number = 0;
   timerEvent: Phaser.Time.TimerEvent;
 
+  fullTimeisAlreadyEnd = false;
+  firstExtraTimeIsAlreadyEnd = false;
+
   constructor(public match: Match, public scene: Phaser.Scene) {
     this.init();
   }
@@ -36,9 +39,21 @@ export default class TimeManager {
 
     if (
       this.time >= 90 &&
-      this.match.matchManager.matchTimeStatus === "fullTimeEnd"
+      this.match.matchManager.matchTimeStatus === "fullTimeEnd" &&
+      this.fullTimeisAlreadyEnd === false
     ) {
       this.match.matchManager.stopMatch("fullTimeEnd");
+      this.fullTimeisAlreadyEnd = true;
+      return;
+    }
+
+    if (
+      this.time >= 105 &&
+      this.match.matchManager.matchTimeStatus === "fullTimeEnd" &&
+      this.firstExtraTimeIsAlreadyEnd === false
+    ) {
+      this.match.matchManager.stopMatch("firstExtratimeEnd");
+      this.firstExtraTimeIsAlreadyEnd = true;
       return;
     }
   }
