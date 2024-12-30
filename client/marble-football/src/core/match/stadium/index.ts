@@ -48,7 +48,7 @@ export class Stadium extends Phaser.GameObjects.Container {
       this.scene.game.canvas.height / 2,
       "stadiumBck"
     );
-    stadiumBck.setTint(0x9fa7ab);
+    stadiumBck.setTint(0x01010a);
     stadiumBck.setScale(0.8);
   }
 
@@ -74,7 +74,7 @@ export class Stadium extends Phaser.GameObjects.Container {
       "stadiumSurrounding"
     );
 
-    stadiumSurrounding.setTint(0x07211b);
+    stadiumSurrounding.setTint(0x074a7a);
     this.add(stadiumSurrounding);
   }
 
@@ -120,6 +120,18 @@ export class Stadium extends Phaser.GameObjects.Container {
     this.light7.makeAnimation(false);
 
     this.spectators.goalSelebration(team);
+  }
+
+  shortGoalSelebration(team: "host" | "guest") {
+    // this.light1.makeAnimation(false);
+    // this.light2.makeAnimation(false);
+    // this.light3.makeAnimation(false);
+    // this.light4.makeAnimation(true);
+    // this.light5.makeAnimation(false);
+    // this.light6.makeAnimation(true);
+    // this.light7.makeAnimation(false);
+
+    this.spectators.shortGoalSelebration(team);
   }
 
   addColliders() {

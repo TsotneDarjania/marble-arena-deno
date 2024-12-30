@@ -188,7 +188,7 @@ export class Corner {
             : this.match.guestTeam.boardFootballPlayers.goalKeeper.getBounds()
                 .x - getRandomIntNumber(70, 200),
       },
-      duration: 1400,
+      duration: 700,
       ease: Phaser.Math.Easing.Quadratic.InOut,
     });
 

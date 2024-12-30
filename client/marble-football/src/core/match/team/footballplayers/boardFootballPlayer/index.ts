@@ -120,6 +120,7 @@ export default class BoardFootballPlayer extends Phaser.GameObjects.Container {
   }
 
   save() {
+    if (this.match.matchManager.isGoalSelebration) return;
     if (this.playerData.who === "guestPlayer") {
       this.match.guestTeam.footballers.forEach((f) => {
         f.stopFreeKickBehaviour();
