@@ -1,6 +1,10 @@
 import { Tweens } from "phaser";
 import Match from "..";
-import { calculatePercentage, getRandomIntNumber } from "../../../utils/math";
+import {
+  calculatePercentage,
+  getRandomIntNumber,
+  mapToRange,
+} from "../../../utils/math";
 import { FreeKickFootballer } from "./freeKickFootballer";
 
 export class FreeKick {
@@ -71,7 +75,10 @@ export class FreeKick {
             f.isFreeKick = true;
           }
         );
-        this.match.hostTeam.boardFootballPlayers.middleColumn.startMotion(true);
+        this.match.hostTeam.boardFootballPlayers.middleColumn.startMotion(
+          true,
+          this.match.hostTeamData.motionSpeed
+        );
       } else {
         this.match.guestTeam.boardFootballPlayers.middleColumn.footballers.forEach(
           (f) => {
@@ -80,7 +87,8 @@ export class FreeKick {
           }
         );
         this.match.guestTeam.boardFootballPlayers.middleColumn.startMotion(
-          true
+          true,
+          this.match.guestTeamData.motionSpeed
         );
       }
     }
@@ -148,10 +156,13 @@ export class FreeKick {
       const x = targetFootballer.getBounds().centerX;
       const y = targetFootballer.getBounds().centerY;
 
-      this.match.ball.kick(200, {
-        x,
-        y,
-      });
+      this.match.ball.kick(
+        mapToRange(this.match.guestTeamData.passSpeed, 160, 300),
+        {
+          x,
+          y,
+        }
+      );
     }
 
     if (this.whoIsGuilty === "guest") {
@@ -170,10 +181,13 @@ export class FreeKick {
       const x = targetFootballer.getBounds().centerX;
       const y = targetFootballer.getBounds().centerY;
 
-      this.match.ball.kick(200, {
-        x,
-        y,
-      });
+      this.match.ball.kick(
+        mapToRange(this.match.hostTeamData.passSpeed, 160, 300),
+        {
+          x,
+          y,
+        }
+      );
     }
   }
 

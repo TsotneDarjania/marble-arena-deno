@@ -5,7 +5,7 @@ import {
   FootballPlayerData,
   TeamDataType,
 } from "../../../../../types/gameTypes";
-import { getRandomIntNumber } from "../../../../../utils/math";
+import { getRandomIntNumber, mapToRange } from "../../../../../utils/math";
 
 export default class BoardFootballPlayer extends Phaser.GameObjects.Container {
   image: Phaser.Physics.Arcade.Image;
@@ -251,7 +251,7 @@ export default class BoardFootballPlayer extends Phaser.GameObjects.Container {
         ]
       );
 
-      this.match.ball.kick(200, {
+      this.match.ball.kick(mapToRange(this.teamData.passSpeed, 160, 300), {
         x,
         y,
       });
@@ -266,7 +266,7 @@ export default class BoardFootballPlayer extends Phaser.GameObjects.Container {
         ]
       );
 
-      this.match.ball.kick(200, {
+      this.match.ball.kick(mapToRange(this.teamData.passSpeed, 160, 300), {
         x,
         y,
       });
@@ -283,7 +283,7 @@ export default class BoardFootballPlayer extends Phaser.GameObjects.Container {
       ]
     );
 
-    this.match.ball.kick(200, {
+    this.match.ball.kick(mapToRange(this.teamData.passSpeed, 160, 300), {
       x,
       y,
     });
@@ -299,7 +299,7 @@ export default class BoardFootballPlayer extends Phaser.GameObjects.Container {
       ]
     );
 
-    this.match.ball.kick(200, {
+    this.match.ball.kick(mapToRange(this.teamData.passSpeed, 160, 300), {
       x,
       y,
     });
@@ -309,7 +309,8 @@ export default class BoardFootballPlayer extends Phaser.GameObjects.Container {
     this.isFreeKickShooter = false;
     let x = 0;
     let y =
-      this.match.hostTeam.boardFootballPlayers.goalKeeper.getBounds().centerY;
+      this.match.hostTeam.boardFootballPlayers.goalKeeper.getBounds().centerY +
+      getRandomIntNumber(-100, 100);
 
     if (this.playerData.who === "hostPlayer") {
       x =
@@ -320,8 +321,10 @@ export default class BoardFootballPlayer extends Phaser.GameObjects.Container {
         this.match.hostTeam.boardFootballPlayers.goalKeeper.getBounds()
           .centerX - 40;
     }
-
-    this.match.ball.kick(300, { x, y });
+    this.match.ball.kick(mapToRange(this.teamData.shootSpeed, 250, 500), {
+      x,
+      y,
+    });
   }
 
   getAnotherFootballerPositions(footballer: BoardFootballPlayer) {

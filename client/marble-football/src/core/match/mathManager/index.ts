@@ -50,10 +50,6 @@ export default class MatchManager {
     this.match.guestTeam.boardFootballPlayers.goalKeeper.startMotion();
 
     this.addEventListeners();
-
-    setTimeout(() => {
-      this.startLastPenalties();
-    }, 2000);
   }
 
   addEventListeners() {
@@ -88,6 +84,10 @@ export default class MatchManager {
 
   makeCorner() {
     if (this.ballGoesForCorner === false) return;
+    const canvasScene = this.match.scene.scene.get(
+      "CanvasScene"
+    ) as CanvasScene;
+    canvasScene.showMatchEvent("Corner");
 
     this.match.ball.stop();
     this.matchPause();
@@ -215,7 +215,7 @@ export default class MatchManager {
       this.match.ball.startBlinkAnimation(() => {
         this.resetUfterGoal();
       });
-    }, 200);
+    }, 40);
   }
 
   resetUfterGoal() {
@@ -279,7 +279,9 @@ export default class MatchManager {
       }
       if (this.matchTimeStatus === "fullTimeEnd") {
         if (this.match.gameConfig.withExtraTimes) {
-          this.resumeMatch("guest");
+          if (this.hostScore === this.guestScore) {
+            this.resumeMatch("guest");
+          }
         }
         this.match.timer.time = 90;
 
@@ -505,10 +507,27 @@ export default class MatchManager {
   }
 
   startLastPenalties() {
-    // if (this.hostScore === this.guestScore) {
-    console.log("start last penalties");
-    this.lastPenalties = new LastPenalties(this.match);
-    // }
+    if (this.hostScore === this.guestScore) {
+      this.lastPenalties = new LastPenalties(this.match);
+    } else {
+      if (this.hostScore > this.guestScore) {
+        const canvasScene = this.match.scene.scene.get(
+          "CanvasScene"
+        ) as CanvasScene;
+        canvasScene.showLastresult({
+          winner: this.match.hostTeamData.name,
+          winnerLogoKey: this.match.hostTeamData.logoKey,
+        });
+      } else {
+        const canvasScene = this.match.scene.scene.get(
+          "CanvasScene"
+        ) as CanvasScene;
+        canvasScene.showLastresult({
+          winner: this.match.guestTeamData.name,
+          winnerLogoKey: this.match.guestTeamData.logoKey,
+        });
+      }
+    }
   }
 
   prepareFreeKick(
@@ -519,6 +538,11 @@ export default class MatchManager {
     this.match.hostTeam.hideTeam();
     this.match.guestTeam.hideTeam();
 
+    const canvasScene = this.match.scene.scene.get(
+      "CanvasScene"
+    ) as CanvasScene;
+    canvasScene.showMatchEvent("Free Kick");
+
     setTimeout(() => {
       playerPosition === "defender"
         ? this.makePenalty(who)
@@ -527,6 +551,11 @@ export default class MatchManager {
   }
 
   makePenalty(who: "unkown" | "hostPlayer" | "guestPlayer") {
+    const canvasScene = this.match.scene.scene.get(
+      "CanvasScene"
+    ) as CanvasScene;
+    canvasScene.showMatchEvent("Penalty");
+
     this.penalty = new Penalty(
       this.match,
       who === "hostPlayer" ? "host" : "guest"

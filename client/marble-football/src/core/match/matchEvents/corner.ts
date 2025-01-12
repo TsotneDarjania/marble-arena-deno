@@ -1,5 +1,9 @@
 import Match from "..";
-import { calculatePercentage, getRandomIntNumber } from "../../../utils/math";
+import {
+  calculatePercentage,
+  getRandomIntNumber,
+  mapToRange,
+} from "../../../utils/math";
 
 export class Corner {
   attacker: Phaser.GameObjects.Image;
@@ -199,24 +203,33 @@ export class Corner {
         to:
           side === "left"
             ? this.match.hostTeam.boardFootballPlayers.goalKeeper.getBounds()
-                .x + getRandomIntNumber(70, 200)
+                .x + getRandomIntNumber(70, 150)
             : this.match.guestTeam.boardFootballPlayers.goalKeeper.getBounds()
-                .x - getRandomIntNumber(70, 200),
+                .x - getRandomIntNumber(70, 150),
       },
       duration: 1400,
       ease: Phaser.Math.Easing.Quadratic.InOut,
     });
 
-    const randomX = getRandomIntNumber(0, 100);
+    const randomX = getRandomIntNumber(0, 60);
     const x =
       getRandomIntNumber(0, 100) >= 50
         ? this.attacker.getBounds().centerX + randomX
         : this.attacker.getBounds().centerX - randomX;
 
-    this.match.ball.kick(250, {
-      x: x,
-      y: this.attacker.getBounds().centerY,
-    });
+    this.match.ball.kick(
+      mapToRange(
+        side === "left"
+          ? this.match.guestTeamData.passSpeed
+          : this.match.hostTeamData.passSpeed,
+        250,
+        500
+      ),
+      {
+        x: x,
+        y: this.attacker.getBounds().centerY,
+      }
+    );
   }
 
   destroy() {

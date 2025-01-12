@@ -323,6 +323,7 @@ export default class Spectators extends Phaser.GameObjects.Container {
       },
     });
   }
+
   shortGoalSelebration(whoScored: "host" | "guest") {
     this.stadium.scene.tweens.add({
       targets:
@@ -333,7 +334,7 @@ export default class Spectators extends Phaser.GameObjects.Container {
       y: `-=15`,
       duration: 200,
       yoyo: true,
-      repeat: 9,
+      repeat: 5,
       onComplete: () => {
         this.stadium.scene.match.matchManager.lastPenalties.FinishedGoalSelebration();
       },

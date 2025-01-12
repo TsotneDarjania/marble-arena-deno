@@ -4,6 +4,7 @@ import { TeamDataType } from "../../../../../types/gameTypes";
 import {
   calculatePercentage,
   getRandomIntNumber,
+  mapToRange,
 } from "../../../../../utils/math";
 import { Stadium } from "../../../stadium";
 import BoardFootballPlayer from "../../footballplayers/boardFootballPlayer";
@@ -105,7 +106,7 @@ export class Column extends Phaser.GameObjects.Container {
     }
   }
 
-  startMotion(blockFreeKickBehaviour: boolean = false) {
+  startMotion(blockFreeKickBehaviour: boolean = false, duration: number) {
     if (this.tween) {
       this.tween?.resume();
 
@@ -125,7 +126,7 @@ export class Column extends Phaser.GameObjects.Container {
       y: { from: -this.motionDistance - 15, to: this.motionDistance + 15 },
       yoyo: true,
       ease: Phaser.Math.Easing.Quadratic.InOut,
-      duration: 1000,
+      duration: mapToRange(duration, 1200, 600),
       repeat: -1,
     });
 

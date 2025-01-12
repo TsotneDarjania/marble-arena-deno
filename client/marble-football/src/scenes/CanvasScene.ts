@@ -16,6 +16,9 @@ export default class CanvasScene extends Phaser.Scene {
   hostTeamScoretext: Phaser.GameObjects.Text;
   guestTeamScoretext: Phaser.GameObjects.Text;
 
+  lastPenaltiesLeftXPosition = -50;
+  lastPenaltiesRightXPosition = 50;
+
   constructor() {
     super("CanvasScene");
   }
@@ -24,6 +27,36 @@ export default class CanvasScene extends Phaser.Scene {
     this.addStartOverlay();
     this.createCameraController();
     this.createIndicators();
+  }
+
+  drawPenaltyDone(side: "left" | "right") {
+    const image = this.scene.scene.add.image(
+      side === "left"
+        ? this.game.canvas.width / 2 + this.lastPenaltiesLeftXPosition
+        : this.game.canvas.width / 2 + this.lastPenaltiesRightXPosition,
+      140,
+      "penaltyDone"
+    );
+    image.setScale(0.65);
+
+    side === "left"
+      ? (this.lastPenaltiesLeftXPosition -= 56)
+      : (this.lastPenaltiesRightXPosition += 56);
+  }
+
+  drawPenaltyFail(side: "left" | "right") {
+    const image = this.scene.scene.add.image(
+      side === "left"
+        ? this.game.canvas.width / 2 + this.lastPenaltiesLeftXPosition
+        : this.game.canvas.width / 2 + this.lastPenaltiesRightXPosition,
+      140,
+      "penaltyFail"
+    );
+    image.setScale(0.65);
+
+    side === "left"
+      ? (this.lastPenaltiesLeftXPosition -= 56)
+      : (this.lastPenaltiesRightXPosition += 56);
   }
 
   createIndicators() {
@@ -172,5 +205,103 @@ export default class CanvasScene extends Phaser.Scene {
         this.introWindow.destroy(true);
       },
     });
+  }
+
+  showLastresult(data: { winner?: string; winnerLogoKey: string }) {
+    const background = this.scene.scene.add.image(
+      this.game.canvas.width / 2,
+      this.game.canvas.height / 2,
+      "default"
+    );
+    background.setDisplaySize(600, this.game.canvas.height);
+    background.setTint(0x0c1c2d);
+    background.setAlpha(0);
+
+    const winnerText = this.scene.scene.add
+      .text(
+        this.game.canvas.width / 2,
+        this.game.canvas.height / 2 - 160,
+        "Winner",
+        {
+          fontSize: "45px",
+          color: "#E9FFFF",
+          fontStyle: "bold",
+          strokeThickness: 2,
+          align: "center",
+        }
+      )
+      .setAlpha(0)
+      .setOrigin(0.5);
+
+    const winnerLogo = this.scene.scene.add
+      .image(
+        this.game.canvas.width / 2,
+        this.game.canvas.height / 2,
+        data.winnerLogoKey
+      )
+      .setAlpha(0)
+      .setScale(2.2);
+
+    const winnerTeamText = this.scene.scene.add
+      .text(
+        this.game.canvas.width / 2,
+        this.game.canvas.height / 2 + 160,
+        data.winner ? data.winner : "Draw",
+        {
+          fontSize: "45px",
+          color: "#E9FFFF",
+          fontStyle: "bold",
+          strokeThickness: 2,
+          align: "center",
+        }
+      )
+      .setAlpha(0)
+      .setOrigin(0.5);
+
+    this.scene.scene.tweens.add({
+      targets: [background, winnerLogo, winnerText, winnerTeamText],
+      duration: 500,
+      alpha: 1,
+    });
+  }
+
+  showMatchEvent(eventText: string) {
+    const background = this.scene.scene.add.image(0, 0, "default");
+    background.setDisplaySize(this.game.canvas.width, this.game.canvas.height);
+    background.setOrigin(0);
+    background.setTint(0x0f2721);
+    background.setAlpha(0.4);
+    background.setAlpha(0);
+
+    const text = this.scene.scene.add.text(
+      this.game.canvas.width / 2,
+      this.game.canvas.height / 2,
+      eventText,
+      {
+        fontSize: "60px",
+        color: "#E9FFFF",
+        fontStyle: "bold",
+        strokeThickness: 2,
+        align: "center",
+      }
+    );
+    text.setOrigin(0.5);
+    text.setAlpha(0);
+
+    this.scene.scene.add.tween({
+      targets: background,
+      alpha: 0.4,
+      duration: 400,
+    });
+    this.scene.scene.add.tween({
+      targets: text,
+      alpha: 1,
+      duration: 400,
+    });
+
+    setTimeout(() => {
+      background.destroy();
+      text.destroy();
+    }, 1500);
   }
 }

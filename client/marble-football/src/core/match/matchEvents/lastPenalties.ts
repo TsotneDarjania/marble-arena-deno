@@ -1,5 +1,6 @@
 import Match from "..";
-import { calculatePercentage } from "../../../utils/math";
+import CanvasScene from "../../../scenes/CanvasScene";
+import { calculatePercentage, getRandomIntNumber } from "../../../utils/math";
 
 export class LastPenalties {
   shooterFootballer: Phaser.Physics.Arcade.Image;
@@ -8,6 +9,11 @@ export class LastPenalties {
 
   shooterWas: "host" | "guest" = "host";
   isGoalSelebration = false;
+
+  step = 0;
+
+  hostScore = 0;
+  guestScore = 0;
 
   constructor(public match: Match) {
     this.init();
@@ -42,7 +48,10 @@ export class LastPenalties {
 
   shoot() {
     let x = 0;
-    let y = this.goalKeeper.getBounds().centerY;
+    const randomY = getRandomIntNumber(-200, 200);
+    console.log(randomY);
+
+    let y = this.goalKeeper.getBounds().centerY + randomY;
 
     this.match.hostTeam.boardFootballPlayers.goalKeeper.getBounds().centerY;
     x =
@@ -97,6 +106,18 @@ export class LastPenalties {
       () => {
         this.match.ball.stop();
 
+        if (this.isGoalSelebration === true) return;
+
+        const canvasScene = this.match.scene.scene.get(
+          "CanvasScene"
+        ) as CanvasScene;
+        canvasScene.drawPenaltyFail(
+          this.shooterWas === "host" ? "left" : "right"
+        );
+
+        this.isGoalSelebration = true;
+        this.goalKeeperTween.pause();
+
         setTimeout(() => {
           this.resetWithNoGoal();
         }, 1500);
@@ -105,35 +126,122 @@ export class LastPenalties {
   }
 
   resetWithNoGoal() {
+    this.step++;
+    this.shooterWas = this.shooterWas === "host" ? "guest" : "host";
+
+    console.log("hostScore " + this.hostScore);
+    console.log("guestScore " + this.guestScore);
+
+    const canvasScene = this.match.scene.scene.get(
+      "CanvasScene"
+    ) as CanvasScene;
+
+    if (this.step >= 6 && this.step / 2 <= 5) {
+      if (this.hostScore > this.guestScore) {
+        const difference = this.hostScore - this.guestScore;
+        const leftStages = 5 - this.step / 2;
+
+        if (leftStages < difference) {
+          // this.match.eventEmitter.emit("finishPenalties", "host");
+          // alert("WIN IN PENALTIES : HOST TEAM ");
+          canvasScene.showLastresult({
+            winner: this.match.hostTeamData.name,
+            winnerLogoKey: this.match.hostTeamData.logoKey,
+          });
+          return;
+        }
+      }
+
+      if (this.hostScore < this.guestScore) {
+        const difference = this.guestScore - this.hostScore;
+        const leftStages = 5 - this.step / 2;
+
+        if (leftStages < difference) {
+          // this.match.eventEmitter.emit("finishPenalties", "guest");
+          // alert("WIN IN PENALTIES : GUEST TEAM ");
+          canvasScene.showLastresult({
+            winner: this.match.guestTeamData.name,
+            winnerLogoKey: this.match.guestTeamData.logoKey,
+          });
+          return;
+        }
+      }
+    }
+    if (this.step / 2 > 5) {
+      if (this.step % 2 === 0) {
+        if (this.hostScore > this.guestScore) {
+          // this.match.eventEmitter.emit("finishPenalties", "host");
+          // alert("WIN IN PENALTIES : HOST TEAM ");
+          canvasScene.showLastresult({
+            winner: this.match.hostTeamData.name,
+            winnerLogoKey: this.match.hostTeamData.logoKey,
+          });
+          return;
+        }
+        if (this.hostScore < this.guestScore) {
+          // this.match.eventEmitter.emit("finishPenalties", "guest");
+          // alert("WIN IN PENALTIES : GUEST TEAM ");
+          canvasScene.showLastresult({
+            winner: this.match.guestTeamData.name,
+            winnerLogoKey: this.match.guestTeamData.logoKey,
+          });
+          return;
+        }
+      }
+    }
+
     this.shooterFootballer.destroy();
     this.goalKeeper.destroy();
+    this.match.ball.setAlpha();
+    this.match.ball.emitter.setAlpha(0);
 
     setTimeout(() => {
+      this.match.ball.setAlpha(1);
+      this.match.ball.emitter.setAlpha(1);
+
       this.addGoalKeeper();
       this.addShooter();
       this.makeReadyBallPosition();
       this.isGoalSelebration = false;
       setTimeout(() => {
         this.shoot();
-      }, 2000);
+      }, getRandomIntNumber(3000, 5000));
+    }, 300);
+  }
 
-      if (this.shooterWas === "host") {
-        this.shooterWas = "guest";
-        return;
-      } else {
-        this.shooterWas = "host";
-      }
-    }, 2000);
+  finish(winnerIs: "host" | "guest") {
+    alert("Win " + winnerIs);
   }
 
   isGoal() {
     if (this.isGoalSelebration) return;
+
+    const canvasScene = this.match.scene.scene.get(
+      "CanvasScene"
+    ) as CanvasScene;
+
+    if (this.shooterWas === "host") {
+      this.hostScore += 1;
+      this.match.matchManager.hostScore += 1;
+    } else {
+      this.guestScore += 1;
+      this.match.matchManager.guestScore += 1;
+    }
+
+    canvasScene.hostTeamScoretext.setText(
+      this.match.matchManager.hostScore.toString()
+    );
+    canvasScene.guestTeamScoretext.setText(
+      this.match.matchManager.guestScore.toString()
+    );
+
+    canvasScene.drawPenaltyDone(this.shooterWas === "host" ? "left" : "right");
     this.goalKeeperTween.pause();
 
     this.match.ball.stop();
-    this.match.ball.startBlinkAnimation(() => {});
+    this.match.ball.startShortBlinkAnimation(() => {});
 
-    this.match.stadium.goalSelebration(this.shooterWas);
+    this.match.stadium.shortGoalSelebration(this.shooterWas);
     this.isGoalSelebration = true;
   }
 

@@ -77,6 +77,19 @@ export class Ball extends Phaser.Physics.Arcade.Image {
     });
   }
 
+  startShortBlinkAnimation(callback: Function) {
+    this.scene.add.tween({
+      targets: this,
+      alpha: 0.3,
+      duration: 300,
+      repeat: 5,
+      onComplete: () => {
+        this.setAlpha(1);
+        callback();
+      },
+    });
+  }
+
   reset() {
     this.setPosition(
       this.scene.game.canvas.width / 2,

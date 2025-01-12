@@ -5,6 +5,10 @@ export type TeamDataType = {
   initials: string;
   logoKey: string;
   formation: "4-4-2" | "4-3-3" | "5-3-2";
+  passSpeed: number;
+  shootSpeed: number;
+  goalKeeperSpeed: number;
+  motionSpeed: number;
 };
 
 export type GameConfigType = {
