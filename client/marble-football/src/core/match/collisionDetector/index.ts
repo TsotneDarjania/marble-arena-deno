@@ -18,6 +18,9 @@ export default class CollisionDetector {
       this.match.ball,
       [...this.match.stadium.stadiumColliders.goalPostColliders],
       () => {
+        if (this.match.matchManager.isCorner) return;
+        this.scene.soundManager.goalBorder.play();
+
         console.log("Goal Posts detect");
       }
     );
@@ -39,12 +42,16 @@ export default class CollisionDetector {
               ? "host"
               : "guest"
           );
+        } else {
+          this.scene.soundManager.border.play();
         }
 
         // console.log("Stadium Border Detect");
         if (this.match.matchManager.ballGoesForCorner) {
           // console.log("aaaaaa");
           if (this.onceForCorner) {
+            this.scene.soundManager.border.play();
+
             this.onceForCorner = false;
             this.match.matchManager.makeCorner();
 

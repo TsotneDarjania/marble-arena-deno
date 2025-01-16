@@ -119,6 +119,7 @@ export class Corner {
         : this.match.guestTeamData.logoKey
     );
 
+    let a = true;
     let once = true;
     this.match.scene.physics.add.overlap(
       this.match.ball,
@@ -126,6 +127,11 @@ export class Corner {
       () => {
         if (once) {
           this.match.ball.stop();
+          if (a === true) {
+            this.match.scene.soundManager.catchBall.play();
+            a = false;
+          }
+
           setTimeout(() => {
             if (once) {
               console.log("RESET UFTER DEFFENDER");
@@ -164,6 +170,7 @@ export class Corner {
             this.match.hostTeam.boardFootballPlayers.goalKeeper.getBounds()
               .centerX - 40;
         }
+        this.match.scene.soundManager.shoot.play();
 
         this.match.ball.kick(300, { x, y });
       }
@@ -180,6 +187,8 @@ export class Corner {
   }
 
   shoot(side: "left" | "right") {
+    this.match.scene.soundManager.shoot.play();
+
     this.cornerAlreadyShoot = true;
     this.match.scene.tweens.add({
       targets: this.deffender,
@@ -211,11 +220,11 @@ export class Corner {
       ease: Phaser.Math.Easing.Quadratic.InOut,
     });
 
-    const randomX = getRandomIntNumber(0, 60);
+    // const randomX = getRandomIntNumber(0, 60);
     const x =
       getRandomIntNumber(0, 100) >= 50
-        ? this.attacker.getBounds().centerX + randomX
-        : this.attacker.getBounds().centerX - randomX;
+        ? this.attacker.getBounds().centerX
+        : this.attacker.getBounds().centerX;
 
     this.match.ball.kick(
       mapToRange(

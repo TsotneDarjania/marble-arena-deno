@@ -2,11 +2,13 @@ import * as Phaser from "phaser";
 import { Match } from "../core";
 import CameraMotion from "../core/cameraMotion";
 import CanvasScene from "./CanvasScene";
+import { SoundManager } from "../core/soundManager";
 
 export default class GamePlay extends Phaser.Scene {
   match: Match;
   cameraMotion: CameraMotion;
   matchIsPossibleToStart: boolean = false;
+  soundManager: SoundManager;
 
   constructor() {
     super("GamePlay");
@@ -18,12 +20,19 @@ export default class GamePlay extends Phaser.Scene {
     this.physics.world.setFPS(4500);
     // Run Canvas Scene simultaneously
     this.scene.launch("CanvasScene");
+    this.addSoundManager();
 
     this.createMatch();
     this.createCameraMotion();
   }
 
+  addSoundManager() {
+    this.soundManager = new SoundManager(this);
+  }
+
   createMatch() {
+    this.soundManager.stadiumNoice.play();
+
     this.match = new Match(
       this,
       {
@@ -31,6 +40,13 @@ export default class GamePlay extends Phaser.Scene {
         initials: "LV",
         logoKey: "liverpool",
         formation: "5-3-2",
+        tactics: {
+          formation: {
+            defenceLine: "wide-attack",
+            centerLine: "wide-attack",
+            attackLine: "wide-attack",
+          },
+        },
         passSpeed: 1,
         shootSpeed: 1,
         goalKeeperSpeed: 30,
@@ -41,6 +57,13 @@ export default class GamePlay extends Phaser.Scene {
         initials: "MC",
         logoKey: "manchester-city",
         formation: "4-4-2",
+        tactics: {
+          formation: {
+            defenceLine: "wide-attack",
+            centerLine: "wide-attack",
+            attackLine: "wide-attack",
+          },
+        },
         passSpeed: 100,
         shootSpeed: 100,
         goalKeeperSpeed: 70,

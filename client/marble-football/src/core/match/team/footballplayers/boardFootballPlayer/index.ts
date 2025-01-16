@@ -29,7 +29,7 @@ export default class BoardFootballPlayer extends Phaser.GameObjects.Container {
   isFreeKickShooter = false;
 
   constructor(
-    scene: GamePlay,
+    public scene: GamePlay,
     x: number,
     y: number,
     public teamData: TeamDataType
@@ -121,6 +121,8 @@ export default class BoardFootballPlayer extends Phaser.GameObjects.Container {
 
   save() {
     if (this.match.matchManager.isGoalSelebration) return;
+    this.scene.soundManager.catchBall.play();
+
     if (this.playerData.who === "guestPlayer") {
       this.match.guestTeam.footballers.forEach((f) => {
         f.stopFreeKickBehaviour();
@@ -140,6 +142,8 @@ export default class BoardFootballPlayer extends Phaser.GameObjects.Container {
   }
 
   takeBall() {
+    this.scene.soundManager.catchBall.play();
+
     this.match.matchManager.someoneHasBall = true;
     if (this.match.matchManager.matchStatus !== "playing") return;
 
@@ -240,6 +244,8 @@ export default class BoardFootballPlayer extends Phaser.GameObjects.Container {
   }
 
   makePassAsGoalKeeper() {
+    this.scene.soundManager.pass.play();
+
     if (this.playerData.who === "hostPlayer") {
       const { x, y } = this.getAnotherFootballerPositions(
         this.match.hostTeam.boardFootballPlayers.defenceColumn.footballers[
@@ -274,6 +280,8 @@ export default class BoardFootballPlayer extends Phaser.GameObjects.Container {
   }
 
   makeShortPass() {
+    this.scene.soundManager.pass.play();
+
     const { x, y } = this.getAnotherFootballerPositions(
       this.playerData.potentialShortPassVariants![
         getRandomIntNumber(
@@ -290,6 +298,8 @@ export default class BoardFootballPlayer extends Phaser.GameObjects.Container {
   }
 
   makeLongPass() {
+    this.scene.soundManager.pass.play();
+
     const { x, y } = this.getAnotherFootballerPositions(
       this.playerData.potentialShortPassVariants![
         getRandomIntNumber(
@@ -306,11 +316,14 @@ export default class BoardFootballPlayer extends Phaser.GameObjects.Container {
   }
 
   shoot() {
+    this.scene.soundManager.shoot.play();
+
     this.isFreeKickShooter = false;
     let x = 0;
+
     let y =
       this.match.hostTeam.boardFootballPlayers.goalKeeper.getBounds().centerY +
-      getRandomIntNumber(-100, 100);
+      getRandomIntNumber(-180, 180);
 
     if (this.playerData.who === "hostPlayer") {
       x =

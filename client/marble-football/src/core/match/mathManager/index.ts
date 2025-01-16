@@ -172,6 +172,8 @@ export default class MatchManager {
   }
 
   isGoal(whoScored: "host" | "guest") {
+    this.match.scene.soundManager.goalSelebration.play();
+
     this.isGoalSelebration = true;
     this.freeKick?.destroy();
     this.match.timer.stopTimer();

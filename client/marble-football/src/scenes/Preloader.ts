@@ -47,6 +47,16 @@ export default class Preload extends Scene {
     // GameObjects
     this.load.image("ball", "image/gameObjects/ball.png");
     this.load.image("circle", "image/gameObjects/circle.png");
+
+    //sounds
+    this.load.audio("stadium-noice", ["sounds/fans-2.mp3"]);
+    this.load.audio("time-start-referee", ["sounds/time-start-referee.mp3"]);
+    this.load.audio("pass", ["sounds/pass.mp3"]);
+    this.load.audio("catch-ball", ["sounds/catch-ball.mp3"]);
+    this.load.audio("shoot", ["sounds/shoot.mp3"]);
+    this.load.audio("goalBorder", ["sounds/goal-border.mp3"]);
+    this.load.audio("border", ["sounds/border.mp3"]);
+    this.load.audio("goalSelebration", ["sounds/goal-2.mp3"]);
   }
 
   create() {

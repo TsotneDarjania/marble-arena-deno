@@ -95,6 +95,57 @@ export class Column extends Phaser.GameObjects.Container {
         this.teamData
       );
 
+      if (
+        this.teamData.tactics.formation.defenceLine === "wide-attack" &&
+        this.type === "defence"
+      ) {
+        if (i === 0 || i === this.quantity - 1) {
+          this.side === "left"
+            ? (footballer.x += calculatePercentage(
+                2.5,
+                this.stadium.fieldWidth
+              ))
+            : (footballer.x -= calculatePercentage(
+                2.5,
+                this.stadium.fieldWidth
+              ));
+        }
+      }
+
+      if (
+        this.teamData.tactics.formation.centerLine === "wide-attack" &&
+        this.type === "middle"
+      ) {
+        if (i === 0 || i === this.quantity - 1) {
+          this.side === "left"
+            ? (footballer.x += calculatePercentage(
+                2.5,
+                this.stadium.fieldWidth
+              ))
+            : (footballer.x -= calculatePercentage(
+                2.5,
+                this.stadium.fieldWidth
+              ));
+        }
+      }
+
+      if (
+        this.teamData.tactics.formation.centerLine === "wide-back" &&
+        this.type === "middle"
+      ) {
+        if (i === 0 || i === this.quantity - 1) {
+          this.side === "left"
+            ? (footballer.x -= calculatePercentage(
+                2.5,
+                this.stadium.fieldWidth
+              ))
+            : (footballer.x += calculatePercentage(
+                2.5,
+                this.stadium.fieldWidth
+              ));
+        }
+      }
+
       y += padding;
 
       this.footballers.push(footballer);

@@ -104,8 +104,11 @@ export default class Match {
     this.addCollisionDetector();
     this.addMatchManager();
 
+    this.scene.soundManager.timeStartReferee.play();
+
     setTimeout(() => {
       this.matchManager.startMatch();
+      this.scene.soundManager.pass.play();
     }, 1000);
   }
 
