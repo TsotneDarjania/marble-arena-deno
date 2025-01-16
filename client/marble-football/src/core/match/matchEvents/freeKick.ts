@@ -122,6 +122,7 @@ export class FreeKick {
   }
 
   shoot() {
+    this.match.scene.soundManager.shoot.play();
     let x = 0;
     let y =
       this.match.hostTeam.boardFootballPlayers.goalKeeper.getBounds().centerY;
@@ -140,6 +141,8 @@ export class FreeKick {
   }
 
   makePass() {
+    this.match.scene.soundManager.shoot.play();
+
     if (this.whoIsGuilty === "host") {
       const targetFootballer =
         this.match.guestTeam.boardFootballPlayers.attackColumn.footballers[
@@ -193,6 +196,7 @@ export class FreeKick {
 
   saveFreeKick() {
     if (this.isAlreadySavedKick) return;
+    this.match.scene.soundManager.catchBall.play();
     this.isAlreadySavedKick = true;
 
     this.match.ball.stop();

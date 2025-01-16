@@ -88,6 +88,7 @@ export default class MatchManager {
       "CanvasScene"
     ) as CanvasScene;
     canvasScene.showMatchEvent("Corner");
+    this.match.scene.soundManager.referee.play();
 
     this.match.ball.stop();
     this.matchPause();
@@ -172,6 +173,8 @@ export default class MatchManager {
   }
 
   isGoal(whoScored: "host" | "guest") {
+    this.match.scene.soundManager.referee.play();
+
     this.match.scene.soundManager.goalSelebration.play();
 
     this.isGoalSelebration = true;
@@ -349,6 +352,7 @@ export default class MatchManager {
         : this.match.guestTeam.boardFootballPlayers.goalKeeper.getBounds()
             .centerY;
 
+    this.match.scene.soundManager.pass.play();
     this.match.ball.setPosition(ballPositionX, ballPositionY);
 
     if (whoWillStart === "host") {
@@ -363,6 +367,8 @@ export default class MatchManager {
 
         const x = targetDeffender.getBounds().centerX;
         const y = targetDeffender.getBounds().centerY;
+
+        this.match.scene.soundManager.pass.play();
         this.match.ball.kick(200, {
           x,
           y,
@@ -400,6 +406,7 @@ export default class MatchManager {
     if (this.corner !== undefined) {
       this.corner.destroy();
     }
+    this.match.scene.soundManager.referee.play();
 
     this.match.timer.resumeTimer();
     this.matchStatus = "playing";
@@ -487,21 +494,29 @@ export default class MatchManager {
 
     switch (reason) {
       case "haltTimeEnd":
+        this.match.scene.soundManager.halfTimeEnd.play();
+
         setTimeout(() => {
           this.resetUfterTimeEnd();
         }, 1500);
         break;
       case "fullTimeEnd":
+        this.match.scene.soundManager.halfTimeEnd.play();
+
         setTimeout(() => {
           this.resetUfterTimeEnd();
         }, 1500);
         break;
       case "firstExtratimeEnd":
+        this.match.scene.soundManager.halfTimeEnd.play();
+
         setTimeout(() => {
           this.resetUfterTimeEnd();
         }, 1500);
         break;
       case "secondExtraTimeEnd":
+        this.match.scene.soundManager.halfTimeEnd.play();
+
         setTimeout(() => {
           this.startLastPenalties();
         }, 1500);
@@ -536,7 +551,11 @@ export default class MatchManager {
     playerPosition: "goalKeeper" | "defender" | "middfielder" | "attacker",
     who: "unkown" | "hostPlayer" | "guestPlayer"
   ) {
+    this.match.scene.soundManager.faul.play();
+    this.match.scene.soundManager.referee.play();
+
     this.matchPause();
+
     this.match.hostTeam.hideTeam();
     this.match.guestTeam.hideTeam();
 

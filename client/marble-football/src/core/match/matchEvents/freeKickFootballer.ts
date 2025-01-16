@@ -80,6 +80,7 @@ export class FreeKickFootballer extends Phaser.GameObjects.Container {
   }
 
   save() {
+    this.match.scene.soundManager.catchBall.play();
     this.match.matchManager.freeKick!.saveFreeKick();
   }
 }

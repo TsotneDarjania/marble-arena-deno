@@ -5,6 +5,8 @@ export class Penalty {
   shooterFootballer!: Phaser.GameObjects.Image;
 
   constructor(public match: Match, public whoIsGulity: "host" | "guest") {
+    match.scene.soundManager.referee.play();
+
     if (this.whoIsGulity === "host") {
       this.match.hostTeam.boardFootballPlayers.goalKeeper.isPenalty = true;
     } else {
@@ -47,6 +49,8 @@ export class Penalty {
   }
 
   shoot() {
+    this.match.scene.soundManager.shoot.play();
+
     let x = 0;
     let y =
       this.match.hostTeam.boardFootballPlayers.goalKeeper.getBounds().centerY;

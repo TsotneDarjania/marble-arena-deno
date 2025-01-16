@@ -40,16 +40,17 @@ export default class GamePlay extends Phaser.Scene {
         initials: "LV",
         logoKey: "liverpool",
         formation: "5-3-2",
+        fansColor: 0x205c5c,
         tactics: {
           formation: {
             defenceLine: "wide-attack",
             centerLine: "wide-attack",
-            attackLine: "wide-attack",
+            // attackLine: "wide-attack", ეს ჯერ არ მუშაობს
           },
         },
         passSpeed: 1,
         shootSpeed: 1,
-        goalKeeperSpeed: 30,
+        goalKeeperSpeed: 1,
         motionSpeed: 1,
       },
       {
@@ -57,16 +58,17 @@ export default class GamePlay extends Phaser.Scene {
         initials: "MC",
         logoKey: "manchester-city",
         formation: "4-4-2",
+        fansColor: 0x205c5c,
         tactics: {
           formation: {
             defenceLine: "wide-attack",
             centerLine: "wide-attack",
-            attackLine: "wide-attack",
+            // attackLine: "wide-attack", ეს ჯერ არ მუშაობს
           },
         },
         passSpeed: 100,
         shootSpeed: 100,
-        goalKeeperSpeed: 70,
+        goalKeeperSpeed: 100,
         motionSpeed: 100,
       },
       {

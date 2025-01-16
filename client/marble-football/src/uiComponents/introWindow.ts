@@ -33,9 +33,9 @@ export class IntroWindow extends Phaser.GameObjects.Container {
 
   init() {
     this.addBackground();
-    this.showBrandTitle();
+    // this.showBrandTitle();
 
-    this.addMatchInfoTexts();
+    // this.addMatchInfoTexts();
   }
 
   addMatchInfoTexts() {

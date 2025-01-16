@@ -196,17 +196,20 @@ export default class BoardFootballPlayer extends Phaser.GameObjects.Container {
 
     if (this.playerData.who === "hostPlayer") {
       x =
-        this.match.hostTeam.boardFootballPlayers.goalKeeper.getBounds().centerX;
+        this.match.hostTeam.boardFootballPlayers.goalKeeper.getBounds()
+          .centerX - 50;
     } else {
       x =
         this.match.guestTeam.boardFootballPlayers.goalKeeper.getBounds()
-          .centerX;
+          .centerX + 50;
     }
 
     y = this.scene.game.canvas.height / 2;
 
     const randomY = getRandomIntNumber(200, 230);
-    getRandomIntNumber(0, 100) >= 50 ? (y += randomY) : (y -= randomY);
+    this.getBounds().y > this.match.hostTeam.boardFootballPlayers.goalKeeper.y
+      ? (y += randomY)
+      : (y -= randomY);
 
     this.match.ball.kick(160, { x, y });
   }

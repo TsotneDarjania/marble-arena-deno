@@ -190,20 +190,20 @@ export class Corner {
     this.match.scene.soundManager.shoot.play();
 
     this.cornerAlreadyShoot = true;
-    this.match.scene.tweens.add({
-      targets: this.deffender,
-      x: {
-        from: this.deffender.x,
-        to:
-          side === "left"
-            ? this.match.hostTeam.boardFootballPlayers.goalKeeper.getBounds()
-                .x + getRandomIntNumber(70, 200)
-            : this.match.guestTeam.boardFootballPlayers.goalKeeper.getBounds()
-                .x - getRandomIntNumber(70, 200),
-      },
-      duration: 700,
-      ease: Phaser.Math.Easing.Quadratic.InOut,
-    });
+    // this.match.scene.tweens.add({
+    //   targets: this.deffender,
+    //   x: {
+    //     from: this.deffender.x,
+    //     to:
+    //       side === "left"
+    //         ? this.match.hostTeam.boardFootballPlayers.goalKeeper.getBounds()
+    //             .x + getRandomIntNumber(70, 200)
+    //         : this.match.guestTeam.boardFootballPlayers.goalKeeper.getBounds()
+    //             .x - getRandomIntNumber(70, 200),
+    //   },
+    //   duration: 700,
+    //   ease: Phaser.Math.Easing.Quadratic.InOut,
+    // });
 
     this.match.scene.tweens.add({
       targets: this.attacker,

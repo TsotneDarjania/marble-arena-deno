@@ -5,6 +5,13 @@ export type TeamDataType = {
   initials: string;
   logoKey: string;
   formation: "4-4-2" | "4-3-3" | "5-3-2";
+  fansColor: number;
+  tactics: {
+    formation: {
+      defenceLine: "wide-attack";
+      centerLine: "wide-attack" | "wide-back";
+    };
+  };
   passSpeed: number;
   shootSpeed: number;
   goalKeeperSpeed: number;

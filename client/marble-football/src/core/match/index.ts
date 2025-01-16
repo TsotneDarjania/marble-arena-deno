@@ -53,8 +53,8 @@ export default class Match {
 
   setFanColors() {
     this.stadium.spectators.fanColors = {
-      hostColor: 0x205c5c,
-      guestColor: 0x5c205c,
+      hostColor: this.hostTeamData.fansColor,
+      guestColor: this.guestTeamData.fansColor,
       hostQuantityPercent: 45,
     };
   }
