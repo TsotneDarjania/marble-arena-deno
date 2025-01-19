@@ -49,7 +49,6 @@ export class LastPenalties {
   shoot() {
     let x = 0;
     const randomY = getRandomIntNumber(-200, 200);
-    console.log(randomY);
 
     let y = this.goalKeeper.getBounds().centerY + randomY;
 

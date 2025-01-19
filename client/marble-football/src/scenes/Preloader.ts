@@ -8,8 +8,6 @@ export default class Preload extends Scene {
   preload() {
     this.load.setPath("assets/");
 
-    this.load.glsl("crowdWaveShader", "/crowdWaveShader.frag");
-
     // Stadium
     this.load.image("stadiumLines", "image/gameObjects/stadium-lines.png");
     this.load.image("spectatorLine", "image/gameObjects/spectator-line.png");

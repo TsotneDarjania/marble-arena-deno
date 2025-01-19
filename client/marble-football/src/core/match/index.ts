@@ -1,9 +1,4 @@
-import GamePlay from "../../scenes/GamePlay";
-import {
-  FootballPlayerData,
-  GameConfigType,
-  TeamDataType,
-} from "../../types/gameTypes";
+import { FootballPlayerData, MatchType } from "../../types/gameTypes";
 import { Ball } from "./ball";
 import CollisionDetector from "./collisionDetector";
 import MatchManager from "./mathManager";
@@ -14,9 +9,6 @@ import TimeManager from "./timeManager";
 
 export default class Match {
   stadium: Stadium;
-  startTeamLogosTween: Phaser.Tweens.Tween;
-  startTeamLogos: Phaser.GameObjects.Image[];
-
   ball: Ball;
 
   hostTeam: Team;
@@ -28,12 +20,7 @@ export default class Match {
 
   matchManager: MatchManager;
 
-  constructor(
-    public scene: GamePlay,
-    public hostTeamData: TeamDataType,
-    public guestTeamData: TeamDataType,
-    public gameConfig: GameConfigType
-  ) {
+  constructor(public matchData: MatchType) {
     this.init();
   }
 
@@ -45,16 +32,16 @@ export default class Match {
 
   addStadium() {
     this.stadium = new Stadium(
-      this.scene,
-      this.scene.game.canvas.width / 2,
-      this.scene.game.canvas.height / 2
+      this.matchData.scene,
+      this.matchData.scene.game.canvas.width / 2,
+      this.matchData.scene.game.canvas.height / 2
     );
   }
 
   setFanColors() {
     this.stadium.spectators.fanColors = {
-      hostColor: 0x205c5c,
-      guestColor: 0x5c205c,
+      hostColor: this.matchData.hostTeamData.fansColor,
+      guestColor: this.matchData.guestTeamData.fansColor,
       hostQuantityPercent: 45,
     };
   }
@@ -63,52 +50,49 @@ export default class Match {
     this.stadium.goalSelebration(whoScored);
   }
 
-  addStartLeyoutTeams() {
-    this.startTeamLogos = [];
-    // Host team
-    let x = -176;
-    for (let i = 0; i < 11; i++) {
-      const image = this.scene.add
-        .image(x, -180, "manchester-city")
-        .setScale(0.6);
-      this.stadium.add(image);
-      this.startTeamLogos.push(image);
-      x += 35;
-    }
+  // addStartLeyoutTeams() {
+  //   this.startTeamLogos = [];
+  //   // Host team
+  //   let x = -176;
+  //   for (let i = 0; i < 11; i++) {
+  //     const image = this.scene.add
+  //       .image(x, -180, "manchester-city")
+  //       .setScale(0.6);
+  //     this.stadium.add(image);
+  //     this.startTeamLogos.push(image);
+  //     x += 35;
+  //   }
 
-    // Guest team
-    x = -176;
-    for (let i = 0; i < 11; i++) {
-      const image = this.scene.add.image(x, -120, "liverpool").setScale(0.6);
-      this.startTeamLogos.push(image);
-      this.stadium.add(image);
-      x += 35;
-    }
+  //   // Guest team
+  //   x = -176;
+  //   for (let i = 0; i < 11; i++) {
+  //     const image = this.scene.add.image(x, -120, "liverpool").setScale(0.6);
+  //     this.startTeamLogos.push(image);
+  //     this.stadium.add(image);
+  //     x += 35;
+  //   }
 
-    this.startTeamLogosTween = this.scene.tweens.add({
-      targets: this.startTeamLogos,
-      alpha: 0.4,
-      duration: 500,
-      yoyo: true,
-      repeat: -1,
-    });
-  }
+  //   this.startTeamLogosTween = this.scene.tweens.add({
+  //     targets: this.startTeamLogos,
+  //     alpha: 0.4,
+  //     duration: 500,
+  //     yoyo: true,
+  //     repeat: -1,
+  //   });
+  // }
 
   startMatch() {
-    this.startTeamLogosTween.destroy();
-    this.startTeamLogos.forEach((logo) => logo.destroy(true));
-
     this.addBall();
     this.addTeams();
     this.setMatchInstanceForFootballers();
     this.addCollisionDetector();
     this.addMatchManager();
 
-    this.scene.soundManager.timeStartReferee.play();
+    this.matchData.scene.soundManager.timeStartReferee.play();
 
     setTimeout(() => {
       this.matchManager.startMatch();
-      this.scene.soundManager.pass.play();
+      this.matchData.scene.soundManager.pass.play();
     }, 1000);
   }
 
@@ -207,36 +191,36 @@ export default class Match {
 
   addBall() {
     this.ball = new Ball(
-      this.scene,
-      this.scene.game.canvas.width / 2,
-      this.scene.game.canvas.height / 2,
+      this.matchData.scene,
+      this.matchData.scene.game.canvas.width / 2,
+      this.matchData.scene.game.canvas.height / 2,
       this.stadium
     );
   }
 
   addTeams() {
     this.hostTeam = new Team(
-      this.scene,
-      this.hostTeamData,
-      this.gameConfig,
+      this.matchData.scene,
+      this.matchData.hostTeamData,
+      this.matchData.gameConfig,
       this.stadium,
       "left"
     );
 
     this.guestTeam = new Team(
-      this.scene,
-      this.guestTeamData,
-      this.gameConfig,
+      this.matchData.scene,
+      this.matchData.guestTeamData,
+      this.matchData.gameConfig,
       this.stadium,
       "right"
     );
   }
 
   addCollisionDetector() {
-    this.collisionDetector = new CollisionDetector(this.scene, this);
+    this.collisionDetector = new CollisionDetector(this.matchData.scene, this);
   }
 
   addTimer() {
-    this.timer = new TimeManager(this, this.scene);
+    this.timer = new TimeManager(this, this.matchData.scene);
   }
 }

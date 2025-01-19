@@ -3,11 +3,11 @@ import { Match } from "../core";
 import CameraMotion from "../core/cameraMotion";
 import CanvasScene from "./CanvasScene";
 import { SoundManager } from "../core/soundManager";
+import matchConfig from "../config/matchConfig";
 
 export default class GamePlay extends Phaser.Scene {
   match: Match;
   cameraMotion: CameraMotion;
-  matchIsPossibleToStart: boolean = false;
   soundManager: SoundManager;
 
   constructor() {
@@ -21,7 +21,6 @@ export default class GamePlay extends Phaser.Scene {
     // Run Canvas Scene simultaneously
     this.scene.launch("CanvasScene");
     this.addSoundManager();
-
     this.createMatch();
     this.createCameraMotion();
   }
@@ -33,9 +32,9 @@ export default class GamePlay extends Phaser.Scene {
   createMatch() {
     this.soundManager.stadiumNoice.play();
 
-    this.match = new Match(
-      this,
-      {
+    this.match = new Match({
+      scene: this,
+      hostTeamData: {
         name: "Liverpool",
         initials: "LV",
         logoKey: "liverpool",
@@ -50,9 +49,10 @@ export default class GamePlay extends Phaser.Scene {
         passSpeed: 1,
         shootSpeed: 1,
         goalKeeperSpeed: 30,
+        fansColor: 0x205c5c,
         motionSpeed: 1,
       },
-      {
+      guestTeamData: {
         name: "Manchester City",
         initials: "MC",
         logoKey: "manchester-city",
@@ -67,13 +67,15 @@ export default class GamePlay extends Phaser.Scene {
         passSpeed: 100,
         shootSpeed: 100,
         goalKeeperSpeed: 70,
+        fansColor: 0x205c5c,
         motionSpeed: 100,
       },
-      {
+      gameConfig: {
         mode: "board-football",
         withExtraTimes: true,
-      }
-    );
+        hostFansCountPercent: 50,
+      },
+    });
   }
 
   createCameraMotion() {
