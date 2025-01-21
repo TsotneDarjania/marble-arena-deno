@@ -9,6 +9,9 @@ export class SoundManager {
   goalBorder: Phaser.Sound.BaseSound;
   border: Phaser.Sound.BaseSound;
   goalSelebration: Phaser.Sound.BaseSound;
+  halfTimeEnd: Phaser.Sound.BaseSound;
+  faul: Phaser.Sound.BaseSound;
+  referee: Phaser.Sound.BaseSound;
 
   constructor(public scene: Phaser.Scene) {
     if (SoundManager.instance) {
@@ -56,6 +59,21 @@ export class SoundManager {
     });
 
     this.goalSelebration = this.scene.sound.add("goalSelebration", {
+      volume: 1,
+      loop: false,
+    });
+
+    this.halfTimeEnd = this.scene.sound.add("halt-time-referee", {
+      volume: 1,
+      loop: false,
+    });
+
+    this.faul = this.scene.sound.add("faul", {
+      volume: 1,
+      loop: false,
+    });
+
+    this.referee = this.scene.sound.add("referee", {
       volume: 1,
       loop: false,
     });

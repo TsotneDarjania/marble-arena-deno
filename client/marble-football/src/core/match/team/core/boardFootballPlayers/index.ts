@@ -33,7 +33,7 @@ export default class BoardFootballPlayers {
     this.goalKeeper.setPosition(
       this.side === "left"
         ? -this.stadium.fieldWidth / 2 - this.goalKeeper.displayWidth / 2
-        : this.stadium.fieldWidth / 2 - this.goalKeeper.displayWidth / 2,
+        : this.stadium.fieldWidth / 2 - this.goalKeeper.displayWidth / 2 - 3,
       0
     );
     this.stadium.add(this.goalKeeper);

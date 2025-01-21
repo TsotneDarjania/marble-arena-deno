@@ -22,6 +22,7 @@ export default class Preload extends Scene {
     this.load.image("stadiumBck", "image/gameObjects/stadium-bck.png");
     this.load.image("stadiumLight", "image/gameObjects/stadium-light.png");
     this.load.image("triangle", "image/gameObjects/triangle.png");
+    this.load.image("grid", "image/gameObjects/grid.png");
 
     // UI
     this.load.image("defaultButton", "image/ui/default-button.png");
@@ -55,6 +56,9 @@ export default class Preload extends Scene {
     this.load.audio("goalBorder", ["sounds/goal-border.mp3"]);
     this.load.audio("border", ["sounds/border.mp3"]);
     this.load.audio("goalSelebration", ["sounds/goal-2.mp3"]);
+    this.load.audio("halt-time-referee", ["sounds/first-half-end.mp3"]);
+    this.load.audio("faul", ["sounds/is-faul.mp3"]);
+    this.load.audio("referee", ["sounds/referee.mp3"]);
   }
 
   create() {

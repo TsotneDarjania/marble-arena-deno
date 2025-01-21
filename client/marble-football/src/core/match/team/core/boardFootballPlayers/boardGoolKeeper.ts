@@ -1,6 +1,6 @@
 import GamePlay from "../../../../../scenes/GamePlay";
 import { TeamDataType } from "../../../../../types/gameTypes";
-import { calculatePercentage } from "../../../../../utils/math";
+import { calculatePercentage, mapToRange } from "../../../../../utils/math";
 import BoardFootballPlayer from "../../footballplayers/boardFootballPlayer";
 
 export default class BoardGoalKeeper extends BoardFootballPlayer {
@@ -18,8 +18,8 @@ export default class BoardGoalKeeper extends BoardFootballPlayer {
 
     this.tween = this.scene.tweens.add({
       targets: this,
-      y: { from: -55, to: 46 },
-      duration: 1000,
+      y: { from: -55, to: 52 },
+      duration: mapToRange(this.teamData.goalKeeperSpeed, 1200, 400),
       ease: Phaser.Math.Easing.Quadratic.InOut,
       yoyo: true,
       repeat: -1,

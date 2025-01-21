@@ -1,4 +1,5 @@
 import GamePlay from "../../../scenes/GamePlay";
+import { calculatePercentage } from "../../../utils/math";
 import Spectators from "./spectators";
 import StadiumColliders from "./stadiumColliders";
 import StadiumLight from "./stadiumLight";
@@ -40,6 +41,22 @@ export class Stadium extends Phaser.GameObjects.Container {
 
     this.addLights();
     this.addColliders();
+
+    this.addGrids();
+  }
+
+  addGrids() {
+    const leftGrid = this.scene.add.image(0, 0, "grid");
+    leftGrid.x = -calculatePercentage(46.8, this.stadiumWidth);
+    leftGrid.setDisplaySize(35, leftGrid.height);
+    leftGrid.y = -1;
+    this.add(leftGrid);
+
+    const rightGrid = this.scene.add.image(0, 0, "grid");
+    rightGrid.x = calculatePercentage(46.5, this.stadiumWidth);
+    rightGrid.setDisplaySize(37, leftGrid.height);
+    rightGrid.y = -1;
+    this.add(rightGrid);
   }
 
   addBakcground() {
@@ -48,7 +65,7 @@ export class Stadium extends Phaser.GameObjects.Container {
       this.scene.game.canvas.height / 2,
       "stadiumBck"
     );
-    stadiumBck.setTint(0x01010a);
+    stadiumBck.setTint(0xffffff);
     stadiumBck.setScale(0.8);
   }
 
@@ -74,7 +91,7 @@ export class Stadium extends Phaser.GameObjects.Container {
       "stadiumSurrounding"
     );
 
-    stadiumSurrounding.setTint(0x074a7a);
+    stadiumSurrounding.setTint(0xffffff);
     this.add(stadiumSurrounding);
   }
 

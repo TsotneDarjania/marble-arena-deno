@@ -1,6 +1,7 @@
 import { FootballPlayerData, MatchType } from "../../types/gameTypes";
 import { Ball } from "./ball";
 import CollisionDetector from "./collisionDetector";
+import { MatchIntroEnvironment } from "./matchIntroEnvironment";
 import MatchManager from "./mathManager";
 import { Stadium } from "./stadium";
 import Team from "./team";
@@ -19,6 +20,8 @@ export default class Match {
   timer: TimeManager;
 
   matchManager: MatchManager;
+
+  matchIntroEnvironment!: MatchIntroEnvironment;
 
   constructor(public matchData: MatchType) {
     this.init();
@@ -46,9 +49,13 @@ export default class Match {
     };
   }
 
-  goalSelebration(whoScored: "host" | "guest") {
-    this.stadium.goalSelebration(whoScored);
+  addMatchIntroEnvironment() {
+    this.matchIntroEnvironment = new MatchIntroEnvironment(this);
   }
+
+  // goalSelebration(whoScored: "host" | "guest") {
+  //   this.stadium.goalSelebration(whoScored);
+  // }
 
   // addStartLeyoutTeams() {
   //   this.startTeamLogos = [];
