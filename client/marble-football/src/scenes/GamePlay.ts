@@ -3,7 +3,6 @@ import { Match } from "../core";
 import CameraMotion from "../core/cameraMotion";
 import CanvasScene from "./CanvasScene";
 import { SoundManager } from "../core/soundManager";
-import matchConfig from "../config/matchConfig";
 
 export default class GamePlay extends Phaser.Scene {
   match: Match;
@@ -32,60 +31,53 @@ export default class GamePlay extends Phaser.Scene {
   createMatch() {
     this.soundManager.stadiumNoice.play();
 
-    this.match = new Match({
-      scene: this,
-      hostTeamData: {
-        name: "Liverpool",
-        initials: "LV",
-        logoKey: "liverpool",
-        formation: "5-3-2",
-        fansColor: 0x205c5c,
-        tactics: {
-          formation: {
-            defenceLine: "wide-attack",
-            centerLine: "wide-attack",
-            // attackLine: "wide-attack", ეს ჯერ არ მუშაობს
+    this.match = new Match(
+      {
+        scene: this,
+        hostTeamData: {
+          name: "Liverpool",
+          initials: "LV",
+          logoKey: "liverpool",
+          formation: "5-3-2",
+          fansColor: 0x205c5c,
+          tactics: {
+            formation: {
+              defenceLine: "wide-attack",
+              centerLine: "wide-attack",
+              attackLine: "wide-attack", //ეს ჯერ არ მუშაობს
+            },
           },
+          passSpeed: 1,
+          shootSpeed: 1,
+          goalKeeperSpeed: 1,
+          motionSpeed: 1,
         },
-        passSpeed: 1,
-        shootSpeed: 1,
-<<<<<<< HEAD
-        goalKeeperSpeed: 30,
-        fansColor: 0x205c5c,
-=======
-        goalKeeperSpeed: 1,
->>>>>>> 80a553d86706c7472dda376310a9803cf7936adf
-        motionSpeed: 1,
-      },
-      guestTeamData: {
-        name: "Manchester City",
-        initials: "MC",
-        logoKey: "manchester-city",
-        formation: "4-4-2",
-        fansColor: 0x205c5c,
-        tactics: {
-          formation: {
-            defenceLine: "wide-attack",
-            centerLine: "wide-attack",
-            // attackLine: "wide-attack", ეს ჯერ არ მუშაობს
+        guestTeamData: {
+          name: "Manchester City",
+          initials: "MC",
+          logoKey: "manchester-city",
+          formation: "4-4-2",
+          fansColor: 0x205c5c,
+          tactics: {
+            formation: {
+              defenceLine: "wide-attack",
+              centerLine: "wide-attack",
+              attackLine: "wide-attack", // ეს ჯერ არ მუშაობს
+            },
           },
+          passSpeed: 100,
+          shootSpeed: 100,
+          goalKeeperSpeed: 100,
+          motionSpeed: 100,
         },
-        passSpeed: 100,
-        shootSpeed: 100,
-<<<<<<< HEAD
-        goalKeeperSpeed: 70,
-        fansColor: 0x205c5c,
-=======
-        goalKeeperSpeed: 100,
->>>>>>> 80a553d86706c7472dda376310a9803cf7936adf
-        motionSpeed: 100,
+        gameConfig: {
+          mode: "board-football",
+          withExtraTimes: true,
+          hostFansCountPercent: 50,
+        },
       },
-      gameConfig: {
-        mode: "board-football",
-        withExtraTimes: true,
-        hostFansCountPercent: 50,
-      },
-    });
+      this
+    );
   }
 
   createCameraMotion() {
@@ -94,7 +86,7 @@ export default class GamePlay extends Phaser.Scene {
 
   startMatchPrepare() {
     this.cameraMotion.showStartGameAnimation();
-    this.match.addStartLeyoutTeams();
+    this.match.showMatchIntroEnvironment();
 
     setTimeout(() => {
       this.addEventListeners();

@@ -1,5 +1,47 @@
 import Match from "..";
 
 export class MatchIntroEnvironment {
-  constructor(public match: Match) {}
+  images!: Array<Phaser.GameObjects.Image>;
+
+  constructor(public match: Match) {
+    this.init();
+  }
+
+  init() {
+    this.addHostTeamfootballers();
+    this.addGuestTeamfootballers();
+  }
+
+  addHostTeamfootballers() {
+    this.addfootballers("left");
+  }
+
+  addGuestTeamfootballers() {
+    this.addfootballers("right");
+  }
+
+  addfootballers(side: "left" | "right") {
+    let y = -140;
+
+    for (let i = 0; i < 10; i++) {
+      const image = this.match.matchData.scene.add.image(
+        side === "left" ? -40 : 40,
+        y,
+        side === "left"
+          ? this.match.matchData.hostTeamData.logoKey
+          : this.match.matchData.guestTeamData.logoKey
+      );
+      image.setScale(0.5);
+
+      this.match.stadium.add(image);
+
+      y += 33;
+    }
+  }
+
+  destroy() {
+    this.images.forEach((image) => {
+      image.destroy(true);
+    });
+  }
 }

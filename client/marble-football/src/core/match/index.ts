@@ -1,3 +1,4 @@
+import GamePlay from "../../scenes/GamePlay";
 import { FootballPlayerData, MatchType } from "../../types/gameTypes";
 import { Ball } from "./ball";
 import CollisionDetector from "./collisionDetector";
@@ -23,7 +24,7 @@ export default class Match {
 
   matchIntroEnvironment!: MatchIntroEnvironment;
 
-  constructor(public matchData: MatchType) {
+  constructor(public matchData: MatchType, public scene: GamePlay) {
     this.init();
   }
 
@@ -49,7 +50,7 @@ export default class Match {
     };
   }
 
-  addMatchIntroEnvironment() {
+  showMatchIntroEnvironment() {
     this.matchIntroEnvironment = new MatchIntroEnvironment(this);
   }
 
@@ -57,38 +58,8 @@ export default class Match {
   //   this.stadium.goalSelebration(whoScored);
   // }
 
-  // addStartLeyoutTeams() {
-  //   this.startTeamLogos = [];
-  //   // Host team
-  //   let x = -176;
-  //   for (let i = 0; i < 11; i++) {
-  //     const image = this.scene.add
-  //       .image(x, -180, "manchester-city")
-  //       .setScale(0.6);
-  //     this.stadium.add(image);
-  //     this.startTeamLogos.push(image);
-  //     x += 35;
-  //   }
-
-  //   // Guest team
-  //   x = -176;
-  //   for (let i = 0; i < 11; i++) {
-  //     const image = this.scene.add.image(x, -120, "liverpool").setScale(0.6);
-  //     this.startTeamLogos.push(image);
-  //     this.stadium.add(image);
-  //     x += 35;
-  //   }
-
-  //   this.startTeamLogosTween = this.scene.tweens.add({
-  //     targets: this.startTeamLogos,
-  //     alpha: 0.4,
-  //     duration: 500,
-  //     yoyo: true,
-  //     repeat: -1,
-  //   });
-  // }
-
   startMatch() {
+    this.matchIntroEnvironment.destroy();
     this.addBall();
     this.addTeams();
     this.setMatchInstanceForFootballers();

@@ -62,7 +62,7 @@ export default class MatchManager {
   }
 
   makeFirstKick() {
-    if (this.match.gameConfig.mode === "board-football") {
+    if (this.match.matchData.gameConfig.mode === "board-football") {
       const footballers =
         this.match.hostTeam.boardFootballPlayers.middleColumn.footballers;
       const randomFootballer =
@@ -283,7 +283,7 @@ export default class MatchManager {
         cavnasScene.timerText.setText("45");
       }
       if (this.matchTimeStatus === "fullTimeEnd") {
-        if (this.match.gameConfig.withExtraTimes) {
+        if (this.match.matchData.gameConfig.withExtraTimes) {
           if (this.hostScore === this.guestScore) {
             this.resumeMatch("guest");
           }
@@ -532,16 +532,16 @@ export default class MatchManager {
           "CanvasScene"
         ) as CanvasScene;
         canvasScene.showLastresult({
-          winner: this.match.hostTeamData.name,
-          winnerLogoKey: this.match.hostTeamData.logoKey,
+          winner: this.match.matchData.hostTeamData.name,
+          winnerLogoKey: this.match.matchData.hostTeamData.logoKey,
         });
       } else {
         const canvasScene = this.match.scene.scene.get(
           "CanvasScene"
         ) as CanvasScene;
         canvasScene.showLastresult({
-          winner: this.match.guestTeamData.name,
-          winnerLogoKey: this.match.guestTeamData.logoKey,
+          winner: this.match.matchData.guestTeamData.name,
+          winnerLogoKey: this.match.matchData.guestTeamData.logoKey,
         });
       }
     }
