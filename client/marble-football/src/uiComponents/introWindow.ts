@@ -20,8 +20,8 @@ export class IntroWindow extends Phaser.GameObjects.Container {
         logoKey: string;
       };
       info: {
-        mode: "Marble League" | "Marble Cup" | "Marble Friendly";
-        title: string;
+        matchTitle: string;
+        matchSubTitle: string;
       };
     }
   ) {
@@ -33,9 +33,8 @@ export class IntroWindow extends Phaser.GameObjects.Container {
 
   init() {
     this.addBackground();
-    // this.showBrandTitle();
-
-    // this.addMatchInfoTexts();
+    this.showBrandTitle();
+    this.addMatchInfoTexts();
   }
 
   addMatchInfoTexts() {
@@ -45,7 +44,7 @@ export class IntroWindow extends Phaser.GameObjects.Container {
           this.scene.game.canvas.width / 2 +
             calculatePercentage(100, this.scene.game.canvas.width),
           this.scene.game.canvas.height / 2 - 50,
-          this.matchData.info.mode,
+          this.matchData.info.matchTitle,
           {
             fontSize: "64px",
             color: "#ffffff",
@@ -73,7 +72,7 @@ export class IntroWindow extends Phaser.GameObjects.Container {
           this.scene.game.canvas.width / 2 -
             calculatePercentage(100, this.scene.game.canvas.width),
           this.scene.game.canvas.height / 2 + 50,
-          this.matchData.info.title,
+          this.matchData.info.matchSubTitle,
           {
             fontSize: "45px",
             color: "#ffffff",
@@ -98,29 +97,27 @@ export class IntroWindow extends Phaser.GameObjects.Container {
           setTimeout(() => {
             this.scene.tweens.add({
               targets: matchModeTitle,
-              duration: 2000,
+              duration: 200,
               scale: 0,
               alpha: 0,
               x:
                 this.scene.game.canvas.width / 2 -
                 calculatePercentage(100, this.scene.game.canvas.width),
-              ease: "Expo.easeInOut",
             });
 
             this.scene.tweens.add({
               targets: matchInfo,
-              duration: 2000,
+              duration: 200,
               scale: 0,
               alpha: 0,
               x:
                 this.scene.game.canvas.width / 2 +
                 calculatePercentage(100, this.scene.game.canvas.width),
-              ease: "Expo.easeInOut",
             });
-          }, 1800);
+          }, 800);
         },
       });
-    }, 3000);
+    }, 2000);
   }
 
   addBackground() {

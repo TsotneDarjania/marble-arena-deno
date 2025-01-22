@@ -1,7 +1,7 @@
 import { calculatePercentage } from "../utils/math";
 import Button from "./button";
 
-export class Overlay extends Phaser.GameObjects.Container {
+export class IntroOverlay extends Phaser.GameObjects.Container {
   background: Phaser.GameObjects.Image;
   button: Button;
   text: Phaser.GameObjects.Text;
@@ -50,15 +50,14 @@ export class Overlay extends Phaser.GameObjects.Container {
     this.add(this.text);
   }
 
-  addButton(textValue: string, onClick: () => void) {
+  addButton(textValue: string) {
     this.button = new Button(
       this.scene,
       0,
       this.text.y + this.text.height * 2 + calculatePercentage(2, this.height),
       calculatePercentage(this.width, 18),
       calculatePercentage(this.width, 6),
-      textValue,
-      onClick
+      textValue
     );
     this.add(this.button);
   }

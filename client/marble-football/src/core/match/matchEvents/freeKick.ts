@@ -51,8 +51,8 @@ export class FreeKick {
       this.match.ball.getBounds().centerY,
       "shooter",
       this.whoIsGuilty === "host"
-        ? this.match.guestTeamData.logoKey
-        : this.match.hostTeamData.logoKey,
+        ? this.match.matchData.guestTeamData.logoKey
+        : this.match.matchData.hostTeamData.logoKey,
       this.match,
       this.whoIsGuilty
     );
@@ -77,7 +77,7 @@ export class FreeKick {
         );
         this.match.hostTeam.boardFootballPlayers.middleColumn.startMotion(
           true,
-          this.match.hostTeamData.motionSpeed
+          this.match.matchData.hostTeamData.motionSpeed
         );
       } else {
         this.match.guestTeam.boardFootballPlayers.middleColumn.footballers.forEach(
@@ -88,7 +88,7 @@ export class FreeKick {
         );
         this.match.guestTeam.boardFootballPlayers.middleColumn.startMotion(
           true,
-          this.match.guestTeamData.motionSpeed
+          this.match.matchData.guestTeamData.motionSpeed
         );
       }
     }
@@ -102,8 +102,8 @@ export class FreeKick {
         0,
         "wallPlayer",
         this.whoIsGuilty === "host"
-          ? this.match.hostTeamData.logoKey
-          : this.match.guestTeamData.logoKey,
+          ? this.match.matchData.hostTeamData.logoKey
+          : this.match.matchData.guestTeamData.logoKey,
         this.match,
         this.whoIsGuilty
       );
@@ -160,7 +160,7 @@ export class FreeKick {
       const y = targetFootballer.getBounds().centerY;
 
       this.match.ball.kick(
-        mapToRange(this.match.guestTeamData.passSpeed, 160, 300),
+        mapToRange(this.match.matchData.guestTeamData.passSpeed, 160, 300),
         {
           x,
           y,
@@ -185,7 +185,7 @@ export class FreeKick {
       const y = targetFootballer.getBounds().centerY;
 
       this.match.ball.kick(
-        mapToRange(this.match.hostTeamData.passSpeed, 160, 300),
+        mapToRange(this.match.matchData.hostTeamData.passSpeed, 160, 300),
         {
           x,
           y,

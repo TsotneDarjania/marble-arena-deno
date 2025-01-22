@@ -75,7 +75,7 @@ export default class MatchManager {
   }
 
   startCamerFollow() {
-    this.match.scene.cameraMotion.startFollow(this.match.ball);
+    this.match.scene.cameraController.startFollow(this.match.ball);
   }
 
   startOponentTeamMotion(team: Team) {

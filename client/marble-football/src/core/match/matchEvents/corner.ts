@@ -115,8 +115,8 @@ export class Corner {
       defenderY,
       this.match.ball.getBounds().centerX <
         this.match.scene.game.canvas.width / 2
-        ? this.match.hostTeamData.logoKey
-        : this.match.guestTeamData.logoKey
+        ? this.match.matchData.hostTeamData.logoKey
+        : this.match.matchData.guestTeamData.logoKey
     );
 
     let a = true;
@@ -148,8 +148,8 @@ export class Corner {
       attackerY,
       this.match.ball.getBounds().centerX <
         this.match.scene.game.canvas.width / 2
-        ? this.match.guestTeamData.logoKey
-        : this.match.hostTeamData.logoKey
+        ? this.match.matchData.guestTeamData.logoKey
+        : this.match.matchData.hostTeamData.logoKey
     );
 
     let once_2 = true;
@@ -229,8 +229,8 @@ export class Corner {
     this.match.ball.kick(
       mapToRange(
         side === "left"
-          ? this.match.guestTeamData.passSpeed
-          : this.match.hostTeamData.passSpeed,
+          ? this.match.matchData.guestTeamData.passSpeed
+          : this.match.matchData.hostTeamData.passSpeed,
         250,
         500
       ),

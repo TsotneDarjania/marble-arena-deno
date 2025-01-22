@@ -3,7 +3,7 @@ import GamePlay from "../../scenes/GamePlay";
 import { calculatePercentage } from "../../utils/math";
 import { SelectBar } from "../uiMechanics";
 
-export default class CameraController {
+export default class CanvasSceneCameraController {
   zoomProgressBar: SelectBar;
 
   constructor(public scene: CanvasScene, public gamePlayScene: GamePlay) {

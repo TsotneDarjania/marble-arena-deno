@@ -1,7 +1,7 @@
 import Match from "..";
 
 export class MatchIntroEnvironment {
-  images!: Array<Phaser.GameObjects.Image>;
+  images: Array<Phaser.GameObjects.Image> = [];
 
   constructor(public match: Match) {
     this.init();
@@ -24,7 +24,7 @@ export class MatchIntroEnvironment {
     let y = -140;
 
     for (let i = 0; i < 10; i++) {
-      const image = this.match.matchData.scene.add.image(
+      const image = this.match.scene.add.image(
         side === "left" ? -40 : 40,
         y,
         side === "left"
@@ -32,7 +32,15 @@ export class MatchIntroEnvironment {
           : this.match.matchData.guestTeamData.logoKey
       );
       image.setScale(0.5);
+      image.alpha = 0;
 
+      this.match.scene.tweens.add({
+        targets: image,
+        alpha: 1,
+        duration: 1000,
+        delay: i * 380,
+      });
+      this.images.push(image);
       this.match.stadium.add(image);
 
       y += 33;

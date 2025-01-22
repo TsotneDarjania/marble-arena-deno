@@ -11,7 +11,7 @@ export default class Button extends Phaser.GameObjects.Container {
     public width: number,
     public height: number,
     public innertext: string,
-    public onClick: () => void
+    public onClick?: () => void
   ) {
     super(scene, x, y);
     scene.add.existing(this);
@@ -24,16 +24,15 @@ export default class Button extends Phaser.GameObjects.Container {
     this.addText(this.innertext, 0, 0);
 
     this.makeInteractive();
-    this.addEventListeners();
   }
 
-  addEventListeners() {
+  addOnClickEvent(onClick: () => void) {
     this.background.on("pointerdown", () => {
-      this.onClick();
+      onClick();
     });
 
     this.text.on("pointerdown", () => {
-      this.onClick();
+      onClick();
     });
   }
 

@@ -1,5 +1,5 @@
 import GamePlay from "../../scenes/GamePlay";
-import { FootballPlayerData, MatchType } from "../../types/gameTypes";
+import { FootballPlayerData, MatchDataType } from "../../types/gameTypes";
 import { Ball } from "./ball";
 import CollisionDetector from "./collisionDetector";
 import { MatchIntroEnvironment } from "./matchIntroEnvironment";
@@ -24,7 +24,7 @@ export default class Match {
 
   matchIntroEnvironment!: MatchIntroEnvironment;
 
-  constructor(public matchData: MatchType, public scene: GamePlay) {
+  constructor(public matchData: MatchDataType, public scene: GamePlay) {
     this.init();
   }
 
@@ -36,9 +36,9 @@ export default class Match {
 
   addStadium() {
     this.stadium = new Stadium(
-      this.matchData.scene,
-      this.matchData.scene.game.canvas.width / 2,
-      this.matchData.scene.game.canvas.height / 2
+      this.scene,
+      this.scene.game.canvas.width / 2,
+      this.scene.game.canvas.height / 2
     );
   }
 
@@ -66,11 +66,11 @@ export default class Match {
     this.addCollisionDetector();
     this.addMatchManager();
 
-    this.matchData.scene.soundManager.timeStartReferee.play();
+    this.scene.soundManager.timeStartReferee.play();
 
     setTimeout(() => {
       this.matchManager.startMatch();
-      this.matchData.scene.soundManager.pass.play();
+      this.scene.soundManager.pass.play();
     }, 1000);
   }
 
@@ -169,16 +169,16 @@ export default class Match {
 
   addBall() {
     this.ball = new Ball(
-      this.matchData.scene,
-      this.matchData.scene.game.canvas.width / 2,
-      this.matchData.scene.game.canvas.height / 2,
+      this.scene,
+      this.scene.game.canvas.width / 2,
+      this.scene.game.canvas.height / 2,
       this.stadium
     );
   }
 
   addTeams() {
     this.hostTeam = new Team(
-      this.matchData.scene,
+      this.scene,
       this.matchData.hostTeamData,
       this.matchData.gameConfig,
       this.stadium,
@@ -186,7 +186,7 @@ export default class Match {
     );
 
     this.guestTeam = new Team(
-      this.matchData.scene,
+      this.scene,
       this.matchData.guestTeamData,
       this.matchData.gameConfig,
       this.stadium,
@@ -195,10 +195,10 @@ export default class Match {
   }
 
   addCollisionDetector() {
-    this.collisionDetector = new CollisionDetector(this.matchData.scene, this);
+    this.collisionDetector = new CollisionDetector(this.scene, this);
   }
 
   addTimer() {
-    this.timer = new TimeManager(this, this.matchData.scene);
+    this.timer = new TimeManager(this, this.scene);
   }
 }

@@ -1,13 +1,13 @@
 import * as Phaser from "phaser";
 import { CameraController } from "../core";
 import GamePlay from "./GamePlay";
-import { Overlay } from "../uiComponents/overlay";
+import { IntroOverlay } from "../uiComponents/overlay";
 import { IntroWindow } from "../uiComponents/introWindow";
-import matchConfig from "../config/matchConfig";
+import { matchDataConfig, matchInfo } from "../config/matchConfig";
 
 export default class CanvasScene extends Phaser.Scene {
   cameraController: CameraController;
-  startOverlay: Overlay;
+  introOverlay: IntroOverlay;
 
   gamePlayMenu: Phaser.GameObjects.Container;
   introWindow: IntroWindow;
@@ -24,7 +24,7 @@ export default class CanvasScene extends Phaser.Scene {
   }
 
   create() {
-    this.addStartOverlay();
+    this.addIntroOverlay();
     this.createCameraController();
     this.createIndicators();
   }
@@ -78,14 +78,14 @@ export default class CanvasScene extends Phaser.Scene {
     this.add.image(
       this.game.canvas.width / 2 - 158,
       56,
-      matchConfig.hostTeam.logoKey
+      matchDataConfig.hostTeamData.logoKey
     );
 
     // guestTeamLogo
     this.add.image(
       this.game.canvas.width / 2 + 158,
       56,
-      matchConfig.guestTeam.logoKey
+      matchDataConfig.guestTeamData.logoKey
     );
 
     // hostTeamInitials
@@ -93,7 +93,7 @@ export default class CanvasScene extends Phaser.Scene {
       .text(
         this.game.canvas.width / 2 - 120,
         60,
-        matchConfig.hostTeam.initials,
+        matchDataConfig.hostTeamData.initials,
         {
           fontSize: "35px",
           color: "#E9FFFF",
@@ -109,7 +109,7 @@ export default class CanvasScene extends Phaser.Scene {
       .text(
         this.game.canvas.width / 2 + 120,
         60,
-        matchConfig.guestTeam.initials,
+        matchDataConfig.guestTeamData.initials,
         {
           fontSize: "35px",
           color: "#E9FFFF",
@@ -147,8 +147,8 @@ export default class CanvasScene extends Phaser.Scene {
       .setDisplaySize(20, 7);
   }
 
-  addStartOverlay() {
-    this.startOverlay = new Overlay(
+  addIntroOverlay() {
+    this.introOverlay = new IntroOverlay(
       this,
       this.game.canvas.width / 2,
       this.game.canvas.height / 2,
@@ -156,20 +156,22 @@ export default class CanvasScene extends Phaser.Scene {
       this.game.canvas.height
     );
 
-    this.startOverlay.addText(
+    this.introOverlay.addText(
       "Set Your Camera Zoom to Begin the Simulation",
       0,
       0
     );
 
-    this.startOverlay.addButton("Start Simulation", () => {
-      this.startOverlay.destroy(true);
-      this.cameraController.destroy();
+    this.introOverlay.addButton("Start Simulation");
+  }
 
-      const gamePlayScene = this.scene.get("GamePlay") as GamePlay;
-      gamePlayScene.startMatchPrepare();
-      this.makeIntroAnimations();
-    });
+  startIntroAnimation() {
+    this.introOverlay.destroy(true);
+    this.cameraController.destroy();
+
+    const gamePlayScene = this.scene.get("GamePlay") as GamePlay;
+    gamePlayScene.startMatchPrepare();
+    this.makeIntroAnimation();
   }
 
   createCameraController() {
@@ -177,21 +179,19 @@ export default class CanvasScene extends Phaser.Scene {
     this.cameraController = new CameraController(this, gamePlayScene);
   }
 
-  createGameConfigMenu() {}
-
-  makeIntroAnimations() {
+  makeIntroAnimation() {
     this.introWindow = new IntroWindow(this, 0, 0, {
       hostTeam: {
-        name: "Manchester City",
-        logoKey: "manchester-city",
+        name: matchDataConfig.hostTeamData.name,
+        logoKey: matchDataConfig.hostTeamData.logoKey,
       },
       guestTeam: {
-        name: "Manchester United",
-        logoKey: "manchester-united",
+        name: matchDataConfig.guestTeamData.name,
+        logoKey: matchDataConfig.guestTeamData.logoKey,
       },
       info: {
-        mode: "Marble League",
-        title: "Fexture 1",
+        matchTitle: matchInfo.matchTitle,
+        matchSubTitle: matchInfo.matchSubTitle,
       },
     });
   }

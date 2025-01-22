@@ -1,8 +1,6 @@
 import BoardFootballPlayer from "../core/match/team/footballplayers/boardFootballPlayer";
-import GamePlay from "../scenes/GamePlay";
 
-export type MatchType = {
-  scene: GamePlay;
+export type MatchDataType = {
   hostTeamData: TeamDataType;
   guestTeamData: TeamDataType;
   gameConfig: GameConfigType;
@@ -13,23 +11,15 @@ export type TeamDataType = {
   initials: string;
   logoKey: string;
   formation: "4-4-2" | "4-3-3" | "5-3-2";
-<<<<<<< HEAD
-  tactics: {
-    formation: {
-      defenceLine: "normal" | "wide-attack";
-      centerLine: "normal" | "wide-attack" | "wide-back";
-      attackLine: "normal" | "wide-attack" | "wide-back";
-=======
   fansColor: number;
   tactics: {
     formation: {
       defenceLine: "wide-attack";
       centerLine: "wide-attack" | "wide-back";
->>>>>>> 80a553d86706c7472dda376310a9803cf7936adf
+      attackLine: "wide-attack" | "wide-back";
     };
   };
   passSpeed: number;
-  fansColor: number;
   shootSpeed: number;
   goalKeeperSpeed: number;
   motionSpeed: number;
@@ -44,6 +34,11 @@ export type GameConfigType = {
     | "experimental";
   withExtraTimes: boolean;
   hostFansCountPercent: number; // her you can set how many host team fans you want on stadium (from 0 to 100)
+};
+
+export type MatchInfoType = {
+  matchTitle: string;
+  matchSubTitle: string;
 };
 
 export type FootballPlayerData = {

@@ -1,6 +1,6 @@
 import GamePlay from "../../scenes/GamePlay";
 
-export default class CameraMotion {
+export default class GamePlayCameraController {
   constructor(public scene: GamePlay) {}
 
   showStartGameAnimation() {
@@ -10,6 +10,10 @@ export default class CameraMotion {
       "Cubic.easeInOut", // Easing function
       false // Force (set to true if you want to force the zoom change)
     );
+
+    this.scene.cameras.main.once("camerazoomcomplete", () => {
+      this.scene.events.emit("cameraZoomFinished");
+    });
   }
 
   startFollow(ball: Phaser.Physics.Arcade.Image) {
