@@ -32,8 +32,8 @@ export default class BoardFootballPlayers {
     // Adjust Positions
     this.goalKeeper.setPosition(
       this.side === "left"
-        ? -this.stadium.fieldWidth / 2 - this.goalKeeper.displayWidth / 2
-        : this.stadium.fieldWidth / 2 - this.goalKeeper.displayWidth / 2 - 3,
+        ? -this.stadium.innerFielddWidth / 2 - this.goalKeeper.displayWidth / 2
+        : this.stadium.innerFielddWidth / 2 - this.goalKeeper.displayWidth / 2,
       0
     );
     this.stadium.add(this.goalKeeper);
@@ -72,6 +72,25 @@ export default class BoardFootballPlayers {
       this.side
     );
     this.stadium.add(this.attackColumn);
+
+    // For Show Animation
+    [
+      this.defenceColumn,
+      this.middleColumn,
+      this.attackColumn,
+      this.goalKeeper,
+    ].forEach((column) => column.setAlpha(0));
+
+    this.scene.tweens.add({
+      targets: [
+        this.defenceColumn,
+        this.middleColumn,
+        this.attackColumn,
+        this.goalKeeper,
+      ],
+      duration: 600,
+      alpha: 1,
+    });
   }
 
   private setMotionDisance() {

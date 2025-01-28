@@ -51,14 +51,4 @@ export default class GamePlay extends Phaser.Scene {
     const canvasScene = (await this.scene.get("CanvasScene")) as CanvasScene;
     this.eventManager = new EventManager(this, canvasScene);
   }
-
-  addEventListeners() {
-    // this.input.keyboard?.on("keydown", (event: KeyboardEvent) => {
-    //   if (event.code === "Space") {
-    //     const canvasScene = this.scene.get("CanvasScene") as CanvasScene;
-    //     canvasScene.hideIntroWindow();
-    //     this.match.startMatch();
-    //   }
-    // });
-  }
 }

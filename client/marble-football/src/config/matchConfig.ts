@@ -14,10 +14,10 @@ export const matchDataConfig = {
         attackLine: "wide-attack", //ეს ჯერ არ მუშაობს
       },
     },
-    passSpeed: 1,
-    shootSpeed: 1,
-    goalKeeperSpeed: 1,
-    motionSpeed: 1,
+    passSpeed: 70,
+    shootSpeed: 90,
+    goalKeeperSpeed: 84,
+    motionSpeed: 51,
   },
   guestTeamData: {
     name: "Manchester City",
@@ -48,3 +48,7 @@ export const matchInfo = {
   matchTitle: "Marble League",
   matchSubTitle: "Fixture 1",
 } as MatchInfoType;
+
+export const stadiumConfig = {
+  spectatorsBackground: 0xffffff,
+};

@@ -1,10 +1,10 @@
 import GamePlay from "../../../../../scenes/GamePlay";
 import { TeamDataType } from "../../../../../types/gameTypes";
-import { calculatePercentage, mapToRange } from "../../../../../utils/math";
+import { mapToRange } from "../../../../../utils/math";
 import BoardFootballPlayer from "../../footballplayers/boardFootballPlayer";
 
 export default class BoardGoalKeeper extends BoardFootballPlayer {
-  tween: Phaser.Tweens.Tween;
+  tween?: Phaser.Tweens.Tween;
 
   constructor(scene: GamePlay, x: number, y: number, teamData: TeamDataType) {
     super(scene, x, y, teamData);
@@ -16,16 +16,26 @@ export default class BoardGoalKeeper extends BoardFootballPlayer {
       return;
     }
 
+    this.initialStartMotion();
+  }
+
+  private initialStartMotion() {
     this.tween = this.scene.tweens.add({
       targets: this,
-      y: { from: -55, to: 52 },
+      y: -55,
       duration: mapToRange(this.teamData.goalKeeperSpeed, 1200, 400),
       ease: Phaser.Math.Easing.Quadratic.InOut,
-      yoyo: true,
-      repeat: -1,
+      onComplete: () => {
+        this.tween = this.scene.tweens.add({
+          targets: this,
+          y: { from: -55, to: 52 },
+          duration: mapToRange(this.teamData.goalKeeperSpeed, 1200, 400),
+          ease: Phaser.Math.Easing.Quadratic.InOut,
+          yoyo: true,
+          repeat: -1,
+        });
+      },
     });
-    // Start fom 50% of the duration
-    this.tween.seek(calculatePercentage(50, 1000));
   }
 
   stopMotion() {
@@ -33,14 +43,13 @@ export default class BoardGoalKeeper extends BoardFootballPlayer {
   }
 
   reset() {
-    if (this.tween) {
-      this.tween.seek(calculatePercentage(50, 1000));
-    }
+    this.tween?.destroy();
+    this.tween = undefined;
 
     const x =
       this.playerData.who === "hostPlayer"
-        ? -this.match.stadium.fieldWidth / 2 - this.displayWidth / 2
-        : this.match.stadium.fieldWidth / 2 - this.displayWidth / 2;
+        ? -this.match.stadium.innerFielddWidth / 2 - this.displayWidth / 2
+        : this.match.stadium.innerFielddWidth / 2 - this.displayWidth / 2;
     this.setPosition(x, 0);
   }
 }

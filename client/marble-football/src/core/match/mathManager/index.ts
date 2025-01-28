@@ -197,7 +197,7 @@ export default class MatchManager {
     });
 
     if (whoScored === "host") {
-      this.match.stadium.goalSelebration("host");
+      this.match.stadium.goalSelebration("host", 2000);
 
       this.hostScore++;
       const canvasScene = this.match.scene.scene.get(
@@ -205,7 +205,7 @@ export default class MatchManager {
       ) as CanvasScene;
       canvasScene.hostTeamScoretext.setText(this.hostScore.toString());
     } else {
-      this.match.stadium.goalSelebration("guest");
+      this.match.stadium.goalSelebration("guest", 2000);
 
       this.guestScore++;
       const canvasScene = this.match.scene.scene.get(
@@ -245,6 +245,8 @@ export default class MatchManager {
     this.match.ball.reset();
     this.match.hostTeam.reset();
     this.match.guestTeam.reset();
+
+    this.isGoalSelebration = false;
   }
 
   resetUfterTimeEnd() {
@@ -428,8 +430,6 @@ export default class MatchManager {
       f.isFreeKickBehaviour = false;
       f.withBall = false;
     });
-
-    this.isGoalSelebration = false;
 
     if (whoScored === "host") {
       this.match.hostTeam.startMotion();

@@ -54,24 +54,23 @@ export default class Match {
     this.matchIntroEnvironment = new MatchIntroEnvironment(this);
   }
 
-  // goalSelebration(whoScored: "host" | "guest") {
-  //   this.stadium.goalSelebration(whoScored);
-  // }
-
   startMatch() {
     this.matchIntroEnvironment.destroy();
-    this.addBall();
-    this.addTeams();
-    this.setMatchInstanceForFootballers();
-    this.addCollisionDetector();
-    this.addMatchManager();
 
-    this.scene.soundManager.timeStartReferee.play();
+    setTimeout(() => {
+      this.addBall();
+      this.addTeams();
+      this.setMatchInstanceForFootballers();
+      this.addCollisionDetector();
+      this.addMatchManager();
+
+      this.scene.soundManager.timeStartReferee.play();
+    }, 1500);
 
     setTimeout(() => {
       this.matchManager.startMatch();
       this.scene.soundManager.pass.play();
-    }, 1000);
+    }, 2000);
   }
 
   addMatchManager() {

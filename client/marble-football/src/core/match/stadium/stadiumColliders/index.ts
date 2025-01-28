@@ -31,8 +31,8 @@ export default class StadiumColliders {
     this.leftGoalColliders = [];
 
     const leftTop = this.scene.physics.add.body(
-      this.scene.game.canvas.width / 2 - this.stadium.fieldWidth / 2 - 60,
-      this.scene.game.canvas.height / 2 - 85,
+      this.scene.game.canvas.width / 2 - this.stadium.innerFielddWidth / 2 - 60,
+      this.scene.game.canvas.height / 2 - 79,
       60,
       13
     );
@@ -40,8 +40,8 @@ export default class StadiumColliders {
     this.goalPostColliders.push(leftTop);
 
     const leftBottom = this.scene.physics.add.body(
-      this.scene.game.canvas.width / 2 - this.stadium.fieldWidth / 2 - 60,
-      this.scene.game.canvas.height / 2 + 72,
+      this.scene.game.canvas.width / 2 - this.stadium.innerFielddWidth / 2 - 60,
+      this.scene.game.canvas.height / 2 + 65,
       60,
       13
     );
@@ -49,7 +49,7 @@ export default class StadiumColliders {
     this.goalPostColliders.push(leftBottom);
 
     const leftBase = this.scene.physics.add.body(
-      this.scene.game.canvas.width / 2 - this.stadium.fieldWidth / 2 - 70,
+      this.scene.game.canvas.width / 2 - this.stadium.innerFielddWidth / 2 - 70,
       this.scene.game.canvas.height / 2 - 85,
       13,
       170
@@ -63,8 +63,8 @@ export default class StadiumColliders {
     this.rightGoalColliders = [];
 
     const rightTop = this.scene.physics.add.body(
-      this.scene.game.canvas.width / 2 + this.stadium.fieldWidth / 2,
-      this.scene.game.canvas.height / 2 - 85,
+      this.scene.game.canvas.width / 2 + this.stadium.innerFielddWidth / 2,
+      this.scene.game.canvas.height / 2 - 79,
       60,
       13
     );
@@ -72,8 +72,8 @@ export default class StadiumColliders {
     this.goalPostColliders.push(rightTop);
 
     const rightBottom = this.scene.physics.add.body(
-      this.scene.game.canvas.width / 2 + this.stadium.fieldWidth / 2,
-      this.scene.game.canvas.height / 2 + 72,
+      this.scene.game.canvas.width / 2 + this.stadium.innerFielddWidth / 2,
+      this.scene.game.canvas.height / 2 + 65,
       60,
       13
     );
@@ -81,7 +81,7 @@ export default class StadiumColliders {
     this.goalPostColliders.push(rightBottom);
 
     const rightBase = this.scene.physics.add.body(
-      this.scene.game.canvas.width / 2 + this.stadium.fieldWidth / 2 + 56,
+      this.scene.game.canvas.width / 2 + this.stadium.innerFielddWidth / 2 + 56,
       this.scene.game.canvas.height / 2 - 85,
       13,
       170
@@ -96,48 +96,60 @@ export default class StadiumColliders {
     this.borderColliders = [];
 
     this.topCollider = this.scene.physics.add.body(
-      this.scene.game.canvas.width / 2 - this.stadium.fieldWidth / 2,
-      this.scene.game.canvas.height / 2 - this.stadium.fieldHeight / 2,
-      this.stadium.fieldWidth,
+      this.scene.game.canvas.width / 2 - this.stadium.innerFielddWidth / 2,
+      this.scene.game.canvas.height / 2 -
+        this.stadium.innerFielddHeight / 2 -
+        15,
+      this.stadium.innerFielddWidth,
       13
     );
     this.topCollider.setImmovable(true);
 
     this.bottomCollider = this.scene.physics.add.body(
-      this.scene.game.canvas.width / 2 - this.stadium.fieldWidth / 2,
-      this.scene.game.canvas.height / 2 + this.stadium.fieldHeight / 2 - 13,
-      this.stadium.fieldWidth,
+      this.scene.game.canvas.width / 2 - this.stadium.innerFielddWidth / 2,
+      this.scene.game.canvas.height / 2 +
+        this.stadium.innerFielddHeight / 2 +
+        5,
+      this.stadium.innerFielddWidth,
       13
     );
     this.bottomCollider.setImmovable(true);
 
     this.leftTopCollider = this.scene.physics.add.body(
-      this.scene.game.canvas.width / 2 - this.stadium.fieldWidth / 2 - 13,
-      this.scene.game.canvas.height / 2 - this.stadium.fieldHeight / 2,
+      this.scene.game.canvas.width / 2 - this.stadium.innerFielddWidth / 2 - 13,
+      this.scene.game.canvas.height / 2 -
+        this.stadium.innerFielddHeight / 2 -
+        15,
       13,
-      210
+      180
     );
     this.leftTopCollider.setImmovable(true);
 
     this.leftBottomCollider = this.scene.physics.add.body(
-      this.scene.game.canvas.width / 2 - this.stadium.fieldWidth / 2 - 13,
-      this.scene.game.canvas.height / 2 + this.stadium.fieldHeight / 2 - 210,
+      this.scene.game.canvas.width / 2 - this.stadium.innerFielddWidth / 2 - 13,
+      this.scene.game.canvas.height / 2 +
+        this.stadium.innerFielddHeight / 2 -
+        180,
       13,
-      210
+      195
     );
     this.leftBottomCollider.setImmovable(true);
 
     this.rightTopCollider = this.scene.physics.add.body(
-      this.scene.game.canvas.width / 2 + this.stadium.fieldWidth / 2,
-      this.scene.game.canvas.height / 2 - this.stadium.fieldHeight / 2,
+      this.scene.game.canvas.width / 2 + this.stadium.innerFielddWidth / 2,
+      this.scene.game.canvas.height / 2 -
+        this.stadium.innerFielddHeight / 2 -
+        15,
       13,
-      210
+      195
     );
     this.rightTopCollider.setImmovable(true);
 
     this.rightBottomCollider = this.scene.physics.add.body(
-      this.scene.game.canvas.width / 2 + this.stadium.fieldWidth / 2,
-      this.scene.game.canvas.height / 2 + this.stadium.fieldHeight / 2 - 210,
+      this.scene.game.canvas.width / 2 + this.stadium.innerFielddWidth / 2,
+      this.scene.game.canvas.height / 2 +
+        this.stadium.innerFielddHeight / 2 -
+        187,
       13,
       210
     );

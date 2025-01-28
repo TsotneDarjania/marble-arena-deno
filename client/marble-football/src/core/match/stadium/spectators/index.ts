@@ -301,7 +301,7 @@ export default class Spectators extends Phaser.GameObjects.Container {
     }
   }
 
-  goalSelebration(whoScored: "host" | "guest") {
+  goalSelebration(whoScored: "host" | "guest", duration: number) {
     this.stadium.scene.tweens.add({
       targets:
         whoScored === "host"
@@ -309,7 +309,7 @@ export default class Spectators extends Phaser.GameObjects.Container {
           : this.guestTeamSpectators,
       alpha: 0.5,
       y: `-=15`,
-      duration: 200,
+      duration: duration / 18,
       yoyo: true,
       repeat: 18,
       onComplete: () => {

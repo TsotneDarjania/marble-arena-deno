@@ -14,7 +14,7 @@ export class Column extends Phaser.GameObjects.Container {
   quantity: number;
   motionDistance = 0;
 
-  tween: Tweens.Tween;
+  tween?: Tweens.Tween;
 
   constructor(
     public scene: GamePlay,
@@ -57,13 +57,13 @@ export class Column extends Phaser.GameObjects.Container {
     if (this.side === "left") {
       switch (this.type) {
         case "defence":
-          x = -calculatePercentage(40, this.stadium.fieldWidth);
+          x = -calculatePercentage(40, this.stadium.innerFielddWidth);
           break;
         case "middle":
-          x = -calculatePercentage(10, this.stadium.fieldWidth);
+          x = -calculatePercentage(10, this.stadium.innerFielddWidth);
           break;
         case "attack":
-          x = calculatePercentage(30, this.stadium.fieldWidth);
+          x = calculatePercentage(30, this.stadium.innerFielddWidth);
           break;
         default:
           throw Error("Invalid Parameter");
@@ -71,21 +71,21 @@ export class Column extends Phaser.GameObjects.Container {
     } else {
       switch (this.type) {
         case "defence":
-          x = calculatePercentage(40, this.stadium.fieldWidth);
+          x = calculatePercentage(40, this.stadium.innerFielddWidth);
           break;
         case "middle":
-          x = calculatePercentage(10, this.stadium.fieldWidth);
+          x = calculatePercentage(10, this.stadium.innerFielddWidth);
           break;
         case "attack":
-          x = -calculatePercentage(30, this.stadium.fieldWidth);
+          x = -calculatePercentage(30, this.stadium.innerFielddWidth);
           break;
         default:
           throw Error("Invalid Parameter");
       }
     }
 
-    const padding = this.stadium.fieldHeight / (this.quantity + 1);
-    let y = -this.stadium.stadiumHeight / 2 + padding;
+    const padding = this.stadium.innerFielddHeight / (this.quantity + 1);
+    let y = -this.stadium.innerFielddHeight / 2 + padding;
 
     for (let i = 0; i < this.quantity; i++) {
       const footballer = new BoardFootballPlayer(
@@ -103,11 +103,11 @@ export class Column extends Phaser.GameObjects.Container {
           this.side === "left"
             ? (footballer.x += calculatePercentage(
                 2.5,
-                this.stadium.fieldWidth
+                this.stadium.innerFielddWidth
               ))
             : (footballer.x -= calculatePercentage(
                 2.5,
-                this.stadium.fieldWidth
+                this.stadium.innerFielddWidth
               ));
         }
       }
@@ -120,11 +120,11 @@ export class Column extends Phaser.GameObjects.Container {
           this.side === "left"
             ? (footballer.x += calculatePercentage(
                 2.5,
-                this.stadium.fieldWidth
+                this.stadium.innerFielddWidth
               ))
             : (footballer.x -= calculatePercentage(
                 2.5,
-                this.stadium.fieldWidth
+                this.stadium.innerFielddWidth
               ));
         }
       }
@@ -137,11 +137,11 @@ export class Column extends Phaser.GameObjects.Container {
           this.side === "left"
             ? (footballer.x -= calculatePercentage(
                 2.5,
-                this.stadium.fieldWidth
+                this.stadium.innerFielddWidth
               ))
             : (footballer.x += calculatePercentage(
                 2.5,
-                this.stadium.fieldWidth
+                this.stadium.innerFielddWidth
               ));
         }
       }
@@ -172,16 +172,26 @@ export class Column extends Phaser.GameObjects.Container {
       return;
     }
 
+    this.startInitialMotion(duration);
+  }
+
+  startInitialMotion(duration: number) {
     this.tween = this.scene.add.tween({
       targets: this,
-      y: { from: -this.motionDistance - 15, to: this.motionDistance + 15 },
-      yoyo: true,
+      y: -this.motionDistance - 15,
       ease: Phaser.Math.Easing.Quadratic.InOut,
       duration: mapToRange(duration, 1200, 600),
-      repeat: -1,
+      onComplete: () => {
+        this.tween = this.scene.add.tween({
+          targets: this,
+          y: { from: -this.motionDistance - 15, to: this.motionDistance + 15 },
+          yoyo: true,
+          ease: Phaser.Math.Easing.Quadratic.InOut,
+          duration: mapToRange(duration, 1200, 600),
+          repeat: -1,
+        });
+      },
     });
-
-    this.tween.seek(calculatePercentage(50, 1000));
   }
 
   stopMotion() {
@@ -189,7 +199,9 @@ export class Column extends Phaser.GameObjects.Container {
   }
 
   public reset() {
-    this.tween?.seek(calculatePercentage(50, 1000));
+    this.tween?.destroy();
+    this.tween = undefined;
+
     this.setPosition(this.x, 0);
 
     this.footballers.forEach((f) => {

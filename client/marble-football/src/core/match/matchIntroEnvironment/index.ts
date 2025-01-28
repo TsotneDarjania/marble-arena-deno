@@ -21,7 +21,7 @@ export class MatchIntroEnvironment {
   }
 
   addfootballers(side: "left" | "right") {
-    let y = -140;
+    let y = -150;
 
     for (let i = 0; i < 10; i++) {
       const image = this.match.scene.add.image(
@@ -49,7 +49,14 @@ export class MatchIntroEnvironment {
 
   destroy() {
     this.images.forEach((image) => {
-      image.destroy(true);
+      this.match.scene.tweens.add({
+        targets: image,
+        duration: 180,
+        alpha: 0,
+        onComplete: () => {
+          image.destroy(true);
+        },
+      });
     });
   }
 }
