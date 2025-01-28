@@ -62,6 +62,9 @@ export default class CollisionDetector {
         if (this.match.matchManager.isCorner) {
           this.match.matchManager.freeKick?.saveFreeKick();
         }
+        if (this.match.matchManager.freeKick !== undefined) {
+          this.match.matchManager.freeKick?.saveFreeKick();
+        }
       }
     );
   }

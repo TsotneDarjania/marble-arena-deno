@@ -18,7 +18,9 @@ export default class TimeManager {
 
   startTimer() {
     this.timerEvent = this.scene.time.addEvent({
-      delay: 1000, // 1 second
+      delay: Math.floor(
+        (((60 * this.match.matchData.gameConfig.mathTime) / 2) * 1000) / 45
+      ), // 1 second
       callback: this.incrementTime,
       callbackScope: this,
       loop: true,

@@ -97,8 +97,8 @@ export class FreeKick {
       this.wallPlayer = new FreeKickFootballer(
         this.match.scene,
         this.whoIsGuilty === "host"
-          ? -calculatePercentage(30, this.match.stadium.fieldWidth)
-          : calculatePercentage(30, this.match.stadium.fieldWidth),
+          ? -calculatePercentage(30, this.match.stadium.innerFielddWidth)
+          : calculatePercentage(30, this.match.stadium.innerFielddWidth),
         0,
         "wallPlayer",
         this.whoIsGuilty === "host"

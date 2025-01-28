@@ -17,6 +17,8 @@ export class Stadium extends Phaser.GameObjects.Container {
 
   spectators: Spectators;
 
+  stadiumField: Phaser.GameObjects.Image;
+
   light1: StadiumLight;
   light2: StadiumLight;
   light3: StadiumLight;
@@ -51,14 +53,14 @@ export class Stadium extends Phaser.GameObjects.Container {
 
   addGrids() {
     const leftGrid = this.scene.add.image(0, 0, "grid");
-    leftGrid.x = -calculatePercentage(46.8, this.stadiumWidth);
-    leftGrid.setDisplaySize(35, leftGrid.height);
+    leftGrid.x = -calculatePercentage(44.1, this.stadiumWidth);
+    leftGrid.setDisplaySize(30, leftGrid.height - 10);
     leftGrid.y = -1;
     this.add(leftGrid);
 
     const rightGrid = this.scene.add.image(0, 0, "grid");
-    rightGrid.x = calculatePercentage(46.5, this.stadiumWidth);
-    rightGrid.setDisplaySize(37, leftGrid.height);
+    rightGrid.x = calculatePercentage(44.1, this.stadiumWidth);
+    rightGrid.setDisplaySize(30, leftGrid.height - 10);
     rightGrid.y = -1;
     this.add(rightGrid);
   }
@@ -74,12 +76,15 @@ export class Stadium extends Phaser.GameObjects.Container {
   }
 
   addfield() {
-    const stadiumfield = this.scene.add.image(
+    this.stadiumField = this.scene.add.image(
       this.scene.game.canvas.width / 2,
       this.scene.game.canvas.height / 2,
       "stadiumLines"
     );
-    stadiumfield.setDisplaySize(this.fieldImageWidth, this.fieldImageHeight);
+    this.stadiumField.setDisplaySize(
+      this.fieldImageWidth,
+      this.fieldImageHeight
+    );
   }
 
   addSpectators() {
@@ -132,13 +137,13 @@ export class Stadium extends Phaser.GameObjects.Container {
   }
 
   goalSelebration(team: "host" | "guest", duration: number) {
-    this.light1.makeAnimation(false);
-    this.light2.makeAnimation(false);
-    this.light3.makeAnimation(false);
-    this.light4.makeAnimation(true);
-    this.light5.makeAnimation(false);
-    this.light6.makeAnimation(true);
-    this.light7.makeAnimation(false);
+    this.light1.makeAnimation(false, duration);
+    this.light2.makeAnimation(false, duration);
+    this.light3.makeAnimation(false, duration);
+    this.light4.makeAnimation(true, duration);
+    this.light5.makeAnimation(false, duration);
+    this.light6.makeAnimation(true, duration);
+    this.light7.makeAnimation(false, duration);
 
     this.spectators.goalSelebration(team, duration);
   }

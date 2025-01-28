@@ -41,6 +41,7 @@ export const matchDataConfig = {
     mode: "board-football",
     withExtraTimes: true,
     hostFansCountPercent: 50,
+    mathTime: 2, //in minutes,
   },
 } as MatchDataType;
 
@@ -50,5 +51,5 @@ export const matchInfo = {
 } as MatchInfoType;
 
 export const stadiumConfig = {
-  spectatorsBackground: 0xffffff,
+  spectatorsBackground: 0x000000,
 };

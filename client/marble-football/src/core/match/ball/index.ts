@@ -69,7 +69,7 @@ export class Ball extends Phaser.Physics.Arcade.Image {
       targets: this,
       alpha: 0.3,
       duration: 300,
-      repeat: 6,
+      repeat: 12,
       onComplete: () => {
         this.setAlpha(1);
         callback();

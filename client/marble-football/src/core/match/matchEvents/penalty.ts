@@ -16,8 +16,8 @@ export class Penalty {
     this.shooterFootballer = new Phaser.GameObjects.Image(
       match.scene,
       whoIsGulity === "host"
-        ? -calculatePercentage(40, this.match.stadium.fieldWidth)
-        : calculatePercentage(40, this.match.stadium.fieldWidth),
+        ? -calculatePercentage(40, this.match.stadium.innerFielddWidth)
+        : calculatePercentage(40, this.match.stadium.innerFielddHeight),
       0,
       whoIsGulity === "host"
         ? this.match.matchData.guestTeamData.logoKey

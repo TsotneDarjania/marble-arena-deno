@@ -34,6 +34,7 @@ export type GameConfigType = {
     | "experimental";
   withExtraTimes: boolean;
   hostFansCountPercent: number; // her you can set how many host team fans you want on stadium (from 0 to 100)
+  mathTime: number;
 };
 
 export type MatchInfoType = {

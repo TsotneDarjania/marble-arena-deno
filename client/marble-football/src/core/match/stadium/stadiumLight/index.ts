@@ -54,7 +54,7 @@ export default class StadiumLight extends Phaser.GameObjects.Container {
     this.light.setVisible(false);
   }
 
-  makeAnimation(referse: boolean) {
+  makeAnimation(referse: boolean, duration: number) {
     this.turnOn();
 
     this.tween = this.scene.tweens.add({
@@ -63,7 +63,7 @@ export default class StadiumLight extends Phaser.GameObjects.Container {
         from: referse ? this.angle + 45 : this.angle - 45,
         to: referse ? this.angle - 45 : this.angle + 45,
       },
-      duration: 700,
+      duration: duration / 4,
       yoyo: true,
       repeat: 4,
       onComplete: () => {

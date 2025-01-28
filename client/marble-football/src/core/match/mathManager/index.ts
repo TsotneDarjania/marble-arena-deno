@@ -218,7 +218,7 @@ export default class MatchManager {
       this.match.ball.stop();
 
       this.match.ball.startBlinkAnimation(() => {
-        this.resetUfterGoal();
+        // this.resetUfterGoal();
       });
     }, 40);
   }
@@ -403,8 +403,17 @@ export default class MatchManager {
     }
   }
 
+
   // Resume Ufte Goal
-  resumeMatch(whoScored: "host" | "guest") {
+  async resumeMatch(whoScored: "host" | "guest") {
+    this.resetUfterGoal();
+
+    await new Promise<void>((resolve) => {
+      setTimeout(() => {
+        resolve();
+      }, 2700);
+    });
+
     if (this.corner !== undefined) {
       this.corner.destroy();
     }

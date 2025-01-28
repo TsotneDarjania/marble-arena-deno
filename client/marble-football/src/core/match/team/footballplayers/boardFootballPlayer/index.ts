@@ -207,7 +207,9 @@ export default class BoardFootballPlayer extends Phaser.GameObjects.Container {
     y = this.scene.game.canvas.height / 2;
 
     const randomY = getRandomIntNumber(200, 230);
-    this.getBounds().y > this.match.hostTeam.boardFootballPlayers.goalKeeper.y
+
+    this.getBounds().centerY >
+    this.match.stadium.stadiumField.getBounds().centerY
       ? (y += randomY)
       : (y -= randomY);
 
