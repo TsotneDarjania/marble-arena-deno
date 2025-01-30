@@ -22,6 +22,7 @@ export type TeamDataType = {
   passSpeed: number;
   shootSpeed: number;
   goalKeeperSpeed: number;
+  shootAccuracy: number;
   motionSpeed: number;
 };
 
