@@ -10,13 +10,13 @@ export type TeamDataType = {
   name: string;
   initials: string;
   logoKey: string;
-  formation: "4-4-2" | "4-3-3" | "5-3-2";
+  formation: string;
   fansColor: number;
   tactics: {
     formation: {
-      defenceLine: "wide-attack";
-      centerLine: "wide-attack" | "wide-back";
-      attackLine: "wide-attack" | "wide-back";
+      defenceLine: "wide-attack" | "normal";
+      centerLine: "wide-attack" | "wide-back" | "normal";
+      attackLine: "wide-attack" | "wide-back" | "normal";
     };
   };
   passSpeed: number;

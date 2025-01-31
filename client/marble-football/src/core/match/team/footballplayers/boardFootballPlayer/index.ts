@@ -96,7 +96,7 @@ export default class BoardFootballPlayer extends Phaser.GameObjects.Container {
         return;
       }
       if (this.isPenalty) {
-        this.match.matchManager.penalty!.savePenalty();
+        this.match.matchManager.penalty?.savePenalty();
         this.isPenalty = false;
         return;
       }

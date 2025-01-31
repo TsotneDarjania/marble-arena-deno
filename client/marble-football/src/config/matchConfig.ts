@@ -5,13 +5,13 @@ export const matchDataConfig = {
     name: "Liverpool",
     initials: "LV",
     logoKey: "liverpool",
-    formation: "5-3-2",
+    formation: "3-4-3",
     fansColor: 0x205c5c,
     tactics: {
       formation: {
-        defenceLine: "wide-attack",
+        defenceLine: "normal",
         centerLine: "wide-attack",
-        attackLine: "wide-attack", //ეს ჯერ არ მუშაობს
+        attackLine: "wide-back", //ეს ჯერ არ მუშაობს
       },
     },
     passSpeed: 70,
@@ -24,13 +24,13 @@ export const matchDataConfig = {
     name: "Manchester City",
     initials: "MC",
     logoKey: "manchester-city",
-    formation: "4-4-2",
+    formation: "4-3-3",
     fansColor: 0x205c5c,
     tactics: {
       formation: {
         defenceLine: "wide-attack",
         centerLine: "wide-attack",
-        attackLine: "wide-attack", // ეს ჯერ არ მუშაობს
+        attackLine: "normal", // ეს ჯერ არ მუშაობს
       },
     },
     passSpeed: 100,

@@ -94,17 +94,20 @@ export default class BoardFootballPlayers {
   }
 
   private setMotionDisance() {
-    let motionDistance = 0;
+    let motionDistance = 10000;
     [this.defenceColumn, this.middleColumn, this.attackColumn].forEach(
       (collumn) => {
-        if (collumn.motionDistance > motionDistance) {
+        if (collumn.motionDistance < motionDistance) {
           motionDistance = collumn.motionDistance;
-          this.defenceColumn.motionDistance = motionDistance;
-          this.middleColumn.motionDistance = motionDistance;
-          this.attackColumn.motionDistance = motionDistance;
         }
       }
     );
+
+    motionDistance -= 20;
+
+    this.defenceColumn.motionDistance = motionDistance;
+    this.middleColumn.motionDistance = motionDistance;
+    this.attackColumn.motionDistance = motionDistance;
   }
 
   startMotion() {

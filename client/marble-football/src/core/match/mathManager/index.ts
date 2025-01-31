@@ -179,6 +179,7 @@ export default class MatchManager {
 
     this.isGoalSelebration = true;
     this.freeKick?.destroy();
+    this.freeKick = undefined;
     this.match.timer.stopTimer();
 
     this.match.hostTeam.stopMotion();
@@ -403,7 +404,6 @@ export default class MatchManager {
     }
   }
 
-
   // Resume Ufte Goal
   async resumeMatch(whoScored: "host" | "guest") {
     this.resetUfterGoal();
@@ -571,7 +571,9 @@ export default class MatchManager {
     const canvasScene = this.match.scene.scene.get(
       "CanvasScene"
     ) as CanvasScene;
-    canvasScene.showMatchEvent("Free Kick");
+    playerPosition === "defender"
+      ? canvasScene.showMatchEvent("Penalty")
+      : canvasScene.showMatchEvent("Free Kick");
 
     setTimeout(() => {
       playerPosition === "defender"
@@ -581,11 +583,6 @@ export default class MatchManager {
   }
 
   makePenalty(who: "unkown" | "hostPlayer" | "guestPlayer") {
-    const canvasScene = this.match.scene.scene.get(
-      "CanvasScene"
-    ) as CanvasScene;
-    canvasScene.showMatchEvent("Penalty");
-
     this.penalty = new Penalty(
       this.match,
       who === "hostPlayer" ? "host" : "guest"

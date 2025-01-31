@@ -219,7 +219,7 @@ export class Corner {
             : this.match.guestTeam.boardFootballPlayers.goalKeeper.getBounds()
                 .x - getRandomIntNumber(70, 200),
       },
-      duration: 300,
+      duration: 500,
       ease: Phaser.Math.Easing.Quadratic.InOut,
     });
 
@@ -238,12 +238,6 @@ export class Corner {
       ease: Phaser.Math.Easing.Quadratic.InOut,
     });
 
-    // const randomX = getRandomIntNumber(0, 60);
-    const x =
-      getRandomIntNumber(0, 100) >= 50
-        ? this.attacker.getBounds().centerX
-        : this.attacker.getBounds().centerX;
-
     this.match.ball.kick(
       mapToRange(
         side === "left"
@@ -253,7 +247,10 @@ export class Corner {
         500
       ),
       {
-        x: x,
+        x:
+          side === "left"
+            ? this.attacker.getBounds().centerX - getRandomIntNumber(20, 90)
+            : this.attacker.getBounds().centerX + getRandomIntNumber(20, 90),
         y: this.attacker.getBounds().centerY,
       }
     );

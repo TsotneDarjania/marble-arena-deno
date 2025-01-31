@@ -17,7 +17,7 @@ export class Penalty {
       match.scene,
       whoIsGulity === "host"
         ? -calculatePercentage(40, this.match.stadium.innerFielddWidth)
-        : calculatePercentage(40, this.match.stadium.innerFielddHeight),
+        : calculatePercentage(40, this.match.stadium.innerFielddWidth),
       0,
       whoIsGulity === "host"
         ? this.match.matchData.guestTeamData.logoKey
@@ -73,6 +73,7 @@ export class Penalty {
     this.match.ball.stop();
     this.match.hostTeam.boardFootballPlayers.goalKeeper.stopMotion();
     this.match.guestTeam.boardFootballPlayers.goalKeeper.stopMotion();
+    
 
     setTimeout(() => {
       this.match.matchManager.resumeMatchUfterKFreeKickOrPenalty(

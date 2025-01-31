@@ -57,13 +57,13 @@ export class Column extends Phaser.GameObjects.Container {
     if (this.side === "left") {
       switch (this.type) {
         case "defence":
-          x = -calculatePercentage(40, this.stadium.innerFielddWidth);
+          x = -calculatePercentage(41, this.stadium.innerFielddWidth);
           break;
         case "middle":
           x = -calculatePercentage(10, this.stadium.innerFielddWidth);
           break;
         case "attack":
-          x = calculatePercentage(30, this.stadium.innerFielddWidth);
+          x = calculatePercentage(25, this.stadium.innerFielddWidth);
           break;
         default:
           throw Error("Invalid Parameter");
@@ -71,13 +71,13 @@ export class Column extends Phaser.GameObjects.Container {
     } else {
       switch (this.type) {
         case "defence":
-          x = calculatePercentage(40, this.stadium.innerFielddWidth);
+          x = calculatePercentage(41, this.stadium.innerFielddWidth);
           break;
         case "middle":
           x = calculatePercentage(10, this.stadium.innerFielddWidth);
           break;
         case "attack":
-          x = -calculatePercentage(30, this.stadium.innerFielddWidth);
+          x = -calculatePercentage(25, this.stadium.innerFielddWidth);
           break;
         default:
           throw Error("Invalid Parameter");
@@ -146,13 +146,47 @@ export class Column extends Phaser.GameObjects.Container {
         }
       }
 
+      if (
+        this.teamData.tactics.formation.attackLine === "wide-attack" &&
+        this.type === "attack"
+      ) {
+        if (i === 0 || i === this.quantity - 1) {
+          this.side === "left"
+            ? (footballer.x += calculatePercentage(
+                2.5,
+                this.stadium.innerFielddWidth
+              ))
+            : (footballer.x -= calculatePercentage(
+                2.5,
+                this.stadium.innerFielddWidth
+              ));
+        }
+      }
+
+      if (
+        this.teamData.tactics.formation.attackLine === "wide-back" &&
+        this.type === "attack"
+      ) {
+        if (i === 0 || i === this.quantity - 1) {
+          this.side === "left"
+            ? (footballer.x -= calculatePercentage(
+                2.5,
+                this.stadium.innerFielddWidth
+              ))
+            : (footballer.x += calculatePercentage(
+                2.5,
+                this.stadium.innerFielddWidth
+              ));
+        }
+      }
+
       y += padding;
 
       this.footballers.push(footballer);
       this.add(footballer);
 
       if (i === 0) {
-        this.motionDistance = padding - footballer.image.displayHeight;
+        this.motionDistance = padding - footballer.image.displayHeight / 2;
       }
     }
   }
@@ -163,10 +197,25 @@ export class Column extends Phaser.GameObjects.Container {
 
       if (blockFreeKickBehaviour) return;
       // Calculate Free Kick Possibility
-      if (getRandomIntNumber(0, 100) > 96) {
-        this.footballers[
-          getRandomIntNumber(0, this.footballers.length - 1)
-        ].startFreeKickBehaviour();
+      if (this.type !== "defence") {
+        if (getRandomIntNumber(0, 100) > 96) {
+          this.footballers[
+            getRandomIntNumber(0, this.footballers.length - 1)
+          ].startFreeKickBehaviour();
+        }
+      }
+      if (this.type === "defence") {
+        if (getRandomIntNumber(0, 100) > 96) {
+          if (this.footballers.length === 3) {
+            this.footballers[1].startFreeKickBehaviour();
+          }
+          if (this.footballers.length === 4) {
+            this.footballers[getRandomIntNumber(1, 2)].startFreeKickBehaviour();
+          }
+          if (this.footballers.length === 5) {
+            this.footballers[2].startFreeKickBehaviour();
+          }
+        }
       }
 
       return;
