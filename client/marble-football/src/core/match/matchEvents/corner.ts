@@ -6,8 +6,8 @@ import {
 } from "../../../utils/math";
 
 export class Corner {
-  attacker: Phaser.GameObjects.Image;
-  deffender: Phaser.GameObjects.Image;
+  attacker: Phaser.Physics.Arcade.Image;
+  deffender: Phaser.Physics.Arcade.Image;
   fakeFootballer: Phaser.GameObjects.Image;
 
   cornerAlreadyShoot = false;
@@ -127,6 +127,8 @@ export class Corner {
         : this.match.matchData.guestTeamData.logoKey
     );
 
+    this.deffender.setCircle(30);
+
     let a = true;
     let once = true;
     this.match.scene.physics.add.overlap(
@@ -159,6 +161,7 @@ export class Corner {
         ? this.match.matchData.guestTeamData.logoKey
         : this.match.matchData.hostTeamData.logoKey
     );
+    this.attacker.setCircle(30);
 
     this.fakeFootballer = this.match.scene.physics.add.image(
       fakeFootballer_x,
