@@ -16,6 +16,8 @@ export class Column extends Phaser.GameObjects.Container {
 
   tween?: Tweens.Tween;
 
+  isInMotion = false;
+
   constructor(
     public scene: GamePlay,
     x: number,
@@ -192,6 +194,9 @@ export class Column extends Phaser.GameObjects.Container {
   }
 
   startMotion(blockFreeKickBehaviour: boolean = false, duration: number) {
+    if (this.isInMotion === true) return;
+    this.isInMotion = true;
+
     if (this.tween) {
       this.tween?.resume();
 
@@ -244,6 +249,9 @@ export class Column extends Phaser.GameObjects.Container {
   }
 
   stopMotion() {
+    if (this.isInMotion === false) return;
+    this.isInMotion = false;
+
     this.tween?.pause();
   }
 

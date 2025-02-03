@@ -144,6 +144,16 @@ export default class BoardFootballPlayer extends Phaser.GameObjects.Container {
   takeBall() {
     this.scene.soundManager.catchBall.play();
 
+    this.match.hostTeam.stopMotion();
+    this.match.guestTeam.stopMotion();
+
+    if (this.playerData.who === "hostPlayer") {
+      this.match.matchManager.teamWhoHasBall = "hostTeam";
+    }
+    if (this.playerData.who === "guestPlayer") {
+      this.match.matchManager.teamWhoHasBall = "guestTeam";
+    }
+
     this.match.matchManager.someoneHasBall = true;
     if (this.match.matchManager.matchStatus !== "playing") return;
 

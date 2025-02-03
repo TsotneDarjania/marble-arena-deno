@@ -11,7 +11,7 @@ export const matchDataConfig = {
       formation: {
         defenceLine: "normal",
         centerLine: "wide-attack",
-        attackLine: "wide-back", //ეს ჯერ არ მუშაობს
+        attackLine: "wide-back",
       },
     },
     passSpeed: 70,
@@ -25,12 +25,12 @@ export const matchDataConfig = {
     initials: "MC",
     logoKey: "manchester-city",
     formation: "4-3-3",
-    fansColor: 0x205c5c,
+    fansColor: 0xffffff,
     tactics: {
       formation: {
         defenceLine: "wide-attack",
         centerLine: "wide-attack",
-        attackLine: "normal", // ეს ჯერ არ მუშაობს
+        attackLine: "normal",
       },
     },
     passSpeed: 100,
@@ -40,9 +40,9 @@ export const matchDataConfig = {
     motionSpeed: 100,
   },
   gameConfig: {
-    mode: "board-football",
+    mode: "marble-football",
     withExtraTimes: true,
-    hostFansCountPercent: 50,
+    hostFansCountPercent: 90,
     mathTime: 2, //in minutes,
   },
 } as MatchDataType;

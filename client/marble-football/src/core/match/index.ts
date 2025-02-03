@@ -1,3 +1,4 @@
+import { matchDataConfig } from "../../config/matchConfig";
 import GamePlay from "../../scenes/GamePlay";
 import { FootballPlayerData, MatchDataType } from "../../types/gameTypes";
 import { Ball } from "./ball";
@@ -46,7 +47,7 @@ export default class Match {
     this.stadium.spectators.fanColors = {
       hostColor: this.matchData.hostTeamData.fansColor,
       guestColor: this.matchData.guestTeamData.fansColor,
-      hostQuantityPercent: 45,
+      hostQuantityPercent: matchDataConfig.gameConfig.hostFansCountPercent,
     };
   }
 

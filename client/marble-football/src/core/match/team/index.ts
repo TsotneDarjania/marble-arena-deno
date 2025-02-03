@@ -33,7 +33,8 @@ export default class Team {
       case "board-football":
         this.addBoardFootballPlayers();
         break;
-      case "experimental":
+      case "marble-football":
+        this.addBoardFootballPlayers();
         break;
       default:
         throw new Error("Invalid mode");

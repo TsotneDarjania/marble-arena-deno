@@ -1,6 +1,6 @@
 import Match from "..";
 import CanvasScene from "../../../scenes/CanvasScene";
-import { getRandomIntNumber } from "../../../utils/math";
+import { calculateDistance, getRandomIntNumber } from "../../../utils/math";
 import { Corner } from "../matchEvents/corner";
 import { FreeKick } from "../matchEvents/freeKick";
 import { LastPenalties } from "../matchEvents/lastPenalties";
@@ -46,8 +46,10 @@ export default class MatchManager {
 
     this.startOponentTeamMotion(this.match.guestTeam);
 
-    this.match.hostTeam.boardFootballPlayers.goalKeeper.startMotion();
-    this.match.guestTeam.boardFootballPlayers.goalKeeper.startMotion();
+    if (this.match.matchData.gameConfig.mode === "board-football") {
+      this.match.hostTeam.boardFootballPlayers.goalKeeper.startMotion();
+      this.match.guestTeam.boardFootballPlayers.goalKeeper.startMotion();
+    }
 
     this.addEventListeners();
   }
@@ -62,7 +64,10 @@ export default class MatchManager {
   }
 
   makeFirstKick() {
-    if (this.match.matchData.gameConfig.mode === "board-football") {
+    if (
+      this.match.matchData.gameConfig.mode === "board-football" ||
+      this.match.matchData.gameConfig.mode === "marble-football"
+    ) {
       const footballers =
         this.match.hostTeam.boardFootballPlayers.middleColumn.footballers;
       const randomFootballer =
@@ -72,6 +77,56 @@ export default class MatchManager {
         y: randomFootballer.getBounds().centerY,
       });
     }
+
+    if (this.match.matchData.gameConfig.mode !== "marble-football") return;
+
+    this.match.scene.events.on("update", () => {
+      if (this.matchStatus !== "playing") return;
+      if (this.match.matchData.gameConfig.mode === "marble-football") {
+        [
+          this.match.hostTeam.boardFootballPlayers.defenceColumn,
+          this.match.hostTeam.boardFootballPlayers.middleColumn,
+          this.match.hostTeam.boardFootballPlayers.attackColumn,
+        ].forEach((column) => {
+          if (this.teamWhoHasBall === "hostTeam") return;
+
+          const distance = calculateDistance(
+            column.getBounds().centerX,
+            column.getBounds().centerY,
+            this.match.ball.getBounds().centerX,
+            this.match.ball.getBounds().centerY
+          );
+
+          distance < 200
+            ? column.startMotion(
+                undefined,
+                this.match.hostTeam.teamData.motionSpeed
+              )
+            : column.stopMotion();
+        });
+        [
+          this.match.guestTeam.boardFootballPlayers.defenceColumn,
+          this.match.guestTeam.boardFootballPlayers.middleColumn,
+          this.match.guestTeam.boardFootballPlayers.attackColumn,
+        ].forEach((column) => {
+          if (this.teamWhoHasBall === "guestTeam") return;
+
+          const distance = calculateDistance(
+            column.getBounds().centerX,
+            column.getBounds().centerY,
+            this.match.ball.getBounds().centerX,
+            this.match.ball.getBounds().centerY
+          );
+
+          distance < 200
+            ? column.startMotion(
+                undefined,
+                this.match.hostTeam.teamData.motionSpeed
+              )
+            : column.stopMotion();
+        });
+      }
+    });
   }
 
   startCamerFollow() {
@@ -133,13 +188,15 @@ export default class MatchManager {
       return;
     }
 
-    if (footballer.playerData.who === "hostPlayer") {
-      this.match.hostTeam.stopMotion();
-      this.match.guestTeam.startMotion();
-    }
-    if (footballer.playerData.who == "guestPlayer") {
-      this.match.guestTeam.stopMotion();
-      this.match.hostTeam.startMotion();
+    if (this.match.matchData.gameConfig.mode === "board-football") {
+      if (footballer.playerData.who === "hostPlayer") {
+        this.match.hostTeam.stopMotion();
+        this.match.guestTeam.startMotion();
+      }
+      if (footballer.playerData.who == "guestPlayer") {
+        this.match.guestTeam.stopMotion();
+        this.match.hostTeam.startMotion();
+      }
     }
   }
 
