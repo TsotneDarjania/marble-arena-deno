@@ -1,13 +1,12 @@
 import { matchDataConfig } from "../../config/matchConfig";
 import GamePlay from "../../scenes/GamePlay";
-import { FootballPlayerData, MatchDataType } from "../../types/gameTypes";
+import { MatchDataType } from "../../types/gameTypes";
 import { Ball } from "./ball";
 import CollisionDetector from "./collisionDetector";
 import { MatchIntroEnvironment } from "./matchIntroEnvironment";
 import MatchManager from "./mathManager";
 import { Stadium } from "./stadium";
 import Team from "./team";
-import BoardFootballPlayer from "./team/footballplayers/boardFootballPlayer";
 import TimeManager from "./timeManager";
 
 export default class Match {
@@ -19,7 +18,7 @@ export default class Match {
 
   collisionDetector: CollisionDetector;
 
-  timer: TimeManager;
+  matchTimer: TimeManager;
 
   matchManager: MatchManager;
 
@@ -32,7 +31,7 @@ export default class Match {
   init() {
     this.addStadium();
     this.setFanColors();
-    this.addTimer();
+    this.createTimer();
   }
 
   addStadium() {
@@ -60,10 +59,9 @@ export default class Match {
 
     setTimeout(() => {
       this.addBall();
-      this.addTeams();
-      this.setMatchInstanceForFootballers();
       this.addCollisionDetector();
-      this.addMatchManager();
+      this.createMatchManager();
+      this.addTeams();
 
       this.scene.soundManager.timeStartReferee.play();
     }, 1500);
@@ -71,100 +69,11 @@ export default class Match {
     setTimeout(() => {
       this.matchManager.startMatch();
       this.scene.soundManager.pass.play();
-    }, 2000);
+    }, 3200);
   }
 
-  addMatchManager() {
+  createMatchManager() {
     this.matchManager = new MatchManager(this);
-  }
-
-  setColliderAndDataToFootballers(
-    footballer: BoardFootballPlayer,
-    data: FootballPlayerData
-  ) {
-    footballer.setMatch = this;
-    footballer.playerData = data;
-    footballer.addCollider();
-  }
-
-  setMatchInstanceForFootballers() {
-    this.hostTeam.boardFootballPlayers.goalKeeper.setMatch = this;
-    this.setColliderAndDataToFootballers(
-      this.hostTeam.boardFootballPlayers.goalKeeper,
-      {
-        who: "hostPlayer",
-        position: "goalKeeper",
-      }
-    );
-    this.hostTeam.boardFootballPlayers.defenceColumn.footballers.forEach(
-      (footballer) => {
-        this.setColliderAndDataToFootballers(footballer, {
-          who: "hostPlayer",
-          potentialShortPassVariants:
-            this.hostTeam.boardFootballPlayers.middleColumn.footballers,
-          potentialLongPassVariants:
-            this.hostTeam.boardFootballPlayers.attackColumn.footballers,
-          position: "defender",
-        });
-      }
-    );
-    this.hostTeam.boardFootballPlayers.middleColumn.footballers.forEach(
-      (footballer) => {
-        this.setColliderAndDataToFootballers(footballer, {
-          who: "hostPlayer",
-          potentialShortPassVariants:
-            this.hostTeam.boardFootballPlayers.attackColumn.footballers,
-          position: "middfielder",
-        });
-      }
-    );
-    this.hostTeam.boardFootballPlayers.attackColumn.footballers.forEach(
-      (footballer) => {
-        this.setColliderAndDataToFootballers(footballer, {
-          who: "hostPlayer",
-          position: "attacker",
-        });
-      }
-    );
-
-    this.guestTeam.boardFootballPlayers.goalKeeper.setMatch = this;
-    this.setColliderAndDataToFootballers(
-      this.guestTeam.boardFootballPlayers.goalKeeper,
-      {
-        who: "guestPlayer",
-        position: "goalKeeper",
-      }
-    );
-    this.guestTeam.boardFootballPlayers.defenceColumn.footballers.forEach(
-      (footballer) => {
-        this.setColliderAndDataToFootballers(footballer, {
-          who: "guestPlayer",
-          potentialShortPassVariants:
-            this.guestTeam.boardFootballPlayers.middleColumn.footballers,
-          potentialLongPassVariants:
-            this.guestTeam.boardFootballPlayers.attackColumn.footballers,
-          position: "defender",
-        });
-      }
-    );
-    this.guestTeam.boardFootballPlayers.middleColumn.footballers.forEach(
-      (footballer) => {
-        this.setColliderAndDataToFootballers(footballer, {
-          who: "guestPlayer",
-          potentialShortPassVariants:
-            this.guestTeam.boardFootballPlayers.attackColumn.footballers,
-          position: "middfielder",
-        });
-      }
-    );
-    this.guestTeam.boardFootballPlayers.attackColumn.footballers.forEach(
-      (footballer) => {
-        this.setColliderAndDataToFootballers(footballer, {
-          who: "guestPlayer",
-          position: "attacker",
-        });
-      }
-    );
   }
 
   addBall() {
@@ -198,7 +107,7 @@ export default class Match {
     this.collisionDetector = new CollisionDetector(this.scene, this);
   }
 
-  addTimer() {
-    this.timer = new TimeManager(this, this.scene);
+  createTimer() {
+    this.matchTimer = new TimeManager(this, this.scene);
   }
 }

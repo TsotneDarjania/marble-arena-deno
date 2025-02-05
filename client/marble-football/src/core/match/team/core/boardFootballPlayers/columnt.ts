@@ -1,11 +1,7 @@
 import { Tweens } from "phaser";
 import GamePlay from "../../../../../scenes/GamePlay";
 import { TeamDataType } from "../../../../../types/gameTypes";
-import {
-  calculatePercentage,
-  getRandomIntNumber,
-  mapToRange,
-} from "../../../../../utils/math";
+import { calculatePercentage, mapToRange } from "../../../../../utils/math";
 import { Stadium } from "../../../stadium";
 import BoardFootballPlayer from "../../footballplayers/boardFootballPlayer";
 
@@ -94,7 +90,8 @@ export class Column extends Phaser.GameObjects.Container {
         this.scene,
         x,
         y,
-        this.teamData
+        this.teamData,
+        this.side === "left" ? "hostPlayer" : "guestPlayer"
       );
 
       if (
@@ -193,36 +190,12 @@ export class Column extends Phaser.GameObjects.Container {
     }
   }
 
-  startMotion(blockFreeKickBehaviour: boolean = false, duration: number) {
+  startMotion(duration: number) {
     if (this.isInMotion === true) return;
     this.isInMotion = true;
 
     if (this.tween) {
       this.tween?.resume();
-
-      if (blockFreeKickBehaviour) return;
-      // Calculate Free Kick Possibility
-      if (this.type !== "defence") {
-        if (getRandomIntNumber(0, 100) > 96) {
-          this.footballers[
-            getRandomIntNumber(0, this.footballers.length - 1)
-          ].startFreeKickBehaviour();
-        }
-      }
-      if (this.type === "defence") {
-        if (getRandomIntNumber(0, 100) > 96) {
-          if (this.footballers.length === 3) {
-            this.footballers[1].startFreeKickBehaviour();
-          }
-          if (this.footballers.length === 4) {
-            this.footballers[getRandomIntNumber(1, 2)].startFreeKickBehaviour();
-          }
-          if (this.footballers.length === 5) {
-            this.footballers[2].startFreeKickBehaviour();
-          }
-        }
-      }
-
       return;
     }
 
@@ -263,7 +236,6 @@ export class Column extends Phaser.GameObjects.Container {
 
     this.footballers.forEach((f) => {
       f.activate();
-      f.isFreeKick = false;
     });
   }
 

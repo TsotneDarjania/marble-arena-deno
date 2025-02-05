@@ -1,40 +1,43 @@
 import Match from "..";
 import CanvasScene from "../../../scenes/CanvasScene";
-import { calculateDistance, getRandomIntNumber } from "../../../utils/math";
+import { getRandomIntNumber } from "../../../utils/math";
 import { Corner } from "../matchEvents/corner";
 import { FreeKick } from "../matchEvents/freeKick";
 import { LastPenalties } from "../matchEvents/lastPenalties";
 import { Penalty } from "../matchEvents/penalty";
-import Team from "../team";
+
 import BoardFootballPlayer from "../team/footballplayers/boardFootballPlayer";
+import { FootballersMotionManager } from "./footballersMotionManager";
+import { MatchEventManager } from "./matchEvenetManager";
 
 export default class MatchManager {
   teamWhoHasBall: "hostTeam" | "guestTeam" = "hostTeam";
 
-  matchStatus: "playing" | "pause" | "finish" | "lastPenalties" = "playing";
-  matchTimeStatus:
+  matchStatus:
     | "none"
+    | "playing"
+    | "isCorner"
+    | "isFreeKick"
+    | "isPenalty"
+    | "isLastPenalties" = "none";
+  matchTimeStatus:
+    | "readyForStart"
     | "haltTimeEnd"
     | "fullTimeEnd"
     | "firstExtratimeEnd"
-    | "secondExtraTimeEnd" = "none";
+    | "secondExtraTimeEnd" = "readyForStart";
 
   hostScore = 0;
   guestScore = 0;
 
-  someoneHasBall = false;
-
   freeKick?: FreeKick;
   penalty?: Penalty;
   corner?: Corner;
+  lastPenalties?: LastPenalties;
 
-  isGoalSelebration = false;
-
-  ballGoesForCorner = false;
-
-  isCorner = false;
-
-  lastPenalties: LastPenalties;
+  // Core
+  footballersMotionManager!: FootballersMotionManager;
+  matchEvenetManager!: MatchEventManager;
 
   constructor(public match: Match) {}
 
@@ -42,99 +45,33 @@ export default class MatchManager {
     this.makeFirstKick();
     this.startCamerFollow();
     this.startTimer();
-    this.addGoalListeners();
-
-    this.startOponentTeamMotion(this.match.guestTeam);
-
-    if (this.match.matchData.gameConfig.mode === "board-football") {
-      this.match.hostTeam.boardFootballPlayers.goalKeeper.startMotion();
-      this.match.guestTeam.boardFootballPlayers.goalKeeper.startMotion();
-    }
-
-    this.addEventListeners();
+    this.createFootballersMotionManager();
+    this.createMatchEvenetManager();
+    this.matchStatus = "playing";
+    this.teamWhoHasBall = "hostTeam";
   }
 
-  addEventListeners() {
-    this.match.stadium.spectators.eventEmitter.on(
-      "FinishGoalSelebration",
-      (whoScored: "host" | "guest") => {
-        this.resumeMatch(whoScored);
-      }
-    );
+  createFootballersMotionManager() {
+    this.footballersMotionManager = new FootballersMotionManager(this.match);
+  }
+
+  createMatchEvenetManager() {
+    this.matchEvenetManager = new MatchEventManager(this.match);
   }
 
   makeFirstKick() {
-    if (
-      this.match.matchData.gameConfig.mode === "board-football" ||
-      this.match.matchData.gameConfig.mode === "marble-football"
-    ) {
-      const footballers =
-        this.match.hostTeam.boardFootballPlayers.middleColumn.footballers;
-      const randomFootballer =
-        footballers[getRandomIntNumber(0, footballers.length)];
-      this.match.ball.kick(200, {
-        x: randomFootballer.getBounds().centerX,
-        y: randomFootballer.getBounds().centerY,
-      });
-    }
-
-    if (this.match.matchData.gameConfig.mode !== "marble-football") return;
-
-    this.match.scene.events.on("update", () => {
-      if (this.matchStatus !== "playing") return;
-      if (this.match.matchData.gameConfig.mode === "marble-football") {
-        [
-          this.match.hostTeam.boardFootballPlayers.defenceColumn,
-          this.match.hostTeam.boardFootballPlayers.middleColumn,
-          this.match.hostTeam.boardFootballPlayers.attackColumn,
-        ].forEach((column) => {
-          if (this.teamWhoHasBall === "hostTeam") return;
-
-          const distance = calculateDistance(
-            column.getBounds().centerX,
-            column.getBounds().centerY,
-            this.match.ball.getBounds().centerX,
-            this.match.ball.getBounds().centerY
-          );
-
-          distance < 200
-            ? column.startMotion(
-                undefined,
-                this.match.hostTeam.teamData.motionSpeed
-              )
-            : column.stopMotion();
-        });
-        [
-          this.match.guestTeam.boardFootballPlayers.defenceColumn,
-          this.match.guestTeam.boardFootballPlayers.middleColumn,
-          this.match.guestTeam.boardFootballPlayers.attackColumn,
-        ].forEach((column) => {
-          if (this.teamWhoHasBall === "guestTeam") return;
-
-          const distance = calculateDistance(
-            column.getBounds().centerX,
-            column.getBounds().centerY,
-            this.match.ball.getBounds().centerX,
-            this.match.ball.getBounds().centerY
-          );
-
-          distance < 200
-            ? column.startMotion(
-                undefined,
-                this.match.hostTeam.teamData.motionSpeed
-              )
-            : column.stopMotion();
-        });
-      }
+    const potentialFootballers =
+      this.match.hostTeam.boardFootballPlayers.middleColumn.footballers;
+    const targetFootballer =
+      potentialFootballers[getRandomIntNumber(0, potentialFootballers.length)];
+    this.match.ball.kick(200, {
+      x: targetFootballer.getBounds().centerX,
+      y: targetFootballer.getBounds().centerY,
     });
   }
 
   startCamerFollow() {
     this.match.scene.cameraController.startFollow(this.match.ball);
-  }
-
-  startOponentTeamMotion(team: Team) {
-    team.startMotion();
   }
 
   makeCorner() {
@@ -158,7 +95,7 @@ export default class MatchManager {
   }
 
   startTimer() {
-    this.match.timer.startTimer();
+    this.match.matchTimer.startTimer();
   }
 
   someoneTakeBall(footballer: BoardFootballPlayer) {
@@ -463,6 +400,11 @@ export default class MatchManager {
 
   // Resume Ufte Goal
   async resumeMatch(whoScored: "host" | "guest") {
+    this.match.hostTeam.stopMotion();
+    this.match.guestTeam.stopMotion();
+
+    this.teamWhoHasBall = whoScored === "host" ? "guestTeam" : "hostTeam";
+
     this.resetUfterGoal();
 
     await new Promise<void>((resolve) => {

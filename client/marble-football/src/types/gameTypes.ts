@@ -27,16 +27,18 @@ export type TeamDataType = {
 };
 
 export type GameConfigType = {
-  mode:
-    | "board-football"
-    | "old-style"
-    | "new-style"
-    | "marble-football"
-    | "experimental";
+  mode: GameModeType;
   withExtraTimes: boolean;
   hostFansCountPercent: number; // her you can set how many host team fans you want on stadium (from 0 to 100)
   mathTime: number;
 };
+
+export type GameModeType =
+  | "board-football"
+  | "old-style"
+  | "new-style"
+  | "marble-football"
+  | "experimental";
 
 export type MatchInfoType = {
   matchTitle: string;

@@ -50,12 +50,24 @@ export default class Team {
     );
   }
 
-  startMotion() {
-    this.boardFootballPlayers.startMotion();
+  startFullMotion() {
+    this.boardFootballPlayers.startFullMotion();
   }
 
-  stopMotion() {
-    this.boardFootballPlayers.stopMotion();
+  stopFullMotion() {
+    this.boardFootballPlayers.stopFullMotion();
+  }
+
+  startSpecificColumnMotion(
+    columnPosition: "defenceColumn" | "middleColumn" | "attackColumn"
+  ) {
+    this.boardFootballPlayers.startSpecificMotion(columnPosition);
+  }
+
+  stopSpecificColumnMotion(
+    columnPosition: "defenceColumn" | "middleColumn" | "attackColumn"
+  ) {
+    this.boardFootballPlayers.stopSpecificMotion(columnPosition);
   }
 
   public reset() {
