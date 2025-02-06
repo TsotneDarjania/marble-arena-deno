@@ -9,10 +9,10 @@ export class MatchEventManager {
     this.footballerWhoHasBall = footballer;
     this.match.scene.soundManager.catchBall.play();
 
-    if (footballer.side === "hostPlayer") {
+    if (footballer.playerData.who === "hostPlayer") {
       this.match.matchManager.teamWhoHasBall = "hostTeam";
     }
-    if (footballer.side === "guestPlayer") {
+    if (footballer.playerData.who === "guestPlayer") {
       this.match.matchManager.teamWhoHasBall = "guestTeam";
     }
   }

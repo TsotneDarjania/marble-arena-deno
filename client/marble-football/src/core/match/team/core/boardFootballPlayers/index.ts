@@ -28,7 +28,13 @@ export default class BoardFootballPlayers {
   }
 
   private addGoalKeeper() {
-    this.goalKeeper = new BoardGoalKeeper(this.scene, 0, 0, this.teamData);
+    this.goalKeeper = new BoardGoalKeeper(
+      this.scene,
+      0,
+      0,
+      this.teamData,
+      this.side
+    );
     // Adjust Positions
     this.goalKeeper.setPosition(
       this.side === "left"

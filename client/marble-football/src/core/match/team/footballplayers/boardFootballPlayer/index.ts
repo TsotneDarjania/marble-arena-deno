@@ -12,11 +12,9 @@ export default class BoardFootballPlayer extends Phaser.GameObjects.Container {
 
   // States
   withBall = false;
-  wantToTakeBall = false;
+  aleradySentTakeBallDesire = false;
 
   freeKickTween!: Tweens.Tween;
-
-  playerData: FootballPlayerData;
 
   isFreeKickBehaviour = false;
 
@@ -27,7 +25,7 @@ export default class BoardFootballPlayer extends Phaser.GameObjects.Container {
     x: number,
     y: number,
     public teamData: TeamDataType,
-    public side: "hostPlayer" | "guestPlayer"
+    public playerData: FootballPlayerData
   ) {
     super(scene, x, y);
 
@@ -43,6 +41,56 @@ export default class BoardFootballPlayer extends Phaser.GameObjects.Container {
     this.setDepth(100);
   }
 
+  defineShortAndLongPassVariants() {
+    // For Host Team
+    if (
+      this.playerData.position === "defender" &&
+      this.playerData.who === "hostPlayer"
+    ) {
+      this.playerData.potentialShortPassVariants =
+        this.scene.match.hostTeam.boardFootballPlayers.middleColumn.footballers;
+    }
+    if (
+      this.playerData.position === "defender" &&
+      this.playerData.who === "hostPlayer"
+    ) {
+      this.playerData.potentialLongPassVariants =
+        this.scene.match.hostTeam.boardFootballPlayers.attackColumn.footballers;
+    }
+
+    if (
+      this.playerData.position === "middfielder" &&
+      this.playerData.who === "hostPlayer"
+    ) {
+      this.playerData.potentialShortPassVariants =
+        this.scene.match.hostTeam.boardFootballPlayers.attackColumn.footballers;
+    }
+
+    // For Guest Team
+    if (
+      this.playerData.position === "defender" &&
+      this.playerData.who === "guestPlayer"
+    ) {
+      this.playerData.potentialShortPassVariants =
+        this.scene.match.guestTeam.boardFootballPlayers.middleColumn.footballers;
+    }
+    if (
+      this.playerData.position === "defender" &&
+      this.playerData.who === "guestPlayer"
+    ) {
+      this.playerData.potentialLongPassVariants =
+        this.scene.match.guestTeam.boardFootballPlayers.attackColumn.footballers;
+    }
+
+    if (
+      this.playerData.position === "middfielder" &&
+      this.playerData.who === "guestPlayer"
+    ) {
+      this.playerData.potentialShortPassVariants =
+        this.scene.match.guestTeam.boardFootballPlayers.attackColumn.footballers;
+    }
+  }
+
   addImage() {
     this.image = this.scene.physics.add.image(0, 0, this.teamData.logoKey);
     this.image.setCircle(30);
@@ -54,8 +102,8 @@ export default class BoardFootballPlayer extends Phaser.GameObjects.Container {
       this.scene.match.ball,
       this.image,
       () => {
-        if (this.wantToTakeBall) return;
-        this.wantToTakeBall = true;
+        if (this.aleradySentTakeBallDesire) return;
+        this.aleradySentTakeBallDesire = true;
         this.takeBall();
       }
     );
@@ -76,11 +124,12 @@ export default class BoardFootballPlayer extends Phaser.GameObjects.Container {
 
     this.selectorOnn();
     this.scene.match.ball.stop();
+
     this.scene.match.ball.goTowardFootballer(this);
 
     setTimeout(() => {
       if (this.scene.match.matchManager.matchStatus !== "playing") return;
-      // this.makeDesition();
+      this.makeDesition();
     }, 300);
   }
 
@@ -92,8 +141,6 @@ export default class BoardFootballPlayer extends Phaser.GameObjects.Container {
       const changeToMakeShortPass = getRandomIntNumber(0, 100);
 
       switch (this.playerData.position) {
-        case "goalKeeper":
-          break;
         case "defender":
           changeToMakeShortPass > 50
             ? this.makeShortPass()
@@ -109,6 +156,7 @@ export default class BoardFootballPlayer extends Phaser.GameObjects.Container {
 
       setTimeout(() => {
         this.withBall = false;
+        this.aleradySentTakeBallDesire = false;
       }, 500);
     }
   }

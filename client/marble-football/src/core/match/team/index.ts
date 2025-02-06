@@ -26,6 +26,22 @@ export default class Team {
       ...this.boardFootballPlayers.attackColumn.footballers,
       this.boardFootballPlayers.goalKeeper
     );
+
+    setTimeout(() => {
+      this.defineShortAndLongPassVariantsForFootballers();
+    }, 1000);
+  }
+
+  private defineShortAndLongPassVariantsForFootballers() {
+    [
+      this.boardFootballPlayers.defenceColumn,
+      this.boardFootballPlayers.middleColumn,
+      this.boardFootballPlayers.attackColumn,
+    ].forEach((column) => {
+      column.footballers.forEach((footballer) => {
+        footballer.defineShortAndLongPassVariants();
+      });
+    });
   }
 
   private addPlayers() {

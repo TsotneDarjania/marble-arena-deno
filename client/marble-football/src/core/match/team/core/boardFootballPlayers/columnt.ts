@@ -86,12 +86,31 @@ export class Column extends Phaser.GameObjects.Container {
     let y = -this.stadium.innerFielddHeight / 2 + padding;
 
     for (let i = 0; i < this.quantity; i++) {
+      let playerPosition:
+        | "goalKeeper"
+        | "defender"
+        | "middfielder"
+        | "attacker" = "goalKeeper";
+
+      if (this.type === "defence") {
+        playerPosition = "defender";
+      }
+      if (this.type === "middle") {
+        playerPosition = "middfielder";
+      }
+      if (this.type === "attack") {
+        playerPosition = "attacker";
+      }
+
       const footballer = new BoardFootballPlayer(
         this.scene,
         x,
         y,
         this.teamData,
-        this.side === "left" ? "hostPlayer" : "guestPlayer"
+        {
+          position: playerPosition,
+          who: this.side === "left" ? "hostPlayer" : "guestPlayer",
+        }
       );
 
       if (
@@ -195,7 +214,13 @@ export class Column extends Phaser.GameObjects.Container {
     this.isInMotion = true;
 
     if (this.tween) {
-      this.tween?.resume();
+      this.scene.tweens.add({
+        targets: this.tween,
+        timeScale: 1, // Restore normal speed
+        duration: 300, // Adjust duration for smooth resuming
+        ease: "Linear",
+      });
+
       return;
     }
 
@@ -221,11 +246,25 @@ export class Column extends Phaser.GameObjects.Container {
     });
   }
 
+  // stopMotion() {
+  //   if (this.isInMotion === false) return;
+  //   this.isInMotion = false;
+
+  //   this.tween?.pause();
+  // }
+
   stopMotion() {
     if (this.isInMotion === false) return;
     this.isInMotion = false;
 
-    this.tween?.pause();
+    if (this.tween) {
+      this.scene.tweens.add({
+        targets: this.tween,
+        timeScale: 0, // Gradually reduce speed to zero
+        duration: 300, // Adjust the duration to control how slowly it stops
+        ease: "Linear",
+      });
+    }
   }
 
   public reset() {

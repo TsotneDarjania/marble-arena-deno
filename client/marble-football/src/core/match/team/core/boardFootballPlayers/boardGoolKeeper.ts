@@ -6,8 +6,17 @@ import BoardFootballPlayer from "../../footballplayers/boardFootballPlayer";
 export default class BoardGoalKeeper extends BoardFootballPlayer {
   tween?: Phaser.Tweens.Tween;
 
-  constructor(scene: GamePlay, x: number, y: number, teamData: TeamDataType) {
-    super(scene, x, y, teamData);
+  constructor(
+    scene: GamePlay,
+    x: number,
+    y: number,
+    teamData: TeamDataType,
+    side: "left" | "right"
+  ) {
+    super(scene, x, y, teamData, {
+      position: "goalKeeper",
+      who: side === "left" ? "hostPlayer" : "guestPlayer",
+    });
   }
 
   startMotion() {
@@ -48,8 +57,8 @@ export default class BoardGoalKeeper extends BoardFootballPlayer {
 
     const x =
       this.playerData.who === "hostPlayer"
-        ? -this.match.stadium.innerFielddWidth / 2 - this.displayWidth / 2
-        : this.match.stadium.innerFielddWidth / 2 - this.displayWidth / 2;
+        ? -this.scene.match.stadium.innerFielddWidth / 2 - this.displayWidth / 2
+        : this.scene.match.stadium.innerFielddWidth / 2 - this.displayWidth / 2;
     this.setPosition(x, 0);
   }
 }

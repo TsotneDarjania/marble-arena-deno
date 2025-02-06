@@ -54,14 +54,31 @@ export class FootballersMotionManager {
       );
 
       if (this.match.matchManager.teamWhoHasBall === "hostTeam") {
-        guestDefenceDistance < 100
-          ? this.match.guestTeam.startSpecificColumnMotion("defenceColumn")
-          : this.match.guestTeam.stopSpecificColumnMotion("defenceColumn");
+        // Check if Ball is Left Side
+        if (
+          this.match.ball.getBounds().centerX <
+          this.match.guestTeam.boardFootballPlayers.defenceColumn.getBounds()
+            .centerX
+        ) {
+          guestDefenceDistance < 260
+            ? this.match.guestTeam.startSpecificColumnMotion("defenceColumn")
+            : this.match.guestTeam.stopSpecificColumnMotion("defenceColumn");
+        } else {
+          this.match.guestTeam.stopSpecificColumnMotion("defenceColumn");
+        }
       }
       if (this.match.matchManager.teamWhoHasBall === "guestTeam") {
-        hostDefenceDistance < 100
-          ? this.match.hostTeam.startSpecificColumnMotion("defenceColumn")
-          : this.match.hostTeam.stopSpecificColumnMotion("defenceColumn");
+        if (
+          this.match.ball.getBounds().centerX >
+          this.match.hostTeam.boardFootballPlayers.defenceColumn.getBounds()
+            .centerX
+        ) {
+          hostDefenceDistance < 260
+            ? this.match.hostTeam.startSpecificColumnMotion("defenceColumn")
+            : this.match.hostTeam.stopSpecificColumnMotion("defenceColumn");
+        } else {
+          this.match.hostTeam.stopSpecificColumnMotion("defenceColumn");
+        }
       }
 
       // Check for MiddleColumns
@@ -82,52 +99,85 @@ export class FootballersMotionManager {
         this.match.ball.getBounds().centerY
       );
 
-      console.log(guestMiddleDistance);
       if (this.match.matchManager.teamWhoHasBall === "hostTeam") {
         // Check if Ball is Left Side
         if (
           this.match.ball.getBounds().centerX <
-          this.match.guestTeam.boardFootballPlayers.defenceColumn.getBounds()
+          this.match.guestTeam.boardFootballPlayers.middleColumn.getBounds()
             .centerX
         ) {
-          guestMiddleDistance < 150
+          guestMiddleDistance < 530
             ? this.match.guestTeam.startSpecificColumnMotion("middleColumn")
             : this.match.guestTeam.stopSpecificColumnMotion("middleColumn");
+        } else {
+          this.match.guestTeam.stopSpecificColumnMotion("middleColumn");
         }
       }
       if (this.match.matchManager.teamWhoHasBall === "guestTeam") {
-        hostMiddleDistance < 150
-          ? this.match.hostTeam.startSpecificColumnMotion("middleColumn")
-          : this.match.hostTeam.stopSpecificColumnMotion("middleColumn");
+        if (
+          this.match.ball.getBounds().centerX >
+          this.match.hostTeam.boardFootballPlayers.middleColumn.getBounds()
+            .centerX
+        ) {
+          hostMiddleDistance < 530
+            ? this.match.hostTeam.startSpecificColumnMotion("middleColumn")
+            : this.match.hostTeam.stopSpecificColumnMotion("middleColumn");
+        } else {
+          this.match.hostTeam.stopSpecificColumnMotion("middleColumn");
+        }
       }
 
       // Check for AttackColumns
       const hostAttackDistance = calculateDistance(
-        this.match.hostTeam.boardFootballPlayers.defenceColumn.getBounds()
+        this.match.hostTeam.boardFootballPlayers.attackColumn.getBounds()
           .centerX,
-        this.match.hostTeam.boardFootballPlayers.defenceColumn.getBounds()
+        this.match.hostTeam.boardFootballPlayers.attackColumn.getBounds()
           .centerY,
         this.match.ball.getBounds().centerX,
         this.match.ball.getBounds().centerY
       );
       const guestAttackDistance = calculateDistance(
-        this.match.guestTeam.boardFootballPlayers.defenceColumn.getBounds()
+        this.match.guestTeam.boardFootballPlayers.attackColumn.getBounds()
           .centerX,
-        this.match.guestTeam.boardFootballPlayers.defenceColumn.getBounds()
+        this.match.guestTeam.boardFootballPlayers.attackColumn.getBounds()
           .centerY,
         this.match.ball.getBounds().centerX,
         this.match.ball.getBounds().centerY
       );
 
       if (this.match.matchManager.teamWhoHasBall === "hostTeam") {
-        guestAttackDistance < 100
-          ? this.match.guestTeam.startSpecificColumnMotion("attackColumn")
-          : this.match.guestTeam.stopSpecificColumnMotion("attackColumn");
+        // Check if Ball is Left Side
+        if (
+          this.match.ball.getBounds().centerX <
+          this.match.guestTeam.boardFootballPlayers.attackColumn.getBounds()
+            .centerX
+        ) {
+          guestAttackDistance < 260
+            ? this.match.guestTeam.startSpecificColumnMotion("attackColumn")
+            : this.match.guestTeam.stopSpecificColumnMotion("attackColumn");
+        } else {
+          this.match.guestTeam.stopSpecificColumnMotion("attackColumn");
+        }
       }
       if (this.match.matchManager.teamWhoHasBall === "guestTeam") {
-        hostAttackDistance < 100
-          ? this.match.hostTeam.startSpecificColumnMotion("attackColumn")
-          : this.match.hostTeam.stopSpecificColumnMotion("attackColumn");
+        if (
+          this.match.ball.getBounds().centerX >
+          this.match.hostTeam.boardFootballPlayers.attackColumn.getBounds()
+            .centerX
+        ) {
+          hostAttackDistance < 260
+            ? this.match.hostTeam.startSpecificColumnMotion("attackColumn")
+            : this.match.hostTeam.stopSpecificColumnMotion("attackColumn");
+        } else {
+          this.match.hostTeam.stopSpecificColumnMotion("attackColumn");
+        }
+      }
+
+      if (this.match.matchManager.teamWhoHasBall === "hostTeam") {
+        this.match.hostTeam.stopFullMotion();
+      }
+      if (this.match.matchManager.teamWhoHasBall === "guestTeam") {
+        this.match.guestTeam.stopFullMotion();
       }
     });
   }
