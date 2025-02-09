@@ -24,6 +24,11 @@ export type TeamDataType = {
   goalKeeperSpeed: number;
   shootAccuracy: number;
   motionSpeed: number;
+  comments: {
+    saveBallComments: Array<string>;
+    defenderComments: Array<string>;
+    shooterComments: Array<string>;
+  };
 };
 
 export type GameConfigType = {

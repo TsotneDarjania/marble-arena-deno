@@ -31,6 +31,7 @@ export default class Preload extends Scene {
     this.load.image("matchIndicatorBck", "image/ui/match-indicator-bck.png");
     this.load.image("penaltyDone", "image/ui/penalty-done.png");
     this.load.image("penaltyFail", "image/ui/penalty-fail.png");
+    this.load.image("ballSaveIcon", "image/ui/ball-save-icon.png");
 
     // Default Team Logos
     this.load.image(

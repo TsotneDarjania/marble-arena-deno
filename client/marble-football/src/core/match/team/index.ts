@@ -42,6 +42,7 @@ export default class Team {
         footballer.defineShortAndLongPassVariants();
       });
     });
+    this.boardFootballPlayers.goalKeeper.defineShortAndLongPassVariants();
   }
 
   private addPlayers() {

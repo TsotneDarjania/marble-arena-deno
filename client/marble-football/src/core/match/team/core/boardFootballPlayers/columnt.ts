@@ -9,8 +9,10 @@ export class Column extends Phaser.GameObjects.Container {
   footballers: BoardFootballPlayer[];
   quantity: number;
   motionDistance = 0;
+  tweenDuration = 0;
 
   tween?: Tweens.Tween;
+  toBottom = true;
 
   isInMotion = false;
 
@@ -210,6 +212,7 @@ export class Column extends Phaser.GameObjects.Container {
   }
 
   startMotion(duration: number) {
+    this.tweenDuration = duration;
     if (this.isInMotion === true) return;
     this.isInMotion = true;
 
@@ -217,7 +220,7 @@ export class Column extends Phaser.GameObjects.Container {
       this.scene.tweens.add({
         targets: this.tween,
         timeScale: 1, // Restore normal speed
-        duration: 300, // Adjust duration for smooth resuming
+        duration: 150, // Adjust duration for smooth resuming
         ease: "Linear",
       });
 
@@ -241,6 +244,12 @@ export class Column extends Phaser.GameObjects.Container {
           ease: Phaser.Math.Easing.Quadratic.InOut,
           duration: mapToRange(duration, 1200, 600),
           repeat: -1,
+          complete: () => {
+            this.toBottom = true;
+          },
+          onYoyo: () => {
+            this.toBottom = false;
+          },
         });
       },
     });
@@ -261,7 +270,7 @@ export class Column extends Phaser.GameObjects.Container {
       this.scene.tweens.add({
         targets: this.tween,
         timeScale: 0, // Gradually reduce speed to zero
-        duration: 300, // Adjust the duration to control how slowly it stops
+        duration: 150, // Adjust the duration to control how slowly it stops
         ease: "Linear",
       });
     }

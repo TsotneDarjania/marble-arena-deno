@@ -4,6 +4,7 @@ import GamePlay from "./GamePlay";
 import { IntroOverlay } from "../uiComponents/overlay";
 import { IntroWindow } from "../uiComponents/introWindow";
 import { matchDataConfig, matchInfo } from "../config/matchConfig";
+import { calculatePercentage } from "../utils/math";
 
 export default class CanvasScene extends Phaser.Scene {
   cameraController: CameraController;
@@ -19,6 +20,8 @@ export default class CanvasScene extends Phaser.Scene {
   lastPenaltiesLeftXPosition = -50;
   lastPenaltiesRightXPosition = 50;
 
+  possibleToShowCommentatorTexrt = true;
+
   constructor() {
     super("CanvasScene");
   }
@@ -27,6 +30,74 @@ export default class CanvasScene extends Phaser.Scene {
     this.addIntroOverlay();
     this.createCameraController();
     this.createIndicators();
+  }
+
+  //For Comentator
+  showComment(message: string) {
+    if (!this.possibleToShowCommentatorTexrt) return;
+    this.possibleToShowCommentatorTexrt = false;
+
+    const text = this.add.text(this.game.canvas.width / 2, 83, message, {
+      fontSize: "65px",
+      color: "#2CE67C",
+      align: "center",
+      strokeThickness: 5,
+    });
+    text.setOrigin(0.5);
+
+    text.setPosition(this.game.canvas.width / 2, this.game.canvas.height - 80);
+
+    this.tweens.add({
+      targets: text,
+      duration: 600,
+      delay: 1200,
+      alpha: 0,
+      scale: 0,
+      onComplete: () => {
+        text.destroy();
+        this.possibleToShowCommentatorTexrt = true;
+      },
+    });
+  }
+
+  showBallSaveIcon(side: "left" | "right") {
+    const image = this.add.image(
+      20,
+      this.game.canvas.height / 2 + 40,
+      "ballSaveIcon"
+    );
+    image.setTint(0x94ff98);
+    image.setOrigin(0.5);
+    image.setScale(0.4);
+
+    if (side === "left") {
+      image.setPosition(
+        image.getBounds().width / 2 +
+          calculatePercentage(3, this.game.canvas.width),
+        this.game.canvas.height -
+          image.getBounds().height / 2 -
+          calculatePercentage(3, this.game.canvas.height)
+      );
+    } else {
+      image.setPosition(
+        this.game.canvas.width -
+          image.getBounds().width / 2 -
+          calculatePercentage(3, this.game.canvas.width),
+        this.game.canvas.height -
+          image.getBounds().height / 2 -
+          calculatePercentage(3, this.game.canvas.height)
+      );
+    }
+
+    this.tweens.add({
+      targets: image,
+      duration: 400,
+      delay: 1100,
+      alpha: 0,
+      onComplete: () => {
+        image.destroy();
+      },
+    });
   }
 
   drawPenaltyDone(side: "left" | "right") {

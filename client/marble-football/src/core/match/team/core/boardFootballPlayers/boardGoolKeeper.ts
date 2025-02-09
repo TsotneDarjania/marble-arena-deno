@@ -1,10 +1,13 @@
+import CanvasScene from "../../../../../scenes/CanvasScene";
 import GamePlay from "../../../../../scenes/GamePlay";
 import { TeamDataType } from "../../../../../types/gameTypes";
-import { mapToRange } from "../../../../../utils/math";
+import { getRandomIntNumber, mapToRange } from "../../../../../utils/math";
 import BoardFootballPlayer from "../../footballplayers/boardFootballPlayer";
 
 export default class BoardGoalKeeper extends BoardFootballPlayer {
   tween?: Phaser.Tweens.Tween;
+
+  alreadyTouchBall = false;
 
   constructor(
     scene: GamePlay,
@@ -60,5 +63,30 @@ export default class BoardGoalKeeper extends BoardFootballPlayer {
         ? -this.scene.match.stadium.innerFielddWidth / 2 - this.displayWidth / 2
         : this.scene.match.stadium.innerFielddWidth / 2 - this.displayWidth / 2;
     this.setPosition(x, 0);
+  }
+
+  touchBall() {
+    if (this.alreadyTouchBall) return;
+    this.scene.match.ball.stop();
+    this.alreadyTouchBall = true;
+    this.scene.match.matchManager.matchEvenetManager.goalKeeperTouchBall(this);
+  }
+
+  save() {
+    this.scene.match.matchManager.comentatorManager.showCommentForGoalKeeper(
+      this.playerData.who === "hostPlayer" ? "host" : "guest"
+    );
+
+    setTimeout(() => {
+      this.alreadyTouchBall = false;
+    }, 200);
+    const canvasScene = this.scene.scene.get("CanvasScene") as CanvasScene;
+
+    if (this.playerData.who === "hostPlayer") {
+      canvasScene.showBallSaveIcon("left");
+    } else {
+      canvasScene.showBallSaveIcon("right");
+    }
+    this.makeShortPass();
   }
 }

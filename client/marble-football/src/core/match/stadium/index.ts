@@ -136,7 +136,7 @@ export class Stadium extends Phaser.GameObjects.Container {
     this.add(this.lightsContainer);
   }
 
-  goalSelebration(team: "host" | "guest", duration: number) {
+  startGoalSelebration(team: "host" | "guest", duration: number) {
     this.light1.makeAnimation(false, duration);
     this.light2.makeAnimation(false, duration);
     this.light3.makeAnimation(false, duration);

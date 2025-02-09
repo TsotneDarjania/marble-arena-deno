@@ -5,6 +5,8 @@ import {
   TeamDataType,
 } from "../../../../../types/gameTypes";
 import { getRandomIntNumber, mapToRange } from "../../../../../utils/math";
+import { Column } from "../../core/boardFootballPlayers/columnt";
+import BoardGoalKeeper from "../../core/boardFootballPlayers/boardGoolKeeper";
 
 export default class BoardFootballPlayer extends Phaser.GameObjects.Container {
   image: Phaser.Physics.Arcade.Image;
@@ -44,6 +46,13 @@ export default class BoardFootballPlayer extends Phaser.GameObjects.Container {
   defineShortAndLongPassVariants() {
     // For Host Team
     if (
+      this.playerData.position === "goalKeeper" &&
+      this.playerData.who === "hostPlayer"
+    ) {
+      this.playerData.potentialShortPassVariants =
+        this.scene.match.hostTeam.boardFootballPlayers.defenceColumn.footballers;
+    }
+    if (
       this.playerData.position === "defender" &&
       this.playerData.who === "hostPlayer"
     ) {
@@ -67,6 +76,13 @@ export default class BoardFootballPlayer extends Phaser.GameObjects.Container {
     }
 
     // For Guest Team
+    if (
+      this.playerData.position === "goalKeeper" &&
+      this.playerData.who === "guestPlayer"
+    ) {
+      this.playerData.potentialShortPassVariants =
+        this.scene.match.guestTeam.boardFootballPlayers.defenceColumn.footballers;
+    }
     if (
       this.playerData.position === "defender" &&
       this.playerData.who === "guestPlayer"
@@ -102,9 +118,15 @@ export default class BoardFootballPlayer extends Phaser.GameObjects.Container {
       this.scene.match.ball,
       this.image,
       () => {
-        if (this.aleradySentTakeBallDesire) return;
-        this.aleradySentTakeBallDesire = true;
-        this.takeBall();
+        if (this.playerData.position !== "goalKeeper") {
+          if (this.aleradySentTakeBallDesire) return;
+          this.aleradySentTakeBallDesire = true;
+          this.takeBall();
+        }
+
+        if (this instanceof BoardGoalKeeper) {
+          this.touchBall();
+        }
       }
     );
   }
@@ -122,15 +144,50 @@ export default class BoardFootballPlayer extends Phaser.GameObjects.Container {
     if (this.scene.match.matchManager.matchStatus !== "playing") return;
     this.scene.match.matchManager.matchEvenetManager.footballerTakeBall(this);
 
+    // For Commentator
+    if (this.playerData.position === "defender") {
+      const random = getRandomIntNumber(0, 100);
+      random > 80 &&
+        this.scene.match.matchManager.comentatorManager.showCommentForDefennder(
+          this.playerData.who === "hostPlayer" ? "host" : "guest"
+        );
+    }
+
     this.selectorOnn();
     this.scene.match.ball.stop();
 
-    this.scene.match.ball.goTowardFootballer(this);
+    if ((this.parentContainer as Column).isInMotion) {
+      if ((this.parentContainer as Column).toBottom) {
+        this.scene.match.ball.goTowardFootballer(
+          this.getBounds().centerX,
+          this.getBounds().centerY +
+            (this.parentContainer as Column).tweenDuration * 0.3
+        );
+      } else {
+        this.scene.match.ball.goTowardFootballer(
+          this.getBounds().centerX,
+          this.getBounds().centerY -
+            (this.parentContainer as Column).tweenDuration * 0.3
+        );
+      }
+    } else {
+      this.scene.match.ball.goTowardFootballer(
+        this.getBounds().centerX,
+        this.getBounds().centerY
+      );
+    }
+
+    setTimeout(() => {
+      this.scene.match.ball.goTowardFootballer(
+        this.getBounds().centerX,
+        this.getBounds().centerY
+      );
+    }, 100);
 
     setTimeout(() => {
       if (this.scene.match.matchManager.matchStatus !== "playing") return;
       this.makeDesition();
-    }, 300);
+    }, 400);
   }
 
   makeDesition() {
@@ -199,6 +256,12 @@ export default class BoardFootballPlayer extends Phaser.GameObjects.Container {
 
   shoot() {
     this.scene.soundManager.shoot.play();
+
+    const random = getRandomIntNumber(0, 100);
+    random > 80 &&
+      this.scene.match.matchManager.comentatorManager.showCommentForShooter(
+        this.playerData.who === "hostPlayer" ? "host" : "guest"
+      );
 
     let x = 0;
     const isfailShoot =
