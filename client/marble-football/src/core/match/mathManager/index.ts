@@ -105,45 +105,6 @@ export default class MatchManager {
     this.match.matchTimer.startTimer();
   }
 
-  someoneTakeBall(footballer: BoardFootballPlayer) {
-    if (this.matchTimeStatus === "none" && this.match.timer.time >= 45) {
-      this.stopMatch("haltTimeEnd");
-      return;
-    }
-    if (this.matchTimeStatus === "haltTimeEnd" && this.match.timer.time >= 90) {
-      this.stopMatch("fullTimeEnd");
-      this.match.timer.fullTimeisAlreadyEnd = true;
-      return;
-    }
-    if (
-      this.matchTimeStatus === "fullTimeEnd" &&
-      this.match.timer.time >= 105
-    ) {
-      this.match.timer.firstExtraTimeIsAlreadyEnd = true;
-
-      this.stopMatch("firstExtratimeEnd");
-      return;
-    }
-    if (
-      this.matchTimeStatus === "firstExtratimeEnd" &&
-      this.match.timer.time >= 120
-    ) {
-      this.stopMatch("secondExtraTimeEnd");
-      return;
-    }
-
-    if (this.match.matchData.gameConfig.mode === "board-football") {
-      if (footballer.playerData.who === "hostPlayer") {
-        this.match.hostTeam.stopMotion();
-        this.match.guestTeam.startMotion();
-      }
-      if (footballer.playerData.who == "guestPlayer") {
-        this.match.guestTeam.stopMotion();
-        this.match.hostTeam.startMotion();
-      }
-    }
-  }
-
   addGoalListeners() {
     this.match.scene.events.on("update", () => {
       if (this.isGoalSelebration) return;
@@ -226,29 +187,9 @@ export default class MatchManager {
   }
 
   resetUfterGoal() {
-    if (this.corner !== undefined) {
-      this.corner.destroy();
-    }
-
-    this.match.collisionDetector.onceForCorner = true;
-    this.ballGoesForCorner = false;
-    if (this.penalty !== undefined) {
-      this.penalty.destoy();
-      this.penalty = undefined;
-    }
-
-    this.match.hostTeam.footballers.forEach((f) => {
-      f.stopFreeKickBehaviour();
-    });
-    this.match.guestTeam.footballers.forEach((f) => {
-      f.stopFreeKickBehaviour();
-    });
-
     this.match.ball.reset();
     this.match.hostTeam.reset();
     this.match.guestTeam.reset();
-
-    this.isGoalSelebration = false;
   }
 
   resetUfterTimeEnd() {
@@ -406,11 +347,8 @@ export default class MatchManager {
   }
 
   // Resume Ufte Goal
-  async resumeMatch(whoScored: "host" | "guest") {
-    this.match.hostTeam.stopMotion();
-    this.match.guestTeam.stopMotion();
-
-    this.teamWhoHasBall = whoScored === "host" ? "guestTeam" : "hostTeam";
+  async resumeMatch(whoStart: "host" | "guest") {
+    this.teamWhoHasBall = whoStart === "host" ? "hostTeam" : "guestTeam";
 
     this.resetUfterGoal();
 
