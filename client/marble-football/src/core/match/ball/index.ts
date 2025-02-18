@@ -1,5 +1,6 @@
 import { Tweens } from "phaser";
 import { Stadium } from "../stadium";
+import GamePlay from "../../../scenes/GamePlay";
 
 export class Ball extends Phaser.Physics.Arcade.Image {
   anglurarVelocity = 800;
@@ -8,7 +9,7 @@ export class Ball extends Phaser.Physics.Arcade.Image {
   blinkAnimation!: Tweens.Tween;
 
   constructor(
-    scene: Phaser.Scene,
+    public scene: GamePlay,
     public x: number,
     public y: number,
     public stadium: Stadium
@@ -82,20 +83,9 @@ export class Ball extends Phaser.Physics.Arcade.Image {
     this.alpha = 1;
   }
 
-  startShortBlinkAnimation(callback: Function) {
-    this.scene.add.tween({
-      targets: this,
-      alpha: 0.3,
-      duration: 300,
-      repeat: 5,
-      onComplete: () => {
-        this.setAlpha(1);
-        callback();
-      },
-    });
-  }
-
   reset() {
+    this.blinkAnimation.destroy();
+    this.setAlpha(1);
     this.setPosition(
       this.scene.game.canvas.width / 2,
       this.scene.game.canvas.height / 2

@@ -118,6 +118,12 @@ export default class BoardFootballPlayer extends Phaser.GameObjects.Container {
       this.scene.match.ball,
       this.image,
       () => {
+        if (
+          this.scene.match.matchManager.matchEvenetManager.matchStatus !==
+          "playing"
+        )
+          return;
+
         if (this.playerData.position !== "goalKeeper") {
           if (this.aleradySentTakeBallDesire) return;
           this.aleradySentTakeBallDesire = true;
@@ -141,8 +147,10 @@ export default class BoardFootballPlayer extends Phaser.GameObjects.Container {
   }
 
   takeBall() {
-    if (this.scene.match.matchManager.matchStatus !== "playing") return;
-    this.scene.match.matchManager.matchEvenetManager.footballerTakeBall(this);
+    if (
+      this.scene.match.matchManager.matchEvenetManager.matchStatus !== "playing"
+    )
+      return;
 
     // For Commentator
     if (this.playerData.position === "defender") {
@@ -151,7 +159,35 @@ export default class BoardFootballPlayer extends Phaser.GameObjects.Container {
         this.scene.match.matchManager.comentatorManager.showCommentForDefennder(
           this.playerData.who === "hostPlayer" ? "host" : "guest"
         );
+
+      const cornerRandom = getRandomIntNumber(0, 100);
+      if (cornerRandom > 0) {
+        const side = this.scene.match.ball.y > 474 ? "bottom" : "top";
+        this.scene.match.matchManager.matchEvenetManager.footballerSaveToCorner(
+          side
+        );
+
+        this.scene.match.ball.kick(150, {
+          x:
+            this.playerData.who === "hostPlayer"
+              ? this.scene.match.hostTeam.boardFootballPlayers.goalKeeper.getBounds()
+                  .centerX - getRandomIntNumber(60, 90)
+              : this.scene.match.guestTeam.boardFootballPlayers.goalKeeper.getBounds()
+                  .centerX + getRandomIntNumber(60, 90),
+          y:
+            side === "top"
+              ? 473 - getRandomIntNumber(130, 150)
+              : 473 + getRandomIntNumber(130, 150),
+        });
+      }
     }
+
+    if (
+      this.scene.match.matchManager.matchEvenetManager.matchStatus !== "playing"
+    )
+      return;
+
+    this.scene.match.matchManager.matchEvenetManager.footballerTakeBall(this);
 
     this.selectorOnn();
     this.scene.match.ball.stop();
@@ -185,16 +221,25 @@ export default class BoardFootballPlayer extends Phaser.GameObjects.Container {
     }, 100);
 
     setTimeout(() => {
-      if (this.scene.match.matchManager.matchStatus !== "playing") return;
+      if (
+        this.scene.match.matchManager.matchEvenetManager.matchStatus !==
+        "playing"
+      )
+        return;
       this.makeDesition();
     }, 400);
   }
 
   makeDesition() {
-    if (this.scene.match.matchManager.matchStatus !== "playing") return;
+    if (
+      this.scene.match.matchManager.matchEvenetManager.matchStatus !== "playing"
+    )
+      return;
     this.selectorOff();
 
-    if (this.scene.match.matchManager.matchStatus === "playing") {
+    if (
+      this.scene.match.matchManager.matchEvenetManager.matchStatus === "playing"
+    ) {
       const changeToMakeShortPass = getRandomIntNumber(0, 100);
 
       switch (this.playerData.position) {

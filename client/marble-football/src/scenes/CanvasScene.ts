@@ -32,6 +32,75 @@ export default class CanvasScene extends Phaser.Scene {
     this.createIndicators();
   }
 
+  showComentator(side: "left" | "right", comment: string) {
+    const image = this.add.image(
+      this.game.canvas.width / 2,
+      this.game.canvas.height / 2,
+      "default"
+    );
+    image.setAlpha(0);
+    image.setScale(1.2);
+    image.setOrigin(0.5);
+    image.setTint(0x000000);
+    image.setAlpha(0.7);
+    image.setDisplaySize(this.game.canvas.width, this.game.canvas.height);
+
+    const comentatorImage = this.add.image(0, 0, "comentator");
+    comentatorImage.setOrigin(0.5);
+    comentatorImage.setScale(0.7);
+    comentatorImage.setAlpha(0);
+    comentatorImage.setPosition(
+      side === "left"
+        ? comentatorImage.getBounds().width / 2 + 10
+        : this.game.canvas.width - (comentatorImage.getBounds().width / 2 - 20),
+      comentatorImage.getBounds().width / 2 + 10
+    );
+
+    const text = this.add.text(
+      this.game.canvas.width / 2,
+      this.game.canvas.height / 2,
+      comment,
+      {
+        fontSize: "85px",
+        color: "#DBD65C",
+        align: "center",
+        strokeThickness: 5,
+      }
+    );
+    text.setAlpha(0);
+    text.setScale(0);
+    text.setOrigin(0.5);
+
+    this.tweens.add({
+      targets: [image],
+      duration: 800,
+      ease: Phaser.Math.Easing.Back.Out,
+      alpha: 0.6,
+    });
+
+    this.tweens.add({
+      targets: [comentatorImage],
+      duration: 300,
+      ease: Phaser.Math.Easing.Back.Out,
+      alpha: 1,
+    });
+
+    this.tweens.add({
+      targets: [text],
+      duration: 700,
+      ease: Phaser.Math.Easing.Back.Out,
+      alpha: 1,
+      scale: 1,
+      delay: 400,
+    });
+
+    setTimeout(() => {
+      image.destroy();
+      comentatorImage.destroy();
+      text.destroy();
+    }, 3200);
+  }
+
   //For Comentator
   showComment(message: string) {
     if (!this.possibleToShowCommentatorTexrt) return;

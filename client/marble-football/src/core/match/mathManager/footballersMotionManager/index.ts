@@ -35,6 +35,8 @@ export class FootballersMotionManager {
 
   updateColumnsMotion() {
     this.match.scene.events.on("update", () => {
+      if (this.match.matchManager.matchEvenetManager.matchStatus !== "playing")
+        return;
       // Check for DefenceColumns
       const hostDefenceDistance = calculateDistance(
         this.match.hostTeam.boardFootballPlayers.defenceColumn.getBounds()

@@ -1,7 +1,7 @@
 import Match from "..";
 import CanvasScene from "../../../scenes/CanvasScene";
 import { getRandomIntNumber } from "../../../utils/math";
-import { Comentator, ComentatorManager } from "../commentatorManager";
+import { ComentatorManager } from "../commentatorManager";
 import { Corner } from "../matchEvents/corner";
 import { FreeKick } from "../matchEvents/freeKick";
 import { LastPenalties } from "../matchEvents/lastPenalties";
@@ -13,14 +13,6 @@ import { MatchEventManager } from "./matchEvenetManager";
 
 export default class MatchManager {
   teamWhoHasBall: "hostTeam" | "guestTeam" = "hostTeam";
-
-  matchStatus:
-    | "none"
-    | "playing"
-    | "isCorner"
-    | "isFreeKick"
-    | "isPenalty"
-    | "isLastPenalties" = "none";
   matchTimeStatus:
     | "readyForStart"
     | "haltTimeEnd"
@@ -44,13 +36,12 @@ export default class MatchManager {
   constructor(public match: Match) {}
 
   startMatch() {
-    this.makeFirstKick();
+    this.makeFirstKick("host");
     this.startCamerFollow();
     this.startTimer();
     this.createFootballersMotionManager();
     this.createMatchEvenetManager();
     this.createComentatorManager();
-    this.matchStatus = "playing";
     this.teamWhoHasBall = "hostTeam";
   }
 
@@ -66,9 +57,11 @@ export default class MatchManager {
     this.matchEvenetManager = new MatchEventManager(this.match);
   }
 
-  makeFirstKick() {
+  makeFirstKick(teamWhoWillGetBall: "host" | "guest") {
     const potentialFootballers =
-      this.match.hostTeam.boardFootballPlayers.middleColumn.footballers;
+      teamWhoWillGetBall === "host"
+        ? this.match.hostTeam.boardFootballPlayers.middleColumn.footballers
+        : this.match.guestTeam.boardFootballPlayers.middleColumn.footballers;
     const targetFootballer =
       potentialFootballers[getRandomIntNumber(0, potentialFootballers.length)];
     this.match.ball.kick(200, {
@@ -81,57 +74,8 @@ export default class MatchManager {
     this.match.scene.cameraController.startFollow(this.match.ball);
   }
 
-  makeCorner() {
-    if (this.ballGoesForCorner === false) return;
-    const canvasScene = this.match.scene.scene.get(
-      "CanvasScene"
-    ) as CanvasScene;
-    canvasScene.showMatchEvent("Corner");
-    this.match.scene.soundManager.referee.play();
-
-    this.match.ball.stop();
-    this.matchPause();
-
-    this.match.hostTeam.hideTeam();
-    this.match.guestTeam.hideTeam();
-
-    setTimeout(() => {
-      this.corner = new Corner(this.match);
-      this.ballGoesForCorner = false;
-    }, 2000);
-  }
-
   startTimer() {
     this.match.matchTimer.startTimer();
-  }
-
-  addGoalListeners() {
-    this.match.scene.events.on("update", () => {
-      if (this.isGoalSelebration) return;
-
-      if (
-        this.match.ball.x >
-        this.match.guestTeam.boardFootballPlayers.goalKeeper.getBounds()
-          .centerX +
-          16
-      ) {
-        this.isGoal("host");
-      }
-
-      if (
-        this.match.ball.x <
-        this.match.hostTeam.boardFootballPlayers.goalKeeper.getBounds()
-          .centerX -
-          16
-      ) {
-        if (this.matchStatus === "lastPenalties") {
-          this.lastPenalties?.isGoal();
-          return;
-        }
-
-        this.isGoal("guest");
-      }
-    });
   }
 
   isGoal(whoScored: "host" | "guest") {
@@ -190,6 +134,19 @@ export default class MatchManager {
     this.match.ball.reset();
     this.match.hostTeam.reset();
     this.match.guestTeam.reset();
+
+    setTimeout(() => {
+      this.matchEvenetManager.matchStatus = "playing";
+      this.teamWhoHasBall === "guestTeam"
+        ? this.makeFirstKick("host")
+        : this.makeFirstKick("guest");
+
+      this.match.hostTeam.boardFootballPlayers.goalKeeper.startMotion();
+      this.match.guestTeam.boardFootballPlayers.goalKeeper.startMotion();
+
+      this.teamWhoHasBall =
+        this.teamWhoHasBall === "guestTeam" ? "hostTeam" : "guestTeam";
+    }, 3000);
   }
 
   resetUfterTimeEnd() {
@@ -350,41 +307,9 @@ export default class MatchManager {
   async resumeMatch(whoStart: "host" | "guest") {
     this.teamWhoHasBall = whoStart === "host" ? "hostTeam" : "guestTeam";
 
-    this.resetUfterGoal();
-
-    await new Promise<void>((resolve) => {
-      setTimeout(() => {
-        resolve();
-      }, 2700);
-    });
-
-    if (this.corner !== undefined) {
-      this.corner.destroy();
-    }
-    this.match.scene.soundManager.referee.play();
-
-    this.match.timer.resumeTimer();
     this.matchStatus = "playing";
 
-    this.isCorner = false;
-    this.corner?.destroy();
-
-    this.match.hostTeam.footballers.forEach((f) => {
-      f.activate();
-      f.isFreeKick = false;
-      f.isFreeKickShooter = false;
-      f.isFreeKickBehaviour = false;
-      f.withBall = false;
-    });
-    this.match.guestTeam.footballers.forEach((f) => {
-      f.activate();
-      f.isFreeKick = false;
-      f.isFreeKickShooter = false;
-      f.isFreeKickBehaviour = false;
-      f.withBall = false;
-    });
-
-    if (whoScored === "host") {
+    if (whoStart === "host") {
       this.match.hostTeam.startMotion();
       const footballers =
         this.match.guestTeam.boardFootballPlayers.middleColumn.footballers;

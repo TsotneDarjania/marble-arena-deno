@@ -89,4 +89,18 @@ export default class BoardGoalKeeper extends BoardFootballPlayer {
     }
     this.makeShortPass();
   }
+
+  saveToCorner(side: "top" | "bottom") {
+    this.stopMotion();
+    this.scene.match.ball.kick(150, {
+      x:
+        this.playerData.who === "hostPlayer"
+          ? this.getBounds().centerX - getRandomIntNumber(60, 90)
+          : this.getBounds().centerX + getRandomIntNumber(60, 90),
+      y:
+        side === "top"
+          ? this.getBounds().centerY - getRandomIntNumber(150, 320)
+          : this.getBounds().centerY + getRandomIntNumber(150, 320),
+    });
+  }
 }
