@@ -171,13 +171,13 @@ export default class BoardFootballPlayer extends Phaser.GameObjects.Container {
           x:
             this.playerData.who === "hostPlayer"
               ? this.scene.match.hostTeam.boardFootballPlayers.goalKeeper.getBounds()
-                  .centerX - getRandomIntNumber(60, 90)
+                  .centerX - getRandomIntNumber(60, 110)
               : this.scene.match.guestTeam.boardFootballPlayers.goalKeeper.getBounds()
-                  .centerX + getRandomIntNumber(60, 90),
+                  .centerX + getRandomIntNumber(60, 110),
           y:
             side === "top"
-              ? 473 - getRandomIntNumber(130, 150)
-              : 473 + getRandomIntNumber(130, 150),
+              ? 473 - getRandomIntNumber(170, 200)
+              : 473 + getRandomIntNumber(170, 200),
         });
       }
     }

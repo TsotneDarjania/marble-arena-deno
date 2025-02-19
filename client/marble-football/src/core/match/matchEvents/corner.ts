@@ -1,5 +1,9 @@
 import Match from "..";
-import { calculatePercentage, getRandomIntNumber } from "../../../utils/math";
+import {
+  calculatePercentage,
+  getRandomIntNumber,
+  mapToRange,
+} from "../../../utils/math";
 
 export class Corner {
   attacker: Phaser.Physics.Arcade.Image;
@@ -8,6 +12,8 @@ export class Corner {
 
   ballX = 0;
   ballY = 0;
+
+  isGoalScored = false;
 
   constructor(
     public match: Match,
@@ -22,6 +28,200 @@ export class Corner {
     this.addFakeFootballer();
     this.addAttacker();
     this.addDefender();
+    this.addColliderDetectors();
+    this.addGoalEventListener();
+
+    setTimeout(() => {
+      this.kickFromCorner();
+    }, 2000);
+  }
+
+  stopCorner() {
+    this.match.ball.stop();
+    this.match.hostTeam.boardFootballPlayers.goalKeeper.stopMotion();
+    this.match.guestTeam.boardFootballPlayers.goalKeeper.stopMotion();
+
+    setTimeout(() => {
+      this.destroyCorner();
+    }, 1000);
+  }
+
+  destroyCorner() {
+    console.log("Destory Corner");
+  }
+
+  isGoal(whoScored: "host" | "guest") {
+    this.match.stadium.startGoalSelebration(whoScored, 3000);
+    this.match.ball.startBlinkAnimation();
+    this.match.ball.stop();
+    this.match.hostTeam.boardFootballPlayers.goalKeeper.stopMotion();
+    this.match.guestTeam.boardFootballPlayers.goalKeeper.stopMotion();
+
+    setTimeout(() => {
+      this.stopCorner();
+    }, 5000);
+  }
+
+  addGoalEventListener() {
+    this.match.scene.events.on("update", () => {
+      if (this.isGoalScored) return;
+
+      if (
+        this.match.ball.x <
+        this.match.hostTeam.boardFootballPlayers.goalKeeper.getBounds()
+          .centerX -
+          16
+      ) {
+        this.isGoal("guest");
+        this.isGoalScored = true;
+      }
+
+      if (
+        this.match.ball.x >
+        this.match.guestTeam.boardFootballPlayers.goalKeeper.getBounds()
+          .centerX +
+          16
+      ) {
+        this.isGoal("host");
+        this.isGoalScored = true;
+      }
+    });
+  }
+
+  kickFromCorner() {
+    setTimeout(() => {
+      this.match.collisionDetector.addDetectorForBallAndStadiumBoards();
+      this.match.matchManager.matchEvenetManager.matchStatus =
+        "CornerIsInProcess";
+    }, 300);
+    const randomx =
+      this.teamWhoShootCorner === "hostTeam"
+        ? getRandomIntNumber(40, 130)
+        : -getRandomIntNumber(40, 130);
+
+    this.match.ball.kick(getRandomIntNumber(200, 260), {
+      x: this.attacker.getBounds().centerX + randomx,
+      y: this.attacker.getBounds().centerY,
+    });
+
+    const randomDeffenderX =
+      this.teamWhoShootCorner === "hostTeam"
+        ? getRandomIntNumber(20, 60)
+        : -getRandomIntNumber(20, 60);
+
+    this.match.scene.add.tween({
+      targets: this.deffender,
+      duration: getRandomIntNumber(300, 700),
+      x: this.deffender.getBounds().centerX + randomDeffenderX,
+    });
+
+    const randomAttackerX =
+      this.teamWhoShootCorner === "hostTeam"
+        ? getRandomIntNumber(40, 120)
+        : -getRandomIntNumber(40, 120);
+
+    this.match.scene.add.tween({
+      targets: this.attacker,
+      duration: getRandomIntNumber(300, 700),
+      x: this.attacker.getBounds().centerX + randomAttackerX,
+    });
+  }
+
+  addColliderDetectors() {
+    let isAlreadyDetect = false;
+
+    this.match.scene.physics.add.overlap(
+      this.match.ball,
+      this.deffender,
+      () => {
+        if (isAlreadyDetect) return;
+        isAlreadyDetect = true;
+        this.saveByDefender();
+      }
+    );
+
+    this.match.scene.physics.add.overlap(this.match.ball, this.attacker, () => {
+      if (isAlreadyDetect) return;
+      isAlreadyDetect = true;
+      this.shootByAttaker();
+    });
+
+    this.match.scene.physics.add.overlap(
+      this.match.ball,
+      this.teamWhoShootCorner === "hostTeam"
+        ? this.match.guestTeam.boardFootballPlayers.goalKeeper
+        : this.match.hostTeam.boardFootballPlayers.goalKeeper,
+      () => {
+        if (isAlreadyDetect) return;
+        isAlreadyDetect = true;
+        this.saveByGoalkeeper();
+      }
+    );
+  }
+
+  saveByGoalkeeper() {
+    this.match.ball.stop();
+    setTimeout(() => {
+      this.stopCorner();
+    }, 1000);
+  }
+
+  shootByAttaker() {
+    const teamData =
+      this.teamWhoShootCorner === "hostTeam"
+        ? this.match.matchData.hostTeamData
+        : this.match.matchData.guestTeamData;
+    let x = 0;
+    const isfailShoot =
+      getRandomIntNumber(0, 100) < teamData.shootAccuracy ? false : true;
+
+    let y = 0;
+
+    if (isfailShoot) {
+      const isTop = getRandomIntNumber(0, 100);
+      if (isTop > 50) {
+        y =
+          this.match.scene.match.stadium.stadiumField.getBounds().centerY +
+          getRandomIntNumber(110, 170);
+      } else {
+        y =
+          this.match.scene.match.stadium.stadiumField.getBounds().centerY -
+          getRandomIntNumber(110, 170);
+      }
+    } else {
+      const isTop = getRandomIntNumber(0, 100);
+
+      if (isTop > 50) {
+        y =
+          this.match.scene.match.stadium.stadiumField.getBounds().centerY +
+          getRandomIntNumber(0, 130);
+      } else {
+        y =
+          this.match.scene.match.stadium.stadiumField.getBounds().centerY -
+          getRandomIntNumber(0, 130);
+      }
+    }
+
+    if (this.teamWhoShootCorner === "hostTeam") {
+      x =
+        this.match.scene.match.guestTeam.boardFootballPlayers.goalKeeper.getBounds()
+          .centerX + 40;
+    } else {
+      x =
+        this.match.scene.match.hostTeam.boardFootballPlayers.goalKeeper.getBounds()
+          .centerX - 40;
+    }
+    this.match.scene.match.ball.kick(
+      mapToRange(teamData.shootSpeed, 250, 500),
+      {
+        x,
+        y,
+      }
+    );
+  }
+
+  saveByDefender() {
+    this.match.ball.stop();
   }
 
   addDefender() {

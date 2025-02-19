@@ -5,8 +5,13 @@ import BoardGoalKeeper from "../../team/core/boardFootballPlayers/boardGoolKeepe
 import BoardFootballPlayer from "../../team/footballplayers/boardFootballPlayer";
 
 export class MatchEventManager {
-  matchStatus: "playing" | "isGoal" | "isCorner" | "isreeKick" | "isPenalty" =
-    "playing";
+  matchStatus:
+    | "playing"
+    | "isGoal"
+    | "isCorner"
+    | "CornerIsInProcess"
+    | "isreeKick"
+    | "isPenalty" = "playing";
 
   footballerWhoHasBall?: BoardFootballPlayer;
   constructor(public match: Match) {

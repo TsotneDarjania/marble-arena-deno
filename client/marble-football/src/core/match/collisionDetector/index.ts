@@ -28,7 +28,14 @@ export default class CollisionDetector {
     this.ballAndBordersCollider = this.scene.physics.add.collider(
       this.match.ball,
       [...this.match.stadium.stadiumColliders.borderColliders],
-      () => {}
+      () => {
+        if (
+          this.match.matchManager.matchEvenetManager.matchStatus ===
+          "CornerIsInProcess"
+        ) {
+          this.match.matchManager.corner!.stopCorner();
+        }
+      }
     );
     this.ballAndBordersCollider.overlapOnly = false;
   }
