@@ -26,6 +26,7 @@ export class Ball extends Phaser.Physics.Arcade.Image {
     this.setBounce(0.8);
     // this.setCollideWorldBounds(true);
     this.addParticles();
+    this.createBlinkAnimation();
 
     this.setDepth(11);
   }
@@ -69,6 +70,10 @@ export class Ball extends Phaser.Physics.Arcade.Image {
   }
 
   startBlinkAnimation() {
+    this.blinkAnimation.resume();
+  }
+
+  createBlinkAnimation() {
     this.blinkAnimation = this.scene.add.tween({
       targets: this,
       alpha: 0.3,
@@ -76,15 +81,18 @@ export class Ball extends Phaser.Physics.Arcade.Image {
       yoyo: true,
       repeat: -1,
     });
+
+    this.blinkAnimation.pause();
   }
 
   stopBlinkAnimation() {
-    this.blinkAnimation.destroy();
-    this.alpha = 1;
+    this.blinkAnimation.pause();
+    this.setAlpha(1);
   }
 
   reset() {
-    this.blinkAnimation.destroy();
+    this.stop();
+    this.blinkAnimation.pause();
     this.setAlpha(1);
     this.setPosition(
       this.scene.game.canvas.width / 2,

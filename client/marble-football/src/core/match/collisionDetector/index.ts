@@ -3,6 +3,7 @@ import GamePlay from "../../../scenes/GamePlay";
 
 export default class CollisionDetector {
   ballAndBordersCollider!: Phaser.Physics.Arcade.Collider;
+  ballAndGoalPostsCollider!: Phaser.Physics.Arcade.Collider;
 
   constructor(public scene: GamePlay, public match: Match) {
     this.init();
@@ -14,7 +15,7 @@ export default class CollisionDetector {
   }
 
   addDetectorForBallAndGoalPosts() {
-    this.scene.physics.add.collider(
+    this.ballAndGoalPostsCollider = this.scene.physics.add.collider(
       this.match.ball,
       [...this.match.stadium.stadiumColliders.goalPostColliders],
       () => {
@@ -22,6 +23,7 @@ export default class CollisionDetector {
         console.log("Goal Posts detect");
       }
     );
+    this.ballAndGoalPostsCollider.overlapOnly = false;
   }
 
   addDetectorForBallAndStadiumBoards() {
@@ -42,5 +44,9 @@ export default class CollisionDetector {
 
   removeColliderforBallAndStadiumBorders() {
     this.ballAndBordersCollider.overlapOnly = true;
+  }
+
+  removeColliderforBallAndGoalPosts() {
+    this.ballAndGoalPostsCollider.overlapOnly = true;
   }
 }

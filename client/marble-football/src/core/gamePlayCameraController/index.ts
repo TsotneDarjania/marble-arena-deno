@@ -17,17 +17,20 @@ export default class GamePlayCameraController {
   }
 
   startFollow(ball: Phaser.Physics.Arcade.Image) {
-    this.scene.cameras.main.startFollow(ball, false, 0.019);
+    this.scene.cameras.main.startFollow(ball, false, 0.002);
 
     this.updateCameraZoom(ball);
   }
 
   updateCameraZoom(ball: Phaser.Physics.Arcade.Image) {
-    const defaultCameraZoom = this.scene.cameras.main.zoom - 0.2;
-    const closeCameraZoom = this.scene.cameras.main.zoom + 0.4;
+    const defaultCameraZoom = this.scene.cameras.main.zoom + 0.1;
+    const closeCameraZoom = this.scene.cameras.main.zoom + 0.14;
 
     this.scene.events.on("update", () => {
-      if (this.scene.match.matchManager.matchStatus === "pause") {
+      if (
+        this.scene.match.matchManager.matchEvenetManager.matchStatus !==
+        "playing"
+      ) {
         this.scene.cameras.main.zoomTo(
           defaultCameraZoom,
           6000,

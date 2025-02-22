@@ -160,7 +160,31 @@ export default class BoardFootballPlayer extends Phaser.GameObjects.Container {
           this.playerData.who === "hostPlayer" ? "host" : "guest"
         );
 
-      const cornerRandom = getRandomIntNumber(0, 100);
+      let cornerRandom = getRandomIntNumber(0, 100);
+      if (
+        this.playerData.who === "hostPlayer" &&
+        this.scene.match.matchManager.teamWhoHasBall === "hostTeam"
+      ) {
+        cornerRandom = -1;
+      }
+      if (
+        this.playerData.who === "guestPlayer" &&
+        this.scene.match.matchManager.teamWhoHasBall === "guestTeam"
+      ) {
+        cornerRandom = -1;
+      }
+      if (
+        this.playerData.who === "hostPlayer" &&
+        this.scene.match.ball.getBounds().centerX < this.getBounds().centerX
+      ) {
+        cornerRandom = -1;
+      }
+      if (
+        this.playerData.who === "guestPlayer" &&
+        this.scene.match.ball.getBounds().centerX > this.getBounds().centerX
+      ) {
+        cornerRandom = -1;
+      }
       if (cornerRandom > 0) {
         const side = this.scene.match.ball.y > 474 ? "bottom" : "top";
         this.scene.match.matchManager.matchEvenetManager.footballerSaveToCorner(

@@ -91,6 +91,12 @@ export default class Team {
     this.boardFootballPlayers.defenceColumn.reset();
     this.boardFootballPlayers.middleColumn.reset();
     this.boardFootballPlayers.attackColumn.reset();
+    this.showTeam();
+    this.footballers.map((f) => {
+      f.activate();
+      f.stopFreeKickBehaviour();
+      f.aleradySentTakeBallDesire = false;
+    });
 
     this.boardFootballPlayers.goalKeeper.reset();
   }

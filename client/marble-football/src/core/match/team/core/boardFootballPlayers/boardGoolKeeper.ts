@@ -72,6 +72,15 @@ export default class BoardGoalKeeper extends BoardFootballPlayer {
     this.scene.match.matchManager.matchEvenetManager.goalKeeperTouchBall(this);
   }
 
+  setBall() {
+    this.scene.match.ball.stop();
+    this.scene.match.ball.setPosition(
+      this.getBounds().centerX +
+        (this.playerData.who === "hostPlayer" ? +30 : -30),
+      this.getBounds().centerY
+    );
+  }
+
   save() {
     this.scene.match.matchManager.comentatorManager.showCommentForGoalKeeper(
       this.playerData.who === "hostPlayer" ? "host" : "guest"

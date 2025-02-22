@@ -10,6 +10,7 @@ export class MatchEventManager {
     | "isGoal"
     | "isCorner"
     | "CornerIsInProcess"
+    | "finishCorner"
     | "isreeKick"
     | "isPenalty" = "playing";
 
@@ -17,6 +18,11 @@ export class MatchEventManager {
   constructor(public match: Match) {
     this.listenGoalEvenets();
   }
+
+  private timeOut_1: NodeJS.Timeout;
+  private timeOut_2: NodeJS.Timeout;
+  private timeOut_3: NodeJS.Timeout;
+  private timeOut_4: NodeJS.Timeout;
 
   isGoal(whoScored: "host" | "guest") {
     this.matchStatus = "isGoal";
@@ -81,7 +87,7 @@ export class MatchEventManager {
     this.matchStatus = "isCorner";
     this.match.collisionDetector.removeColliderforBallAndStadiumBorders();
 
-    setTimeout(() => {
+    this.timeOut_1 = setTimeout(() => {
       this.match.ball.stop();
       const canvasScene = this.match.scene.scene.get(
         "CanvasScene"
@@ -94,7 +100,7 @@ export class MatchEventManager {
       );
     }, 1100);
 
-    setTimeout(() => {
+    this.timeOut_2 = setTimeout(() => {
       this.startCorner(side);
     }, 3000);
   }
@@ -120,7 +126,7 @@ export class MatchEventManager {
     this.match.collisionDetector.removeColliderforBallAndStadiumBorders();
     goalKeeper.saveToCorner(side);
 
-    setTimeout(() => {
+    this.timeOut_4 = setTimeout(() => {
       this.match.ball.stop();
       const canvasScene = this.match.scene.scene.get(
         "CanvasScene"
@@ -133,7 +139,7 @@ export class MatchEventManager {
       );
     }, 900);
 
-    setTimeout(() => {
+    this.timeOut_3 = setTimeout(() => {
       this.startCorner(side);
     }, 3000);
   }
@@ -155,5 +161,43 @@ export class MatchEventManager {
       this.match.hostTeam.boardFootballPlayers.goalKeeper.activate();
       this.match.hostTeam.boardFootballPlayers.goalKeeper.startMotion();
     }
+  }
+
+  resumeUfterCorner(teamWhoWillResume: "host" | "guest", wasGoal: boolean) {
+    this.match.hostTeam.reset();
+    this.match.guestTeam.reset();
+    this.match.ball.reset();
+    this.match.matchManager.corner = undefined;
+
+    clearTimeout(this.timeOut_1);
+    clearTimeout(this.timeOut_2);
+    clearTimeout(this.timeOut_3);
+    clearTimeout(this.timeOut_4);
+
+    if (wasGoal === false) {
+      teamWhoWillResume === "host"
+        ? this.match.hostTeam.boardFootballPlayers.goalKeeper.setBall()
+        : this.match.guestTeam.boardFootballPlayers.goalKeeper.setBall();
+    }
+
+    this.match.matchManager.teamWhoHasBall =
+      teamWhoWillResume === "host" ? "hostTeam" : "guestTeam";
+
+    setTimeout(() => {
+      this.match.matchManager.matchEvenetManager.matchStatus = "playing";
+
+      if (wasGoal) {
+        this.match.matchManager.makeFirstKick(teamWhoWillResume);
+      } else {
+        teamWhoWillResume === "host"
+          ? this.match.hostTeam.boardFootballPlayers.goalKeeper.makeShortPass()
+          : this.match.guestTeam.boardFootballPlayers.goalKeeper.makeShortPass();
+      }
+    }, 1400);
+
+    setTimeout(() => {
+      this.match.hostTeam.boardFootballPlayers.goalKeeper.startMotion();
+      this.match.guestTeam.boardFootballPlayers.goalKeeper.startMotion();
+    }, 1600);
   }
 }
