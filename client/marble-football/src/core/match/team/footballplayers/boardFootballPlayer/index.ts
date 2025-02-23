@@ -119,19 +119,27 @@ export default class BoardFootballPlayer extends Phaser.GameObjects.Container {
       this.image,
       () => {
         if (
-          this.scene.match.matchManager.matchEvenetManager.matchStatus !==
+          this.scene.match.matchManager.matchEvenetManager.matchStatus ===
           "playing"
-        )
-          return;
+        ) {
+          if (this.playerData.position !== "goalKeeper") {
+            if (this.aleradySentTakeBallDesire) return;
+            this.aleradySentTakeBallDesire = true;
+            this.takeBall();
+          }
 
-        if (this.playerData.position !== "goalKeeper") {
-          if (this.aleradySentTakeBallDesire) return;
-          this.aleradySentTakeBallDesire = true;
-          this.takeBall();
+          if (this instanceof BoardGoalKeeper) {
+            this.touchBall();
+          }
         }
 
-        if (this instanceof BoardGoalKeeper) {
-          this.touchBall();
+        if (
+          this.scene.match.matchManager.matchEvenetManager.matchStatus ===
+          "CornerIsInProcess"
+        ) {
+          if (this instanceof BoardGoalKeeper) {
+            this.scene.match.matchManager.corner!.saveByGoalkeeper();
+          }
         }
       }
     );
@@ -200,8 +208,8 @@ export default class BoardFootballPlayer extends Phaser.GameObjects.Container {
                   .centerX + getRandomIntNumber(60, 110),
           y:
             side === "top"
-              ? 473 - getRandomIntNumber(170, 200)
-              : 473 + getRandomIntNumber(170, 200),
+              ? 473 - getRandomIntNumber(190, 230)
+              : 473 + getRandomIntNumber(190, 230),
         });
       }
     }

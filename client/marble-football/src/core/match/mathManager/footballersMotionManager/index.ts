@@ -85,17 +85,17 @@ export class FootballersMotionManager {
 
       // Check for MiddleColumns
       const hostMiddleDistance = calculateDistance(
-        this.match.hostTeam.boardFootballPlayers.defenceColumn.getBounds()
+        this.match.hostTeam.boardFootballPlayers.middleColumn.getBounds()
           .centerX,
-        this.match.hostTeam.boardFootballPlayers.defenceColumn.getBounds()
+        this.match.hostTeam.boardFootballPlayers.middleColumn.getBounds()
           .centerY,
         this.match.ball.getBounds().centerX,
         this.match.ball.getBounds().centerY
       );
       const guestMiddleDistance = calculateDistance(
-        this.match.guestTeam.boardFootballPlayers.defenceColumn.getBounds()
+        this.match.guestTeam.boardFootballPlayers.middleColumn.getBounds()
           .centerX,
-        this.match.guestTeam.boardFootballPlayers.defenceColumn.getBounds()
+        this.match.guestTeam.boardFootballPlayers.middleColumn.getBounds()
           .centerY,
         this.match.ball.getBounds().centerX,
         this.match.ball.getBounds().centerY
@@ -108,12 +108,14 @@ export class FootballersMotionManager {
           this.match.guestTeam.boardFootballPlayers.middleColumn.getBounds()
             .centerX
         ) {
-          guestMiddleDistance < 530
+          guestMiddleDistance < 200
             ? this.match.guestTeam.startSpecificColumnMotion("middleColumn")
             : this.match.guestTeam.stopSpecificColumnMotion("middleColumn");
         } else {
           this.match.guestTeam.stopSpecificColumnMotion("middleColumn");
         }
+      } else {
+        this.match.guestTeam.stopSpecificColumnMotion("middleColumn");
       }
       if (this.match.matchManager.teamWhoHasBall === "guestTeam") {
         if (
@@ -121,12 +123,14 @@ export class FootballersMotionManager {
           this.match.hostTeam.boardFootballPlayers.middleColumn.getBounds()
             .centerX
         ) {
-          hostMiddleDistance < 530
+          hostMiddleDistance < 200
             ? this.match.hostTeam.startSpecificColumnMotion("middleColumn")
             : this.match.hostTeam.stopSpecificColumnMotion("middleColumn");
         } else {
           this.match.hostTeam.stopSpecificColumnMotion("middleColumn");
         }
+      } else {
+        this.match.hostTeam.stopSpecificColumnMotion("middleColumn");
       }
 
       // Check for AttackColumns

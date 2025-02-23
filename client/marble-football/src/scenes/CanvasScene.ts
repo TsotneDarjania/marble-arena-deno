@@ -47,13 +47,13 @@ export default class CanvasScene extends Phaser.Scene {
 
     const comentatorImage = this.add.image(0, 0, "comentator");
     comentatorImage.setOrigin(0.5);
-    comentatorImage.setScale(0.7);
+    comentatorImage.setScale(0.35);
     comentatorImage.setAlpha(0);
     comentatorImage.setPosition(
       side === "left"
-        ? comentatorImage.getBounds().width / 2 + 10
-        : this.game.canvas.width - (comentatorImage.getBounds().width / 2 - 20),
-      comentatorImage.getBounds().width / 2 + 10
+        ? comentatorImage.getBounds().width / 2 + 20
+        : this.game.canvas.width - comentatorImage.getBounds().width / 2 - 20,
+      comentatorImage.getBounds().height / 2 + 20
     );
 
     const text = this.add.text(

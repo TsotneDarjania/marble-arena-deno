@@ -17,14 +17,14 @@ export default class GamePlayCameraController {
   }
 
   startFollow(ball: Phaser.Physics.Arcade.Image) {
-    this.scene.cameras.main.startFollow(ball, false, 0.002);
+    this.scene.cameras.main.startFollow(ball, false, 0.003);
 
     this.updateCameraZoom(ball);
   }
 
   updateCameraZoom(ball: Phaser.Physics.Arcade.Image) {
-    const defaultCameraZoom = this.scene.cameras.main.zoom + 0.1;
-    const closeCameraZoom = this.scene.cameras.main.zoom + 0.14;
+    const defaultCameraZoom = this.scene.cameras.main.zoom - 0.18;
+    const closeCameraZoom = this.scene.cameras.main.zoom - 0.18;
 
     this.scene.events.on("update", () => {
       if (
@@ -43,7 +43,7 @@ export default class GamePlayCameraController {
       if (ball.x > this.scene.game.canvas.width / 2 + 200) {
         this.scene.cameras.main.zoomTo(
           closeCameraZoom,
-          1600,
+          3000,
           "Cubic.easeInOut"
         ); // Zoom in when x > 50
       }
@@ -51,7 +51,7 @@ export default class GamePlayCameraController {
       if (ball.x < this.scene.game.canvas.width / 2 - 200) {
         this.scene.cameras.main.zoomTo(
           closeCameraZoom,
-          1600,
+          3000,
           "Cubic.easeInOut"
         ); // Zoom out when x < -50
       }

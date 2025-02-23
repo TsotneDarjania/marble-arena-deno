@@ -55,6 +55,7 @@ export default class BoardGoalKeeper extends BoardFootballPlayer {
   }
 
   reset() {
+    this.alreadyTouchBall = false;
     this.tween?.destroy();
     this.tween = undefined;
 

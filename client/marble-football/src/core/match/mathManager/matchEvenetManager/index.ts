@@ -24,27 +24,37 @@ export class MatchEventManager {
   private timeOut_3: NodeJS.Timeout;
   private timeOut_4: NodeJS.Timeout;
 
+  public isPossibleToListenGoalEvents = true;
+
   isGoal(whoScored: "host" | "guest") {
-    this.matchStatus = "isGoal";
-    this.match.matchTimer.stopTimer();
+    if (this.matchStatus === "playing") {
+      this.matchStatus = "isGoal";
+      this.match.matchTimer.stopTimer();
 
-    this.match.hostTeam.stopFullMotion();
-    this.match.hostTeam.boardFootballPlayers.goalKeeper.stopMotion();
-    this.match.guestTeam.stopFullMotion();
-    this.match.guestTeam.boardFootballPlayers.goalKeeper.stopMotion();
+      this.match.hostTeam.stopFullMotion();
+      this.match.hostTeam.boardFootballPlayers.goalKeeper.stopMotion();
+      this.match.guestTeam.stopFullMotion();
+      this.match.guestTeam.boardFootballPlayers.goalKeeper.stopMotion();
 
-    this.match.ball.stop();
-    this.match.ball.startBlinkAnimation();
-    this.match.stadium.startGoalSelebration(whoScored, 2000);
+      this.match.ball.stop();
+      this.match.ball.startBlinkAnimation();
+      this.match.stadium.startGoalSelebration(whoScored);
 
-    setTimeout(() => {
-      this.match.matchManager.resetUfterGoal();
-    }, 4000);
+      setTimeout(() => {
+        this.match.stadium.stopGoalSelebration();
+        this.match.matchManager.resetUfterGoal();
+      }, 4000);
+    }
+
+    if (this.matchStatus === "CornerIsInProcess") {
+      this.match.matchManager.corner!.isGoal(whoScored);
+      this.matchStatus = "finishCorner";
+    }
   }
 
   listenGoalEvenets() {
     this.match.scene.events.on("update", () => {
-      if (this.matchStatus === "playing") {
+      if (this.isPossibleToListenGoalEvents) {
         if (
           this.match.ball.x <
           this.match.hostTeam.boardFootballPlayers.goalKeeper.getBounds()
@@ -86,6 +96,7 @@ export class MatchEventManager {
 
     this.matchStatus = "isCorner";
     this.match.collisionDetector.removeColliderforBallAndStadiumBorders();
+    this.match.collisionDetector.removeColliderforBallAndGoalPosts();
 
     this.timeOut_1 = setTimeout(() => {
       this.match.ball.stop();
@@ -94,11 +105,11 @@ export class MatchEventManager {
       ) as CanvasScene;
       canvasScene.showComentator(
         this.match.matchManager.teamWhoHasBall === "hostTeam"
-          ? "left"
-          : "right",
-        "Corner Kisk!"
+          ? "right"
+          : "left",
+        "Corner Kick!"
       );
-    }, 1100);
+    }, 1400);
 
     this.timeOut_2 = setTimeout(() => {
       this.startCorner(side);
@@ -124,6 +135,7 @@ export class MatchEventManager {
   makeCornerFromGoaleeper(goalKeeper: BoardGoalKeeper, side: "top" | "bottom") {
     this.matchStatus = "isCorner";
     this.match.collisionDetector.removeColliderforBallAndStadiumBorders();
+    this.match.collisionDetector.removeColliderforBallAndGoalPosts();
     goalKeeper.saveToCorner(side);
 
     this.timeOut_4 = setTimeout(() => {

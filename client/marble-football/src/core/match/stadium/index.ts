@@ -136,16 +136,28 @@ export class Stadium extends Phaser.GameObjects.Container {
     this.add(this.lightsContainer);
   }
 
-  startGoalSelebration(team: "host" | "guest", duration: number) {
-    this.light1.makeAnimation(false, duration);
-    this.light2.makeAnimation(false, duration);
-    this.light3.makeAnimation(false, duration);
-    this.light4.makeAnimation(true, duration);
-    this.light5.makeAnimation(false, duration);
-    this.light6.makeAnimation(true, duration);
-    this.light7.makeAnimation(false, duration);
+  startGoalSelebration(team: "host" | "guest") {
+    this.light1.startAnimation(false);
+    this.light2.startAnimation(false);
+    this.light3.startAnimation(false);
+    this.light4.startAnimation(true);
+    this.light5.startAnimation(false);
+    this.light6.startAnimation(true);
+    this.light7.startAnimation(false);
 
-    this.spectators.goalSelebration(team, duration);
+    this.spectators.startGoalSelebration(team);
+  }
+
+  stopGoalSelebration() {
+    this.light1.stopAnimation();
+    this.light2.stopAnimation();
+    this.light3.stopAnimation();
+    this.light4.stopAnimation();
+    this.light5.stopAnimation();
+    this.light6.stopAnimation();
+    this.light7.stopAnimation();
+
+    this.spectators.stopGoalSelebration();
   }
 
   addColliders() {

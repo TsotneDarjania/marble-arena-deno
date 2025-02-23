@@ -21,7 +21,6 @@ export class Corner {
   timeOut_4: NodeJS.Timeout;
   timeOut_5: NodeJS.Timeout;
   timeOut_6: NodeJS.Timeout;
-  overlapGoalkeeper: Phaser.Physics.Arcade.Collider;
 
   constructor(
     public match: Match,
@@ -37,7 +36,6 @@ export class Corner {
     this.addAttacker();
     this.addDefender();
     this.addColliderDetectors();
-    this.addGoalEventListener();
 
     this.timeOut_4 = setTimeout(() => {
       this.kickFromCorner();
@@ -62,7 +60,7 @@ export class Corner {
         this.match.scene.game.canvas.height / 2,
         "default"
       )
-      .setDepth(100)
+      .setDepth(150)
       .setTint(0x000000)
       .setScale(100)
       .setAlpha(0);
@@ -72,6 +70,7 @@ export class Corner {
       alpha: 1,
       duration: 500,
       onComplete: () => {
+        this.match.stadium.stopGoalSelebration();
         this.match.matchManager.matchEvenetManager.resumeUfterCorner(
           this.teamWhoShootCorner === "hostTeam" ? "guest" : "host",
           this.isGoalScored
@@ -97,7 +96,7 @@ export class Corner {
   }
 
   isGoal(whoScored: "host" | "guest") {
-    this.match.stadium.startGoalSelebration(whoScored, 2000);
+    this.match.stadium.startGoalSelebration(whoScored);
     this.match.ball.startBlinkAnimation();
     this.match.ball.stop();
     this.match.hostTeam.boardFootballPlayers.goalKeeper.stopMotion();
@@ -106,37 +105,6 @@ export class Corner {
     this.timeOut_2 = setTimeout(() => {
       this.stopCorner();
     }, 4000);
-  }
-
-  addGoalEventListener() {
-    this.match.scene.events.on("update", () => {
-      if (this.isGoalScored) return;
-      if (
-        this.match.matchManager.matchEvenetManager.matchStatus !==
-        "CornerIsInProcess"
-      )
-        return;
-
-      if (
-        this.match.ball.x <
-        this.match.hostTeam.boardFootballPlayers.goalKeeper.getBounds()
-          .centerX -
-          16
-      ) {
-        this.isGoal("guest");
-        this.isGoalScored = true;
-      }
-
-      if (
-        this.match.ball.x >
-        this.match.guestTeam.boardFootballPlayers.goalKeeper.getBounds()
-          .centerX +
-          16
-      ) {
-        this.isGoal("host");
-        this.isGoalScored = true;
-      }
-    });
   }
 
   kickFromCorner() {
@@ -197,21 +165,10 @@ export class Corner {
       isAlreadyDetect = true;
       this.shootByAttaker();
     });
-
-    this.overlapGoalkeeper = this.match.scene.physics.add.overlap(
-      this.match.ball,
-      this.teamWhoShootCorner === "hostTeam"
-        ? this.match.guestTeam.boardFootballPlayers.goalKeeper.image
-        : this.match.hostTeam.boardFootballPlayers.goalKeeper.image,
-      () => {
-        alert("Save corner");
-        this.saveByGoalkeeper();
-        this.overlapGoalkeeper?.destroy();
-      }
-    );
   }
 
   saveByGoalkeeper() {
+    this.match.matchManager.matchEvenetManager.matchStatus = "finishCorner";
     this.match.ball.stop();
     this.match.hostTeam.boardFootballPlayers.goalKeeper.stopMotion();
     this.match.guestTeam.boardFootballPlayers.goalKeeper.stopMotion();
@@ -304,6 +261,7 @@ export class Corner {
         ? this.match.matchData.guestTeamData.logoKey
         : this.match.matchData.hostTeamData.logoKey
     );
+    this.deffender.setDepth(110);
     this.deffender.setScale(0.6);
     this.deffender.setCircle(30);
   }
@@ -334,6 +292,7 @@ export class Corner {
         ? this.match.matchData.hostTeamData.logoKey
         : this.match.matchData.guestTeamData.logoKey
     );
+    this.attacker.setDepth(110);
     this.attacker.setCircle(30);
     this.attacker.setScale(0.6);
   }
@@ -375,8 +334,6 @@ export class Corner {
   }
 
   destroy() {
-    this.overlapGoalkeeper?.destroy();
-
     // Destroy game objects
     if (this.attacker) {
       this.attacker.destroy();

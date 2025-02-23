@@ -19,8 +19,11 @@ export default class CollisionDetector {
       this.match.ball,
       [...this.match.stadium.stadiumColliders.goalPostColliders],
       () => {
-        this.scene.soundManager.goalBorder.play();
-        console.log("Goal Posts detect");
+        if (
+          this.match.matchManager.matchEvenetManager.matchStatus === "playing"
+        ) {
+          console.log("Goal Posts detect");
+        }
       }
     );
     this.ballAndGoalPostsCollider.overlapOnly = false;

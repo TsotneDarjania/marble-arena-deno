@@ -1,7 +1,7 @@
+import { Tweens } from "phaser";
 import { Stadium } from "..";
 import GamePlay from "../../../../scenes/GamePlay";
 import SpectatorsGroup from "./spectatorsGroup";
-import { Events } from "phaser";
 
 export default class Spectators extends Phaser.GameObjects.Container {
   topSpectatorsContainer: Phaser.GameObjects.Container;
@@ -18,7 +18,7 @@ export default class Spectators extends Phaser.GameObjects.Container {
   hostTeamSpectators: Array<Phaser.GameObjects.Bob>;
   guestTeamSpectators: Array<Phaser.GameObjects.Bob>;
 
-  eventEmitter: Events.EventEmitter;
+  tween: Tweens.Tween;
 
   constructor(public scene: GamePlay, public stadium: Stadium) {
     super(scene);
@@ -38,8 +38,6 @@ export default class Spectators extends Phaser.GameObjects.Container {
     this.addBottomLeftAngleSpectators();
     this.addLeftSpectators();
     this.addTopLeftAngleSpectators();
-
-    this.eventEmitter = new Events.EventEmitter();
   }
 
   addTopSpectators() {
@@ -301,31 +299,8 @@ export default class Spectators extends Phaser.GameObjects.Container {
     }
   }
 
-  goalSelebration(whoScored: "host" | "guest", duration: number) {
-    this.stadium.scene.tweens.add({
-      targets:
-        whoScored === "host"
-          ? this.hostTeamSpectators
-          : this.guestTeamSpectators,
-      alpha: 0.5,
-      y: `-=15`,
-      duration: duration / 18,
-      yoyo: true,
-      repeat: 18,
-      onComplete: () => {
-        if (
-          this.stadium.scene.match.matchManager.matchStatus === "lastPenalties"
-        ) {
-          this.stadium.scene.match.matchManager.lastPenalties.FinishedGoalSelebration();
-        } else {
-          this.eventEmitter.emit("FinishGoalSelebration", whoScored);
-        }
-      },
-    });
-  }
-
-  shortGoalSelebration(whoScored: "host" | "guest") {
-    this.stadium.scene.tweens.add({
+  startGoalSelebration(whoScored: "host" | "guest") {
+    this.tween = this.stadium.scene.tweens.add({
       targets:
         whoScored === "host"
           ? this.hostTeamSpectators
@@ -334,10 +309,17 @@ export default class Spectators extends Phaser.GameObjects.Container {
       y: `-=15`,
       duration: 200,
       yoyo: true,
-      repeat: 5,
-      onComplete: () => {
-        this.stadium.scene.match.matchManager.lastPenalties.FinishedGoalSelebration();
-      },
+      repeat: -1,
+    });
+  }
+
+  stopGoalSelebration() {
+    this.tween?.destroy();
+    this.stadium.scene.tweens.add({
+      targets: [this.hostTeamSpectators, this.guestTeamSpectators],
+      alpha: 1,
+      y: 0,
+      duration: 200,
     });
   }
 }
