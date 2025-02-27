@@ -263,15 +263,15 @@ export class Column extends Phaser.GameObjects.Container {
   // }
 
   stopMotion() {
-    if (this.isInMotion === false) return;
-    this.isInMotion = false;
-
     if (this.tween) {
       this.scene.tweens.add({
         targets: this.tween,
         timeScale: 0, // Gradually reduce speed to zero
         duration: 150, // Adjust the duration to control how slowly it stops
         ease: "Linear",
+        onComplete: () => {
+          this.isInMotion = false;
+        },
       });
     }
   }

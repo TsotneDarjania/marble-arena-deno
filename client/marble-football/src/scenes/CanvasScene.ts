@@ -56,6 +56,28 @@ export default class CanvasScene extends Phaser.Scene {
       comentatorImage.getBounds().height / 2 + 20
     );
 
+    const liveImage = this.add.image(0, 0, "live");
+    liveImage.setOrigin(0.5);
+    liveImage.setScale(0.35);
+    liveImage.setAlpha(0);
+    liveImage.setPosition(
+      side === "left"
+        ? comentatorImage.getBounds().width / 2 + 142
+        : this.game.canvas.width - comentatorImage.getBounds().width / 2 - 142,
+      comentatorImage.getBounds().centerY + 246
+    );
+
+    const mikeImage = this.add.image(0, 0, "mike");
+    mikeImage.setOrigin(0.5);
+    mikeImage.setScale(0.5);
+    mikeImage.setAlpha(0);
+    mikeImage.setPosition(
+      side === "left"
+        ? comentatorImage.getBounds().width / 2 - 40
+        : this.game.canvas.width - comentatorImage.getBounds().width / 2 + 40,
+      comentatorImage.getBounds().centerY + 246
+    );
+
     const text = this.add.text(
       this.game.canvas.width / 2,
       this.game.canvas.height / 2,
@@ -79,7 +101,7 @@ export default class CanvasScene extends Phaser.Scene {
     });
 
     this.tweens.add({
-      targets: [comentatorImage],
+      targets: [comentatorImage, liveImage, mikeImage],
       duration: 300,
       ease: Phaser.Math.Easing.Back.Out,
       alpha: 1,
@@ -98,6 +120,8 @@ export default class CanvasScene extends Phaser.Scene {
       image.destroy();
       comentatorImage.destroy();
       text.destroy();
+      liveImage.destroy();
+      mikeImage.destroy();
     }, 3200);
   }
 
