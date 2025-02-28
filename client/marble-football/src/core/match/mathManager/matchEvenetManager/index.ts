@@ -205,11 +205,11 @@ export class MatchEventManager {
           ? this.match.hostTeam.boardFootballPlayers.goalKeeper.makeShortPass()
           : this.match.guestTeam.boardFootballPlayers.goalKeeper.makeShortPass();
       }
-    }, 1400);
+    }, 1800);
 
     setTimeout(() => {
       this.match.hostTeam.boardFootballPlayers.goalKeeper.startMotion();
       this.match.guestTeam.boardFootballPlayers.goalKeeper.startMotion();
-    }, 1600);
+    }, 2100);
   }
 }

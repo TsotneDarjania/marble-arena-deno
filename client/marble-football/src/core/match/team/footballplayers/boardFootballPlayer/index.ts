@@ -11,12 +11,14 @@ import BoardGoalKeeper from "../../core/boardFootballPlayers/boardGoolKeeper";
 export default class BoardFootballPlayer extends Phaser.GameObjects.Container {
   image: Phaser.Physics.Arcade.Image;
   selector: Phaser.GameObjects.Image;
+  targetSelector: Phaser.GameObjects.Image;
 
   // States
   withBall = false;
   aleradySentTakeBallDesire = false;
 
   freeKickTween!: Tweens.Tween;
+  targetSelectorTween!: Tweens.Tween;
 
   isFreeKickBehaviour = false;
 
@@ -37,10 +39,42 @@ export default class BoardFootballPlayer extends Phaser.GameObjects.Container {
   init() {
     this.setScale(0.6);
     this.addSelector();
+    this.createTargetSelector();
     this.addImage();
     this.addColliderDetector();
 
     this.setDepth(100);
+  }
+
+  createTargetSelector() {
+    this.targetSelector = this.scene.add.image(0, 0, "circle");
+    this.targetSelector.setTint(0xdbcd00);
+    this.targetSelector.setScale(0.88);
+    this.targetSelector.setAlpha(0);
+
+    this.add(this.targetSelector);
+  }
+
+  showTargetSelector() {
+    if (this.targetSelectorTween) {
+      this.targetSelectorTween.stop();
+    }
+
+    this.targetSelector.setAlpha(0); // Reset alpha before starting the tween
+
+    this.targetSelectorTween = this.scene.tweens.add({
+      targets: this.targetSelector,
+      duration: 300,
+      alpha: 1,
+      onComplete: () => {
+        this.scene.tweens.add({
+          targets: this.targetSelector,
+          duration: 300,
+          alpha: 0,
+          delay: 500,
+        });
+      },
+    });
   }
 
   defineShortAndLongPassVariants() {
@@ -193,7 +227,7 @@ export default class BoardFootballPlayer extends Phaser.GameObjects.Container {
       ) {
         cornerRandom = -1;
       }
-      if (cornerRandom > 0) {
+      if (cornerRandom > 95) {
         const side = this.scene.match.ball.y > 474 ? "bottom" : "top";
         this.scene.match.matchManager.matchEvenetManager.footballerSaveToCorner(
           side
@@ -251,6 +285,18 @@ export default class BoardFootballPlayer extends Phaser.GameObjects.Container {
         this.getBounds().centerY
       );
     }, 100);
+    setTimeout(() => {
+      this.scene.match.ball.goTowardFootballer(
+        this.getBounds().centerX,
+        this.getBounds().centerY
+      );
+    }, 200);
+    setTimeout(() => {
+      this.scene.match.ball.goTowardFootballer(
+        this.getBounds().centerX,
+        this.getBounds().centerY
+      );
+    }, 300);
 
     setTimeout(() => {
       if (
@@ -298,14 +344,17 @@ export default class BoardFootballPlayer extends Phaser.GameObjects.Container {
   makeShortPass() {
     this.scene.soundManager.pass.play();
 
-    const { x, y } = this.getAnotherFootballerPositions(
+    const anotherFootballer =
       this.playerData.potentialShortPassVariants![
         getRandomIntNumber(
           0,
           this.playerData.potentialShortPassVariants!.length
         )
-      ]
-    );
+      ];
+
+    anotherFootballer.showTargetSelector();
+
+    const { x, y } = this.getAnotherFootballerPositions(anotherFootballer);
 
     this.scene.match.ball.kick(mapToRange(this.teamData.passSpeed, 160, 300), {
       x,

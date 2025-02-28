@@ -2,6 +2,7 @@ import { matchDataConfig } from "../../config/matchConfig";
 import GamePlay from "../../scenes/GamePlay";
 import { MatchDataType } from "../../types/gameTypes";
 import { Ball } from "./ball";
+import { Coach } from "./coach";
 import CollisionDetector from "./collisionDetector";
 import { MatchIntroEnvironment } from "./matchIntroEnvironment";
 import MatchManager from "./mathManager";
@@ -23,6 +24,9 @@ export default class Match {
   matchManager: MatchManager;
 
   matchIntroEnvironment!: MatchIntroEnvironment;
+
+  hostTeamCoach!: Coach;
+  guestTeamCoach!: Coach;
 
   constructor(public matchData: MatchDataType, public scene: GamePlay) {
     this.init();
@@ -62,6 +66,7 @@ export default class Match {
       this.addCollisionDetector();
       this.createMatchManager();
       this.addTeams();
+      this.addCoaches();
 
       this.scene.soundManager.timeStartReferee.play();
     }, 1500);
@@ -82,6 +87,24 @@ export default class Match {
       this.scene.game.canvas.width / 2,
       this.scene.game.canvas.height / 2,
       this.stadium
+    );
+  }
+
+  addCoaches() {
+    this.hostTeamCoach = new Coach(
+      this.scene,
+      this.scene.game.canvas.width / 2 - 150,
+      this.scene.game.canvas.height / 2 + 320,
+      this.matchData.hostTeamData.logoKey,
+      true
+    );
+
+    this.guestTeamCoach = new Coach(
+      this.scene,
+      this.scene.game.canvas.width / 2 + 150,
+      this.scene.game.canvas.height / 2 + 320,
+      this.matchData.guestTeamData.logoKey,
+      false
     );
   }
 

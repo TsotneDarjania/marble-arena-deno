@@ -1,4 +1,5 @@
 import Match from "..";
+import CanvasScene from "../../../scenes/CanvasScene";
 import {
   calculatePercentage,
   getRandomIntNumber,
@@ -65,8 +66,13 @@ export class Corner {
       .setScale(100)
       .setAlpha(0);
 
+    const canvasScene = this.match.scene.scene.get(
+      "CanvasScene"
+    ) as CanvasScene;
+    canvasScene.showMarbleArenaLogo();
+
     this.match.scene.tweens.add({
-      targets: bg,
+      targets: [bg],
       alpha: 1,
       duration: 500,
       onComplete: () => {
@@ -80,6 +86,7 @@ export class Corner {
           this.match.scene.tweens.add({
             targets: bg,
             alpha: 0,
+            delay: 300,
             duration: 500,
             onComplete: () => {
               clearTimeout(this.timeOut_1);
@@ -96,6 +103,7 @@ export class Corner {
   }
 
   isGoal(whoScored: "host" | "guest") {
+    this.isGoalScored = true;
     this.match.stadium.startGoalSelebration(whoScored);
     this.match.ball.startBlinkAnimation();
     this.match.ball.stop();

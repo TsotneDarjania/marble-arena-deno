@@ -108,7 +108,7 @@ export class FootballersMotionManager {
           this.match.guestTeam.boardFootballPlayers.middleColumn.getBounds()
             .centerX
         ) {
-          guestMiddleDistance < 200
+          guestMiddleDistance < 250
             ? this.match.guestTeam.startSpecificColumnMotion("middleColumn")
             : this.match.guestTeam.stopSpecificColumnMotion("middleColumn");
         } else {
@@ -123,7 +123,7 @@ export class FootballersMotionManager {
           this.match.hostTeam.boardFootballPlayers.middleColumn.getBounds()
             .centerX
         ) {
-          hostMiddleDistance < 200
+          hostMiddleDistance < 250
             ? this.match.hostTeam.startSpecificColumnMotion("middleColumn")
             : this.match.hostTeam.stopSpecificColumnMotion("middleColumn");
         } else {

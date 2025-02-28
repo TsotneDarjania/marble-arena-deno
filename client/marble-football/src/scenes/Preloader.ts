@@ -35,6 +35,7 @@ export default class Preload extends Scene {
     this.load.image("comentator", "image/ui/commentator.png");
     this.load.image("live", "image/ui/live.png");
     this.load.image("mike", "image/ui/mike.png");
+    this.load.image("marbleArenaLogo", "image/ui/logo.png");
 
     // Default Team Logos
     this.load.image(

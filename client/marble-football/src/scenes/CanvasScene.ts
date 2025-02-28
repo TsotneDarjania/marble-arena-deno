@@ -58,29 +58,29 @@ export default class CanvasScene extends Phaser.Scene {
 
     const liveImage = this.add.image(0, 0, "live");
     liveImage.setOrigin(0.5);
-    liveImage.setScale(0.35);
+    liveImage.setScale(0.3);
     liveImage.setAlpha(0);
     liveImage.setPosition(
       side === "left"
-        ? comentatorImage.getBounds().width / 2 + 142
-        : this.game.canvas.width - comentatorImage.getBounds().width / 2 - 142,
+        ? comentatorImage.getBounds().width / 2 + 152
+        : this.game.canvas.width - comentatorImage.getBounds().width / 2 - 152,
       comentatorImage.getBounds().centerY + 246
     );
 
     const mikeImage = this.add.image(0, 0, "mike");
     mikeImage.setOrigin(0.5);
-    mikeImage.setScale(0.5);
+    mikeImage.setScale(0.4);
     mikeImage.setAlpha(0);
     mikeImage.setPosition(
       side === "left"
-        ? comentatorImage.getBounds().width / 2 - 40
-        : this.game.canvas.width - comentatorImage.getBounds().width / 2 + 40,
+        ? comentatorImage.getBounds().width / 2 - 80
+        : this.game.canvas.width - comentatorImage.getBounds().width / 2 + 80,
       comentatorImage.getBounds().centerY + 246
     );
 
     const text = this.add.text(
       this.game.canvas.width / 2,
-      this.game.canvas.height / 2,
+      this.game.canvas.height / 2 + 100,
       comment,
       {
         fontSize: "85px",
@@ -189,6 +189,41 @@ export default class CanvasScene extends Phaser.Scene {
       alpha: 0,
       onComplete: () => {
         image.destroy();
+      },
+    });
+  }
+
+  // During Transitions
+  showMarbleArenaLogo() {
+    const marbleArenaLogo = this.add
+      .image(
+        this.game.canvas.width / 2,
+        this.game.canvas.height / 2,
+        "marbleArenaLogo"
+      )
+      .setScale(0)
+      .setOrigin(0.5)
+      .setDepth(150)
+      .setAlpha(0);
+
+    this.tweens.add({
+      targets: marbleArenaLogo,
+      alpha: 1,
+      scale: 0.3,
+      duration: 500,
+      onComplete: () => {
+        setTimeout(() => {
+          this.tweens.add({
+            targets: marbleArenaLogo,
+            alpha: 0,
+            scale: 0,
+            delay: 300,
+            duration: 500,
+            onComplete: () => {
+              marbleArenaLogo.destroy();
+            },
+          });
+        }, 300);
       },
     });
   }

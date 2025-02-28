@@ -79,6 +79,7 @@ export default class MatchManager {
   }
 
   resetUfterGoal() {
+    console.log("reset ufter goal");
     this.match.ball.reset();
     this.match.hostTeam.reset();
     this.match.guestTeam.reset();
