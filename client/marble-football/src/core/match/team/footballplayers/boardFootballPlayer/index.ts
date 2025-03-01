@@ -464,13 +464,15 @@ export default class BoardFootballPlayer extends Phaser.GameObjects.Container {
     this.isFreeKickBehaviour = true;
     this.selector.setTint(0xeb1611);
 
+    this.image.setTint(0xfa580a);
+
     this.image.alpha = 0.5;
 
     this.freeKickTween = this.scene.add.tween({
       targets: this.selector,
       alpha: 1,
-      duration: 400,
-      repeat: 5,
+      duration: 200,
+      repeat: 3,
       yoyo: true,
       onComplete: () => {
         this.stopFreeKickBehaviour();
@@ -483,6 +485,7 @@ export default class BoardFootballPlayer extends Phaser.GameObjects.Container {
     this.selector.setTint(0x48f526);
     this.selector.setAlpha(0);
     this.image.alpha = 1;
+    this.image.setTint(0xffffff);
 
     this.freeKickTween?.destroy();
   }

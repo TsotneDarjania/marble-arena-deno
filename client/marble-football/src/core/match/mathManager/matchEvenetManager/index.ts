@@ -1,10 +1,18 @@
 import Match from "../..";
 import CanvasScene from "../../../../scenes/CanvasScene";
+import { getRandomIntNumber } from "../../../../utils/math";
 import { Corner } from "../../matchEvents/corner";
 import BoardGoalKeeper from "../../team/core/boardFootballPlayers/boardGoolKeeper";
 import BoardFootballPlayer from "../../team/footballplayers/boardFootballPlayer";
 
 export class MatchEventManager {
+  private timeOut_1: NodeJS.Timeout;
+  private timeOut_2: NodeJS.Timeout;
+  private timeOut_3: NodeJS.Timeout;
+  private timeOut_4: NodeJS.Timeout;
+
+  public isPossibleToListenGoalEvents = true;
+
   matchStatus:
     | "playing"
     | "isGoal"
@@ -19,15 +27,63 @@ export class MatchEventManager {
     this.listenGoalEvenets();
   }
 
-  private timeOut_1: NodeJS.Timeout;
-  private timeOut_2: NodeJS.Timeout;
-  private timeOut_3: NodeJS.Timeout;
-  private timeOut_4: NodeJS.Timeout;
+  calculateFreeKickPossibility() {
+    const random = getRandomIntNumber(0, 100);
+    if (random > 70) {
+      if (this.match.matchManager.teamWhoHasBall === "hostTeam") {
+        const randomFootballer =
+          getRandomIntNumber(0, 100) > 50
+            ? this.match.guestTeam.boardFootballPlayers.middleColumn
+                .footballers[
+                getRandomIntNumber(
+                  0,
+                  this.match.guestTeam.boardFootballPlayers.middleColumn
+                    .footballers.length
+                )
+              ]
+            : this.match.guestTeam.boardFootballPlayers.attackColumn
+                .footballers[
+                getRandomIntNumber(
+                  0,
+                  this.match.guestTeam.boardFootballPlayers.attackColumn
+                    .footballers.length
+                )
+              ];
 
-  public isPossibleToListenGoalEvents = true;
+        randomFootballer.startFreeKickBehaviour();
+      } else {
+        const randomFootballer =
+          getRandomIntNumber(0, 100) > 50
+            ? this.match.hostTeam.boardFootballPlayers.middleColumn.footballers[
+                getRandomIntNumber(
+                  0,
+                  this.match.hostTeam.boardFootballPlayers.middleColumn
+                    .footballers.length
+                )
+              ]
+            : this.match.hostTeam.boardFootballPlayers.attackColumn.footballers[
+                getRandomIntNumber(
+                  0,
+                  this.match.hostTeam.boardFootballPlayers.attackColumn
+                    .footballers.length
+                )
+              ];
+
+        randomFootballer.startFreeKickBehaviour();
+      }
+    }
+  }
 
   isGoal(whoScored: "host" | "guest") {
     if (this.matchStatus === "playing") {
+      if (whoScored === "host") {
+        this.match.hostTeamCoach.selebration();
+        this.match.guestTeamCoach.angry();
+      } else {
+        this.match.guestTeamCoach.selebration();
+        this.match.hostTeamCoach.angry();
+      }
+
       this.matchStatus = "isGoal";
       this.match.matchTimer.stopTimer();
 
@@ -86,6 +142,8 @@ export class MatchEventManager {
     if (footballer.playerData.who === "guestPlayer") {
       this.match.matchManager.teamWhoHasBall = "guestTeam";
     }
+
+    this.calculateFreeKickPossibility();
   }
 
   footballerSaveToCorner(side: "top" | "bottom") {
