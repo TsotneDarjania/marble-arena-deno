@@ -3,7 +3,8 @@ import CanvasScene from "../../../scenes/CanvasScene";
 import { getRandomIntNumber } from "../../../utils/math";
 import { ComentatorManager } from "../commentatorManager";
 import { Corner } from "../matchEvents/corner";
-import { FreeKick } from "../matchEvents/freeKick";
+import { Freekick } from "../matchEvents/freeKick";
+
 import { LastPenalties } from "../matchEvents/lastPenalties";
 import { Penalty } from "../matchEvents/penalty";
 
@@ -23,7 +24,7 @@ export default class MatchManager {
   hostScore = 0;
   guestScore = 0;
 
-  freeKick?: FreeKick;
+  freeKick?: Freekick;
   penalty?: Penalty;
   corner?: Corner;
   lastPenalties?: LastPenalties;

@@ -159,6 +159,13 @@ export default class BoardFootballPlayer extends Phaser.GameObjects.Container {
           if (this.playerData.position !== "goalKeeper") {
             if (this.aleradySentTakeBallDesire) return;
             this.aleradySentTakeBallDesire = true;
+            if (this.isFreeKickBehaviour) {
+              this.scene.match.matchManager.matchEvenetManager.makefreeKick(
+                this
+              );
+              this.stopFreeKickBehaviour();
+              return;
+            }
             this.takeBall();
           }
 
@@ -174,6 +181,21 @@ export default class BoardFootballPlayer extends Phaser.GameObjects.Container {
           if (this instanceof BoardGoalKeeper) {
             this.scene.match.matchManager.corner!.saveByGoalkeeper();
           }
+        }
+
+        if (
+          this.scene.match.matchManager.matchEvenetManager.matchStatus ===
+            "isreeKick" &&
+          this.scene.match.matchManager.freeKick !== undefined &&
+          this.isDeactive === false
+        ) {
+          const playerTeamIs =
+            this.playerData.who === "hostPlayer" ? "host" : "guest";
+          if (
+            playerTeamIs ===
+            this.scene.match.matchManager.freeKick.teamWhoIsGuilty
+          )
+            this.scene.match.matchManager.freeKick.save();
         }
       }
     );
@@ -194,14 +216,7 @@ export default class BoardFootballPlayer extends Phaser.GameObjects.Container {
     )
       return;
 
-    // For Commentator
     if (this.playerData.position === "defender") {
-      const random = getRandomIntNumber(0, 100);
-      random > 80 &&
-        this.scene.match.matchManager.comentatorManager.showCommentForDefennder(
-          this.playerData.who === "hostPlayer" ? "host" : "guest"
-        );
-
       let cornerRandom = getRandomIntNumber(0, 100);
       if (
         this.playerData.who === "hostPlayer" &&
@@ -227,7 +242,7 @@ export default class BoardFootballPlayer extends Phaser.GameObjects.Container {
       ) {
         cornerRandom = -1;
       }
-      if (cornerRandom > 95) {
+      if (cornerRandom > 90) {
         const side = this.scene.match.ball.y > 474 ? "bottom" : "top";
         this.scene.match.matchManager.matchEvenetManager.footballerSaveToCorner(
           side
@@ -246,6 +261,13 @@ export default class BoardFootballPlayer extends Phaser.GameObjects.Container {
               : 473 + getRandomIntNumber(190, 230),
         });
       }
+
+      // For Commentator
+      const random = getRandomIntNumber(0, 100);
+      random > 80 &&
+        this.scene.match.matchManager.comentatorManager.showCommentForDefennder(
+          this.playerData.who === "hostPlayer" ? "host" : "guest"
+        );
     }
 
     if (
@@ -471,8 +493,8 @@ export default class BoardFootballPlayer extends Phaser.GameObjects.Container {
     this.freeKickTween = this.scene.add.tween({
       targets: this.selector,
       alpha: 1,
-      duration: 200,
-      repeat: 3,
+      duration: 300,
+      repeat: 12,
       yoyo: true,
       onComplete: () => {
         this.stopFreeKickBehaviour();

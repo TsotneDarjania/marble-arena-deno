@@ -209,7 +209,7 @@ export default class CanvasScene extends Phaser.Scene {
     this.tweens.add({
       targets: marbleArenaLogo,
       alpha: 1,
-      scale: 0.3,
+      scale: 0.45,
       duration: 500,
       onComplete: () => {
         setTimeout(() => {

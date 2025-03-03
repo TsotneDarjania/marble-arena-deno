@@ -2,6 +2,7 @@ import Match from "../..";
 import CanvasScene from "../../../../scenes/CanvasScene";
 import { getRandomIntNumber } from "../../../../utils/math";
 import { Corner } from "../../matchEvents/corner";
+import { Freekick } from "../../matchEvents/freeKick";
 import BoardGoalKeeper from "../../team/core/boardFootballPlayers/boardGoolKeeper";
 import BoardFootballPlayer from "../../team/footballplayers/boardFootballPlayer";
 
@@ -20,6 +21,7 @@ export class MatchEventManager {
     | "CornerIsInProcess"
     | "finishCorner"
     | "isreeKick"
+    | "finishFreeKick"
     | "isPenalty" = "playing";
 
   footballerWhoHasBall?: BoardFootballPlayer;
@@ -29,7 +31,7 @@ export class MatchEventManager {
 
   calculateFreeKickPossibility() {
     const random = getRandomIntNumber(0, 100);
-    if (random > 70) {
+    if (random > 90) {
       if (this.match.matchManager.teamWhoHasBall === "hostTeam") {
         const randomFootballer =
           getRandomIntNumber(0, 100) > 50
@@ -105,6 +107,11 @@ export class MatchEventManager {
     if (this.matchStatus === "CornerIsInProcess") {
       this.match.matchManager.corner!.isGoal(whoScored);
       this.matchStatus = "finishCorner";
+    }
+
+    if (this.matchStatus === "isreeKick") {
+      this.match.matchManager.freeKick!.isGoal(whoScored);
+      this.matchStatus = "finishFreeKick";
     }
   }
 
@@ -233,6 +240,39 @@ export class MatchEventManager {
     }
   }
 
+  resumeUfterFreeKick(teamWhoWillResume: "host" | "guest", wasGoal: boolean) {
+    this.match.hostTeam.reset();
+    this.match.guestTeam.reset();
+    this.match.ball.reset();
+    this.match.matchManager.freeKick = undefined;
+
+    this.match.matchManager.teamWhoHasBall =
+      teamWhoWillResume === "host" ? "hostTeam" : "guestTeam";
+
+    if (wasGoal === false) {
+      teamWhoWillResume === "host"
+        ? this.match.hostTeam.boardFootballPlayers.goalKeeper.setBall()
+        : this.match.guestTeam.boardFootballPlayers.goalKeeper.setBall();
+    }
+
+    setTimeout(() => {
+      this.match.matchManager.matchEvenetManager.matchStatus = "playing";
+
+      if (wasGoal) {
+        this.match.matchManager.makeFirstKick(teamWhoWillResume);
+      } else {
+        teamWhoWillResume === "host"
+          ? this.match.hostTeam.boardFootballPlayers.goalKeeper.makeShortPass()
+          : this.match.guestTeam.boardFootballPlayers.goalKeeper.makeShortPass();
+      }
+    }, 1800);
+
+    setTimeout(() => {
+      this.match.hostTeam.boardFootballPlayers.goalKeeper.startMotion();
+      this.match.guestTeam.boardFootballPlayers.goalKeeper.startMotion();
+    }, 2100);
+  }
+
   resumeUfterCorner(teamWhoWillResume: "host" | "guest", wasGoal: boolean) {
     this.match.hostTeam.reset();
     this.match.guestTeam.reset();
@@ -269,5 +309,42 @@ export class MatchEventManager {
       this.match.hostTeam.boardFootballPlayers.goalKeeper.startMotion();
       this.match.guestTeam.boardFootballPlayers.goalKeeper.startMotion();
     }, 2100);
+  }
+
+  makefreeKick(footballer: BoardFootballPlayer) {
+    this.matchStatus = "isreeKick";
+    this.match.matchTimer.stopTimer();
+
+    this.match.hostTeam.stopFullMotion();
+    this.match.hostTeam.boardFootballPlayers.goalKeeper.stopMotion();
+    this.match.guestTeam.stopFullMotion();
+    this.match.guestTeam.boardFootballPlayers.goalKeeper.stopMotion();
+
+    this.match.ball.stop();
+    this.match.ball.startBlinkAnimation();
+
+    setTimeout(() => {
+      const canvasScene = this.match.scene.scene.get(
+        "CanvasScene"
+      ) as CanvasScene;
+      canvasScene.showComentator(
+        this.match.matchManager.teamWhoHasBall === "hostTeam"
+          ? "left"
+          : "right",
+        "Free kick!"
+      );
+    }, 1500);
+
+    setTimeout(() => {
+      this.match.hostTeam.hideTeam();
+      this.match.guestTeam.hideTeam();
+      this.match.ball.stopBlinkAnimation();
+
+      this.match.matchManager.freeKick = new Freekick(
+        this.match,
+        footballer.playerData.who === "hostPlayer" ? "host" : "guest",
+        footballer
+      );
+    }, 1500);
   }
 }

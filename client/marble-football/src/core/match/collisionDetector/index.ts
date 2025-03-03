@@ -24,6 +24,12 @@ export default class CollisionDetector {
         ) {
           console.log("Goal Posts detect");
         }
+
+        if (
+          this.match.matchManager.matchEvenetManager.matchStatus === "isreeKick"
+        ) {
+          this.match.matchManager.freeKick!.stopFreeKick();
+        }
       }
     );
     this.ballAndGoalPostsCollider.overlapOnly = false;
@@ -39,6 +45,12 @@ export default class CollisionDetector {
           "CornerIsInProcess"
         ) {
           this.match.matchManager.corner!.stopCorner();
+        }
+
+        if (
+          this.match.matchManager.matchEvenetManager.matchStatus === "isreeKick"
+        ) {
+          this.match.matchManager.freeKick!.stopFreeKick();
         }
       }
     );
