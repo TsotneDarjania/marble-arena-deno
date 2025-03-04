@@ -52,6 +52,12 @@ export default class CollisionDetector {
         ) {
           this.match.matchManager.freeKick!.stopFreeKick();
         }
+
+        if (
+          this.match.matchManager.matchEvenetManager.matchStatus === "isPenalty"
+        ) {
+          this.match.matchManager.penalty!.stopPenalty();
+        }
       }
     );
     this.ballAndBordersCollider.overlapOnly = false;

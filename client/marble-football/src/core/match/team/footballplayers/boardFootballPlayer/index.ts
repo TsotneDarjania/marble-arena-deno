@@ -159,6 +159,17 @@ export default class BoardFootballPlayer extends Phaser.GameObjects.Container {
           if (this.playerData.position !== "goalKeeper") {
             if (this.aleradySentTakeBallDesire) return;
             this.aleradySentTakeBallDesire = true;
+            if (
+              this.isFreeKickBehaviour &&
+              this.playerData.position === "defender"
+            ) {
+              this.scene.match.matchManager.matchEvenetManager.makePenalty(
+                this
+              );
+              this.stopFreeKickBehaviour();
+              return;
+            }
+
             if (this.isFreeKickBehaviour) {
               this.scene.match.matchManager.matchEvenetManager.makefreeKick(
                 this
@@ -171,6 +182,15 @@ export default class BoardFootballPlayer extends Phaser.GameObjects.Container {
 
           if (this instanceof BoardGoalKeeper) {
             this.touchBall();
+          }
+        }
+
+        if (
+          this.scene.match.matchManager.matchEvenetManager.matchStatus ===
+          "isPenalty"
+        ) {
+          if (this instanceof BoardGoalKeeper) {
+            this.scene.match.matchManager.penalty!.stopPenalty();
           }
         }
 
@@ -494,7 +514,7 @@ export default class BoardFootballPlayer extends Phaser.GameObjects.Container {
       targets: this.selector,
       alpha: 1,
       duration: 300,
-      repeat: 12,
+      repeat: 9,
       yoyo: true,
       onComplete: () => {
         this.stopFreeKickBehaviour();
