@@ -18,6 +18,8 @@ export class Freekick {
   }
 
   init() {
+    this.match.scene.soundManager.referee.play();
+
     this.addShooterootballer();
     // Make Layout
     this.footballer.playerData.position === "attacker"
@@ -49,6 +51,24 @@ export class Freekick {
   }
 
   isGoal(whoScored: "host" | "guest") {
+    if (whoScored === "host") {
+      this.match.matchManager.hostScore++;
+      const canvasScene = this.match.scene.scene.get(
+        "CanvasScene"
+      ) as CanvasScene;
+      canvasScene.hostTeamScoretext.setText(
+        this.match.matchManager.hostScore.toString()
+      );
+    } else {
+      this.match.matchManager.guestScore++;
+      const canvasScene = this.match.scene.scene.get(
+        "CanvasScene"
+      ) as CanvasScene;
+      canvasScene.guestTeamScoretext.setText(
+        this.match.matchManager.guestScore.toString()
+      );
+    }
+
     this.isGoalScored = true;
     this.match.stadium.startGoalSelebration(whoScored);
     this.match.ball.startBlinkAnimation();
@@ -118,6 +138,8 @@ export class Freekick {
   }
 
   shoot() {
+    this.match.scene.soundManager.shoot.play();
+
     const teamData =
       this.teamWhoIsGuilty === "guest"
         ? this.match.matchData.hostTeamData
@@ -164,6 +186,8 @@ export class Freekick {
   }
 
   save() {
+    this.match.scene.soundManager.catchBall.play();
+
     this.match.ball.stop();
     this.match.hostTeam.stopFullMotion();
     this.match.guestTeam.stopFullMotion();
@@ -236,6 +260,8 @@ export class Freekick {
         const x = this.longDistanceSecondShooter.getBounds().centerX;
         const y = this.longDistanceSecondShooter.getBounds().centerY;
 
+        this.match.scene.soundManager.pass.play();
+
         this.match.ball.kick(
           mapToRange(this.match.matchData.guestTeamData.passSpeed, 160, 300),
           {
@@ -278,6 +304,8 @@ export class Freekick {
       setTimeout(() => {
         const x = this.longDistanceSecondShooter.getBounds().centerX;
         const y = this.longDistanceSecondShooter.getBounds().centerY;
+
+        this.match.scene.soundManager.pass.play();
 
         this.match.ball.kick(
           mapToRange(this.match.matchData.hostTeamData.passSpeed, 160, 300),

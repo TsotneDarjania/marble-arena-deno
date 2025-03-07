@@ -29,11 +29,12 @@ export type TeamDataType = {
     defenderComments: Array<string>;
     shooterComments: Array<string>;
   };
+  freeKiskFrequency: number;
+  penaltyFrequency: number;
 };
 
 export type GameConfigType = {
   mode: GameModeType;
-  withExtraTimes: boolean;
   hostFansCountPercent: number; // her you can set how many host team fans you want on stadium (from 0 to 100)
   mathTime: number;
 };

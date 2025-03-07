@@ -64,6 +64,7 @@ export default class Preload extends Scene {
     this.load.audio("halt-time-referee", ["sounds/first-half-end.mp3"]);
     this.load.audio("faul", ["sounds/is-faul.mp3"]);
     this.load.audio("referee", ["sounds/referee.mp3"]);
+    this.load.audio("goalkeeperJumpSound", ["sounds/goalkeeperJumpSound.mp3"]);
   }
 
   create() {

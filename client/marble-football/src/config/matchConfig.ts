@@ -38,6 +38,8 @@ export const matchDataConfig: MatchDataType = {
         "Look at that, wow !!",
       ],
     },
+    freeKiskFrequency: 10, // from 0 to 100
+    penaltyFrequency: 4, // from 0 to 100
   },
   guestTeamData: {
     name: "Manchester City",
@@ -76,10 +78,11 @@ export const matchDataConfig: MatchDataType = {
         "Look at that, wow !!",
       ],
     },
+    freeKiskFrequency: 10, // from 0 to 100
+    penaltyFrequency: 4, // from 0 to 100
   },
   gameConfig: {
     mode: "marble-football",
-    withExtraTimes: true,
     hostFansCountPercent: 90,
     mathTime: 2, //in minutes,
   },
@@ -91,5 +94,5 @@ export const matchInfo = {
 } as MatchInfoType;
 
 export const stadiumConfig = {
-  spectatorsBackground: 0x000000,
+  spectatorsBackground: 0xfa4e33,
 };

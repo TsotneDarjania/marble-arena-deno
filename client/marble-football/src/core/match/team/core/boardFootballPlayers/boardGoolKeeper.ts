@@ -83,6 +83,7 @@ export default class BoardGoalKeeper extends BoardFootballPlayer {
   }
 
   save() {
+    this.scene.soundManager.goalKeeperJumpSound.play();
     this.scene.match.matchManager.comentatorManager.showCommentForGoalKeeper(
       this.playerData.who === "hostPlayer" ? "host" : "guest"
     );

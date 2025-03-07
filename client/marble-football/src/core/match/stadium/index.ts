@@ -68,7 +68,7 @@ export class Stadium extends Phaser.GameObjects.Container {
   addSpectatorsBakcground() {
     const stadiumBck = this.scene.add.image(
       this.scene.game.canvas.width / 2,
-      this.scene.game.canvas.height / 2,
+      this.scene.game.canvas.height / 2 + 100,
       "stadiumBck"
     );
     stadiumBck.setTint(stadiumConfig.spectatorsBackground);
@@ -137,6 +137,8 @@ export class Stadium extends Phaser.GameObjects.Container {
   }
 
   startGoalSelebration(team: "host" | "guest") {
+    this.scene.soundManager.goalSelebration.play();
+
     this.light1.startAnimation(false);
     this.light2.startAnimation(false);
     this.light3.startAnimation(false);

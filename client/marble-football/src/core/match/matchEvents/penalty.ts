@@ -56,6 +56,8 @@ export class Penalty {
   }
 
   shoot() {
+    this.match.scene.soundManager.shoot.play();
+
     const teamData =
       this.whoIsGulity === "guest"
         ? this.match.matchData.hostTeamData
@@ -107,10 +109,30 @@ export class Penalty {
     this.match.hostTeam.boardFootballPlayers.goalKeeper.stopMotion();
     this.match.guestTeam.boardFootballPlayers.goalKeeper.stopMotion();
 
-    this.destoy();
+    setTimeout(() => {
+      this.destoy();
+    }, 1500);
   }
 
   isGoal(whoScored: "host" | "guest") {
+    if (whoScored === "host") {
+      this.match.matchManager.hostScore++;
+      const canvasScene = this.match.scene.scene.get(
+        "CanvasScene"
+      ) as CanvasScene;
+      canvasScene.hostTeamScoretext.setText(
+        this.match.matchManager.hostScore.toString()
+      );
+    } else {
+      this.match.matchManager.guestScore++;
+      const canvasScene = this.match.scene.scene.get(
+        "CanvasScene"
+      ) as CanvasScene;
+      canvasScene.guestTeamScoretext.setText(
+        this.match.matchManager.guestScore.toString()
+      );
+    }
+
     this.wasGoalScored = true;
     this.match.stadium.startGoalSelebration(whoScored);
     this.match.ball.startBlinkAnimation();

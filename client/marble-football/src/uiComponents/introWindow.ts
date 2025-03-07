@@ -184,31 +184,31 @@ export class IntroWindow extends Phaser.GameObjects.Container {
       )
       .setAlpha(0);
 
-    const guestTeamLogo = this.scene.add
-      .image(0, 0, this.matchData.guestTeam.logoKey)
-      .setDisplaySize(
-        calculatePercentage(12, this.scene.game.canvas.width),
-        calculatePercentage(12, this.scene.game.canvas.width)
-      );
+    // const guestTeamLogo = this.scene.add
+    //   .image(0, 0, this.matchData.guestTeam.logoKey)
+    //   .setDisplaySize(
+    //     calculatePercentage(12, this.scene.game.canvas.width),
+    //     calculatePercentage(12, this.scene.game.canvas.width)
+    //   );
 
-    this.guestTeamIndicators.add(guestTeamLogo);
+    // this.guestTeamIndicators.add(guestTeamLogo);
 
     //Title
-    const title = this.scene.add
-      .text(
-        calculatePercentage(-7, this.scene.game.canvas.width),
-        calculatePercentage(-0.5, this.scene.game.canvas.width),
-        this.matchData.guestTeam.name,
-        {
-          fontSize: "42px",
-          color: "#ffffff",
-          fontStyle: "bold",
-          align: "right",
-        }
-      )
-      .setOrigin(1, 0);
+    // const title = this.scene.add
+    //   .text(
+    //     calculatePercentage(-7, this.scene.game.canvas.width),
+    //     calculatePercentage(-0.5, this.scene.game.canvas.width),
+    //     this.matchData.guestTeam.name,
+    //     {
+    //       fontSize: "42px",
+    //       color: "#ffffff",
+    //       fontStyle: "bold",
+    //       align: "right",
+    //     }
+    //   )
+    //   .setOrigin(1, 0);
 
-    this.guestTeamIndicators.add(title);
+    // this.guestTeamIndicators.add(title);
 
     this.add(this.guestTeamIndicators);
 
@@ -228,29 +228,29 @@ export class IntroWindow extends Phaser.GameObjects.Container {
       .container(calculatePercentage(7, this.scene.game.canvas.width), -500)
       .setAlpha(0);
 
-    const hostTeamLogo = this.scene.add
-      .image(0, 0, this.matchData.hostTeam.logoKey)
-      .setDisplaySize(
-        calculatePercentage(12, this.scene.game.canvas.width),
-        calculatePercentage(12, this.scene.game.canvas.width)
-      );
+    // const hostTeamLogo = this.scene.add
+    //   .image(0, 0, this.matchData.hostTeam.logoKey)
+    //   .setDisplaySize(
+    //     calculatePercentage(12, this.scene.game.canvas.width),
+    //     calculatePercentage(12, this.scene.game.canvas.width)
+    //   );
 
-    this.hostTeamIndicators.add(hostTeamLogo);
+    // this.hostTeamIndicators.add(hostTeamLogo);
 
     //Title
-    const title = this.scene.add.text(
-      calculatePercentage(7, this.scene.game.canvas.width),
-      calculatePercentage(-0.5, this.scene.game.canvas.width),
-      this.matchData.hostTeam.name,
-      {
-        fontSize: "42px",
-        color: "#ffffff",
-        fontStyle: "bold",
-        align: "left",
-      }
-    );
+    // const title = this.scene.add.text(
+    //   calculatePercentage(7, this.scene.game.canvas.width),
+    //   calculatePercentage(-0.5, this.scene.game.canvas.width),
+    //   this.matchData.hostTeam.name,
+    //   {
+    //     fontSize: "42px",
+    //     color: "#ffffff",
+    //     fontStyle: "bold",
+    //     align: "left",
+    //   }
+    // );
 
-    this.hostTeamIndicators.add(title);
+    // this.hostTeamIndicators.add(title);
 
     this.add(this.hostTeamIndicators);
 

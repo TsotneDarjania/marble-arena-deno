@@ -23,12 +23,14 @@ export default class CollisionDetector {
           this.match.matchManager.matchEvenetManager.matchStatus === "playing"
         ) {
           console.log("Goal Posts detect");
+          this.scene.soundManager.goalBorder.play();
         }
 
         if (
           this.match.matchManager.matchEvenetManager.matchStatus === "isreeKick"
         ) {
           this.match.matchManager.freeKick!.stopFreeKick();
+          this.scene.soundManager.goalBorder.play();
         }
       }
     );
@@ -41,22 +43,31 @@ export default class CollisionDetector {
       [...this.match.stadium.stadiumColliders.borderColliders],
       () => {
         if (
+          this.match.matchManager.matchEvenetManager.matchStatus === "playing"
+        ) {
+          this.scene.soundManager.border.play();
+        }
+
+        if (
           this.match.matchManager.matchEvenetManager.matchStatus ===
           "CornerIsInProcess"
         ) {
           this.match.matchManager.corner!.stopCorner();
+          this.scene.soundManager.border.play();
         }
 
         if (
           this.match.matchManager.matchEvenetManager.matchStatus === "isreeKick"
         ) {
           this.match.matchManager.freeKick!.stopFreeKick();
+          this.scene.soundManager.border.play();
         }
 
         if (
           this.match.matchManager.matchEvenetManager.matchStatus === "isPenalty"
         ) {
           this.match.matchManager.penalty!.stopPenalty();
+          this.scene.soundManager.border.play();
         }
       }
     );

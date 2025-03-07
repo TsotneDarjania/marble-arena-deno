@@ -103,6 +103,24 @@ export class Corner {
   }
 
   isGoal(whoScored: "host" | "guest") {
+    if (whoScored === "host") {
+      this.match.matchManager.hostScore++;
+      const canvasScene = this.match.scene.scene.get(
+        "CanvasScene"
+      ) as CanvasScene;
+      canvasScene.hostTeamScoretext.setText(
+        this.match.matchManager.hostScore.toString()
+      );
+    } else {
+      this.match.matchManager.guestScore++;
+      const canvasScene = this.match.scene.scene.get(
+        "CanvasScene"
+      ) as CanvasScene;
+      canvasScene.guestTeamScoretext.setText(
+        this.match.matchManager.guestScore.toString()
+      );
+    }
+
     this.isGoalScored = true;
     this.match.stadium.startGoalSelebration(whoScored);
     this.match.ball.startBlinkAnimation();
@@ -116,6 +134,7 @@ export class Corner {
   }
 
   kickFromCorner() {
+    this.match.scene.soundManager.pass.play();
     setTimeout(() => {
       this.match.collisionDetector.addDetectorForBallAndStadiumBoards();
       this.match.collisionDetector.addDetectorForBallAndGoalPosts();
@@ -187,6 +206,7 @@ export class Corner {
   }
 
   shootByAttaker() {
+    this.match.scene.soundManager.shoot.play();
     const teamData =
       this.teamWhoShootCorner === "hostTeam"
         ? this.match.matchData.hostTeamData
@@ -233,6 +253,7 @@ export class Corner {
   }
 
   saveByDefender() {
+    this.match.scene.soundManager.catchBall.play();
     this.teamWhoShootCorner === "hostTeam"
       ? this.match.guestTeam.boardFootballPlayers.goalKeeper.stopMotion()
       : this.match.hostTeam.boardFootballPlayers.goalKeeper.stopMotion();
