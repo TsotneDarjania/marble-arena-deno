@@ -26,6 +26,23 @@ export default class Team {
       ...this.boardFootballPlayers.attackColumn.footballers,
       this.boardFootballPlayers.goalKeeper
     );
+
+    setTimeout(() => {
+      this.defineShortAndLongPassVariantsForFootballers();
+    }, 1000);
+  }
+
+  private defineShortAndLongPassVariantsForFootballers() {
+    [
+      this.boardFootballPlayers.defenceColumn,
+      this.boardFootballPlayers.middleColumn,
+      this.boardFootballPlayers.attackColumn,
+    ].forEach((column) => {
+      column.footballers.forEach((footballer) => {
+        footballer.defineShortAndLongPassVariants();
+      });
+    });
+    this.boardFootballPlayers.goalKeeper.defineShortAndLongPassVariants();
   }
 
   private addPlayers() {
@@ -50,18 +67,36 @@ export default class Team {
     );
   }
 
-  startMotion() {
-    this.boardFootballPlayers.startMotion();
+  startFullMotion() {
+    this.boardFootballPlayers.startFullMotion();
   }
 
-  stopMotion() {
-    this.boardFootballPlayers.stopMotion();
+  stopFullMotion() {
+    this.boardFootballPlayers.stopFullMotion();
+  }
+
+  startSpecificColumnMotion(
+    columnPosition: "defenceColumn" | "middleColumn" | "attackColumn"
+  ) {
+    this.boardFootballPlayers.startSpecificMotion(columnPosition);
+  }
+
+  stopSpecificColumnMotion(
+    columnPosition: "defenceColumn" | "middleColumn" | "attackColumn"
+  ) {
+    this.boardFootballPlayers.stopSpecificMotion(columnPosition);
   }
 
   public reset() {
     this.boardFootballPlayers.defenceColumn.reset();
     this.boardFootballPlayers.middleColumn.reset();
     this.boardFootballPlayers.attackColumn.reset();
+    this.showTeam();
+    this.footballers.map((f) => {
+      f.activate();
+      f.stopFreeKickBehaviour();
+      f.aleradySentTakeBallDesire = false;
+    });
 
     this.boardFootballPlayers.goalKeeper.reset();
   }

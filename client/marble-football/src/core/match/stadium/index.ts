@@ -68,7 +68,7 @@ export class Stadium extends Phaser.GameObjects.Container {
   addSpectatorsBakcground() {
     const stadiumBck = this.scene.add.image(
       this.scene.game.canvas.width / 2,
-      this.scene.game.canvas.height / 2,
+      this.scene.game.canvas.height / 2 + 100,
       "stadiumBck"
     );
     stadiumBck.setTint(stadiumConfig.spectatorsBackground);
@@ -136,16 +136,30 @@ export class Stadium extends Phaser.GameObjects.Container {
     this.add(this.lightsContainer);
   }
 
-  goalSelebration(team: "host" | "guest", duration: number) {
-    this.light1.makeAnimation(false, duration);
-    this.light2.makeAnimation(false, duration);
-    this.light3.makeAnimation(false, duration);
-    this.light4.makeAnimation(true, duration);
-    this.light5.makeAnimation(false, duration);
-    this.light6.makeAnimation(true, duration);
-    this.light7.makeAnimation(false, duration);
+  startGoalSelebration(team: "host" | "guest") {
+    this.scene.soundManager.goalSelebration.play();
 
-    this.spectators.goalSelebration(team, duration);
+    this.light1.startAnimation(false);
+    this.light2.startAnimation(false);
+    this.light3.startAnimation(false);
+    this.light4.startAnimation(true);
+    this.light5.startAnimation(false);
+    this.light6.startAnimation(true);
+    this.light7.startAnimation(false);
+
+    this.spectators.startGoalSelebration(team);
+  }
+
+  stopGoalSelebration() {
+    this.light1.stopAnimation();
+    this.light2.stopAnimation();
+    this.light3.stopAnimation();
+    this.light4.stopAnimation();
+    this.light5.stopAnimation();
+    this.light6.stopAnimation();
+    this.light7.stopAnimation();
+
+    this.spectators.stopGoalSelebration();
   }
 
   addColliders() {

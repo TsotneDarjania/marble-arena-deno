@@ -2,7 +2,6 @@ import CanvasScene from "./scenes/CanvasScene";
 import GamePlay from "./scenes/GamePlay";
 import Menu from "./scenes/Menu";
 import Preload from "./scenes/Preloader";
-
 import { Game, Types } from "phaser";
 
 //  Find out more information about the Game Config at:

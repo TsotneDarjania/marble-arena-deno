@@ -28,7 +28,13 @@ export default class BoardFootballPlayers {
   }
 
   private addGoalKeeper() {
-    this.goalKeeper = new BoardGoalKeeper(this.scene, 0, 0, this.teamData);
+    this.goalKeeper = new BoardGoalKeeper(
+      this.scene,
+      0,
+      0,
+      this.teamData,
+      this.side
+    );
     // Adjust Positions
     this.goalKeeper.setPosition(
       this.side === "left"
@@ -110,15 +116,51 @@ export default class BoardFootballPlayers {
     this.attackColumn.motionDistance = motionDistance;
   }
 
-  startMotion() {
-    this.defenceColumn.startMotion(undefined, this.teamData.motionSpeed);
-    this.middleColumn.startMotion(undefined, this.teamData.motionSpeed);
-    this.attackColumn.startMotion(undefined, this.teamData.motionSpeed);
+  startFullMotion() {
+    this.defenceColumn.startMotion(this.teamData.motionSpeed);
+    this.middleColumn.startMotion(this.teamData.motionSpeed);
+    this.attackColumn.startMotion(this.teamData.motionSpeed);
   }
 
-  stopMotion() {
+  startSpecificMotion(
+    position: "defenceColumn" | "middleColumn" | "attackColumn"
+  ) {
+    switch (position) {
+      case "defenceColumn":
+        this.defenceColumn.startMotion(this.teamData.motionSpeed);
+        break;
+      case "middleColumn":
+        this.middleColumn.startMotion(this.teamData.motionSpeed);
+        break;
+      case "attackColumn":
+        this.attackColumn.startMotion(this.teamData.motionSpeed);
+        break;
+      default:
+        throw new Error("Invalid Parameter of Column position");
+    }
+  }
+
+  stopFullMotion() {
     this.defenceColumn.stopMotion();
     this.middleColumn.stopMotion();
     this.attackColumn.stopMotion();
+  }
+
+  stopSpecificMotion(
+    position: "defenceColumn" | "middleColumn" | "attackColumn"
+  ) {
+    switch (position) {
+      case "defenceColumn":
+        this.defenceColumn.stopMotion();
+        break;
+      case "middleColumn":
+        this.middleColumn.stopMotion();
+        break;
+      case "attackColumn":
+        this.attackColumn.stopMotion();
+        break;
+      default:
+        throw new Error("Invalid Parameter of Column position");
+    }
   }
 }

@@ -31,6 +31,11 @@ export default class Preload extends Scene {
     this.load.image("matchIndicatorBck", "image/ui/match-indicator-bck.png");
     this.load.image("penaltyDone", "image/ui/penalty-done.png");
     this.load.image("penaltyFail", "image/ui/penalty-fail.png");
+    this.load.image("ballSaveIcon", "image/ui/ball-save-icon.png");
+    this.load.image("comentator", "image/ui/commentator.png");
+    this.load.image("live", "image/ui/live.png");
+    this.load.image("mike", "image/ui/mike.png");
+    this.load.image("marbleArenaLogo", "image/ui/logo.png");
 
     // Default Team Logos
     this.load.image(
@@ -59,6 +64,7 @@ export default class Preload extends Scene {
     this.load.audio("halt-time-referee", ["sounds/first-half-end.mp3"]);
     this.load.audio("faul", ["sounds/is-faul.mp3"]);
     this.load.audio("referee", ["sounds/referee.mp3"]);
+    this.load.audio("goalkeeperJumpSound", ["sounds/goalkeeperJumpSound.mp3"]);
   }
 
   create() {

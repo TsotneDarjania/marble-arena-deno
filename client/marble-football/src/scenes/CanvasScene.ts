@@ -4,6 +4,7 @@ import GamePlay from "./GamePlay";
 import { IntroOverlay } from "../uiComponents/overlay";
 import { IntroWindow } from "../uiComponents/introWindow";
 import { matchDataConfig, matchInfo } from "../config/matchConfig";
+import { calculatePercentage } from "../utils/math";
 
 export default class CanvasScene extends Phaser.Scene {
   cameraController: CameraController;
@@ -19,6 +20,8 @@ export default class CanvasScene extends Phaser.Scene {
   lastPenaltiesLeftXPosition = -50;
   lastPenaltiesRightXPosition = 50;
 
+  possibleToShowCommentatorTexrt = true;
+
   constructor() {
     super("CanvasScene");
   }
@@ -27,6 +30,202 @@ export default class CanvasScene extends Phaser.Scene {
     this.addIntroOverlay();
     this.createCameraController();
     this.createIndicators();
+  }
+
+  showComentator(side: "left" | "right", comment: string) {
+    const image = this.add.image(
+      this.game.canvas.width / 2,
+      this.game.canvas.height / 2,
+      "default"
+    );
+    image.setAlpha(0);
+    image.setScale(1.2);
+    image.setOrigin(0.5);
+    image.setTint(0x000000);
+    image.setAlpha(0.7);
+    image.setDisplaySize(this.game.canvas.width, this.game.canvas.height);
+
+    const comentatorImage = this.add.image(0, 0, "comentator");
+    comentatorImage.setOrigin(0.5);
+    comentatorImage.setScale(0.35);
+    comentatorImage.setAlpha(0);
+    comentatorImage.setPosition(
+      side === "left"
+        ? comentatorImage.getBounds().width / 2 + 20
+        : this.game.canvas.width - comentatorImage.getBounds().width / 2 - 20,
+      comentatorImage.getBounds().height / 2 + 20
+    );
+
+    const liveImage = this.add.image(0, 0, "live");
+    liveImage.setOrigin(0.5);
+    liveImage.setScale(0.3);
+    liveImage.setAlpha(0);
+    liveImage.setPosition(
+      side === "left"
+        ? comentatorImage.getBounds().width / 2 + 152
+        : this.game.canvas.width - comentatorImage.getBounds().width / 2 - 152,
+      comentatorImage.getBounds().centerY + 246
+    );
+
+    const mikeImage = this.add.image(0, 0, "mike");
+    mikeImage.setOrigin(0.5);
+    mikeImage.setScale(0.4);
+    mikeImage.setAlpha(0);
+    mikeImage.setPosition(
+      side === "left"
+        ? comentatorImage.getBounds().width / 2 - 80
+        : this.game.canvas.width - comentatorImage.getBounds().width / 2 + 80,
+      comentatorImage.getBounds().centerY + 246
+    );
+
+    const text = this.add.text(
+      this.game.canvas.width / 2,
+      this.game.canvas.height / 2 + 100,
+      comment,
+      {
+        fontSize: "85px",
+        color: "#DBD65C",
+        align: "center",
+        strokeThickness: 5,
+      }
+    );
+    text.setAlpha(0);
+    text.setScale(0);
+    text.setOrigin(0.5);
+
+    this.tweens.add({
+      targets: [image],
+      duration: 800,
+      ease: Phaser.Math.Easing.Back.Out,
+      alpha: 0.6,
+    });
+
+    this.tweens.add({
+      targets: [comentatorImage, liveImage, mikeImage],
+      duration: 300,
+      ease: Phaser.Math.Easing.Back.Out,
+      alpha: 1,
+    });
+
+    this.tweens.add({
+      targets: [text],
+      duration: 700,
+      ease: Phaser.Math.Easing.Back.Out,
+      alpha: 1,
+      scale: 1,
+      delay: 400,
+    });
+
+    setTimeout(() => {
+      image.destroy();
+      comentatorImage.destroy();
+      text.destroy();
+      liveImage.destroy();
+      mikeImage.destroy();
+    }, 3200);
+  }
+
+  //For Comentator
+  showComment(message: string) {
+    if (!this.possibleToShowCommentatorTexrt) return;
+    this.possibleToShowCommentatorTexrt = false;
+
+    const text = this.add.text(this.game.canvas.width / 2, 83, message, {
+      fontSize: "65px",
+      color: "#2CE67C",
+      align: "center",
+      strokeThickness: 5,
+    });
+    text.setOrigin(0.5);
+
+    text.setPosition(this.game.canvas.width / 2, this.game.canvas.height - 80);
+
+    this.tweens.add({
+      targets: text,
+      duration: 600,
+      delay: 1200,
+      alpha: 0,
+      scale: 0,
+      onComplete: () => {
+        text.destroy();
+        this.possibleToShowCommentatorTexrt = true;
+      },
+    });
+  }
+
+  showBallSaveIcon(side: "left" | "right") {
+    const image = this.add.image(
+      20,
+      this.game.canvas.height / 2 + 40,
+      "ballSaveIcon"
+    );
+    image.setTint(0x94ff98);
+    image.setOrigin(0.5);
+    image.setScale(0.4);
+
+    if (side === "left") {
+      image.setPosition(
+        image.getBounds().width / 2 +
+          calculatePercentage(3, this.game.canvas.width),
+        this.game.canvas.height -
+          image.getBounds().height / 2 -
+          calculatePercentage(3, this.game.canvas.height)
+      );
+    } else {
+      image.setPosition(
+        this.game.canvas.width -
+          image.getBounds().width / 2 -
+          calculatePercentage(3, this.game.canvas.width),
+        this.game.canvas.height -
+          image.getBounds().height / 2 -
+          calculatePercentage(3, this.game.canvas.height)
+      );
+    }
+
+    this.tweens.add({
+      targets: image,
+      duration: 400,
+      delay: 1100,
+      alpha: 0,
+      onComplete: () => {
+        image.destroy();
+      },
+    });
+  }
+
+  // During Transitions
+  showMarbleArenaLogo() {
+    const marbleArenaLogo = this.add
+      .image(
+        this.game.canvas.width / 2,
+        this.game.canvas.height / 2,
+        "marbleArenaLogo"
+      )
+      .setScale(0)
+      .setOrigin(0.5)
+      .setDepth(150)
+      .setAlpha(0);
+
+    this.tweens.add({
+      targets: marbleArenaLogo,
+      alpha: 1,
+      scale: 0.45,
+      duration: 500,
+      onComplete: () => {
+        setTimeout(() => {
+          this.tweens.add({
+            targets: marbleArenaLogo,
+            alpha: 0,
+            scale: 0,
+            delay: 300,
+            duration: 500,
+            onComplete: () => {
+              marbleArenaLogo.destroy();
+            },
+          });
+        }, 300);
+      },
+    });
   }
 
   drawPenaltyDone(side: "left" | "right") {

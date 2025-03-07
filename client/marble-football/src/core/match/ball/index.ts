@@ -1,11 +1,15 @@
+import { Tweens } from "phaser";
 import { Stadium } from "../stadium";
+import GamePlay from "../../../scenes/GamePlay";
 
 export class Ball extends Phaser.Physics.Arcade.Image {
   anglurarVelocity = 800;
   emitter: Phaser.GameObjects.Particles.ParticleEmitter;
 
+  blinkAnimation!: Tweens.Tween;
+
   constructor(
-    scene: Phaser.Scene,
+    public scene: GamePlay,
     public x: number,
     public y: number,
     public stadium: Stadium
@@ -22,6 +26,7 @@ export class Ball extends Phaser.Physics.Arcade.Image {
     this.setBounce(0.8);
     // this.setCollideWorldBounds(true);
     this.addParticles();
+    this.createBlinkAnimation();
 
     this.setDepth(11);
   }
@@ -55,42 +60,40 @@ export class Ball extends Phaser.Physics.Arcade.Image {
     this.setAngularVelocity(0);
   }
 
-  goTowardFootballer(footballer: Phaser.GameObjects.Container) {
+  goTowardFootballer(x: number, y: number) {
     this.scene.tweens.add({
       targets: this,
-      x: footballer.getBounds().centerX,
-      y: footballer.getBounds().centerY,
+      x: x,
+      y: y,
       duration: 200,
     });
   }
 
-  startBlinkAnimation(callback: Function) {
-    this.scene.add.tween({
-      targets: this,
-      alpha: 0.3,
-      duration: 300,
-      repeat: 12,
-      onComplete: () => {
-        this.setAlpha(1);
-        callback();
-      },
-    });
+  startBlinkAnimation() {
+    this.blinkAnimation.resume();
   }
 
-  startShortBlinkAnimation(callback: Function) {
-    this.scene.add.tween({
+  createBlinkAnimation() {
+    this.blinkAnimation = this.scene.add.tween({
       targets: this,
       alpha: 0.3,
       duration: 300,
-      repeat: 5,
-      onComplete: () => {
-        this.setAlpha(1);
-        callback();
-      },
+      yoyo: true,
+      repeat: -1,
     });
+
+    this.blinkAnimation.pause();
+  }
+
+  stopBlinkAnimation() {
+    this.blinkAnimation.pause();
+    this.setAlpha(1);
   }
 
   reset() {
+    this.stop();
+    this.blinkAnimation.pause();
+    this.setAlpha(1);
     this.setPosition(
       this.scene.game.canvas.width / 2,
       this.scene.game.canvas.height / 2

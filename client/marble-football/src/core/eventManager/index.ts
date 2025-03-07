@@ -15,6 +15,22 @@ export class EventManager {
       this.canvasScene.startIntroAnimation();
     });
 
+    this.gamePlayScene.input.keyboard?.on("keydown", (event: KeyboardEvent) => {
+      if (event.code === "Space") {
+        if (this.gamePlayScene.match.matchManager === undefined) return;
+        if (
+          this.gamePlayScene.match.matchManager.matchEvenetManager === undefined
+        )
+          return;
+        if (
+          this.gamePlayScene.match.matchManager.matchEvenetManager
+            .matchStatus === "pause"
+        ) {
+          this.gamePlayScene.match.matchManager.resumeMatch();
+        }
+      }
+    });
+
     // Player Wants to Start match he will pressed space for that
     this.gamePlayScene.input.keyboard?.on("keydown", (event: KeyboardEvent) => {
       if (this.status !== "ready-for-start-match") return;

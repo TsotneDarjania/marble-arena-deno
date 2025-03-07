@@ -1,11 +1,7 @@
 import { Tweens } from "phaser";
 import GamePlay from "../../../../../scenes/GamePlay";
 import { TeamDataType } from "../../../../../types/gameTypes";
-import {
-  calculatePercentage,
-  getRandomIntNumber,
-  mapToRange,
-} from "../../../../../utils/math";
+import { calculatePercentage, mapToRange } from "../../../../../utils/math";
 import { Stadium } from "../../../stadium";
 import BoardFootballPlayer from "../../footballplayers/boardFootballPlayer";
 
@@ -13,8 +9,10 @@ export class Column extends Phaser.GameObjects.Container {
   footballers: BoardFootballPlayer[];
   quantity: number;
   motionDistance = 0;
+  tweenDuration = 0;
 
   tween?: Tweens.Tween;
+  toBottom = true;
 
   isInMotion = false;
 
@@ -90,11 +88,31 @@ export class Column extends Phaser.GameObjects.Container {
     let y = -this.stadium.innerFielddHeight / 2 + padding;
 
     for (let i = 0; i < this.quantity; i++) {
+      let playerPosition:
+        | "goalKeeper"
+        | "defender"
+        | "middfielder"
+        | "attacker" = "goalKeeper";
+
+      if (this.type === "defence") {
+        playerPosition = "defender";
+      }
+      if (this.type === "middle") {
+        playerPosition = "middfielder";
+      }
+      if (this.type === "attack") {
+        playerPosition = "attacker";
+      }
+
       const footballer = new BoardFootballPlayer(
         this.scene,
         x,
         y,
-        this.teamData
+        this.teamData,
+        {
+          position: playerPosition,
+          who: this.side === "left" ? "hostPlayer" : "guestPlayer",
+        }
       );
 
       if (
@@ -193,35 +211,18 @@ export class Column extends Phaser.GameObjects.Container {
     }
   }
 
-  startMotion(blockFreeKickBehaviour: boolean = false, duration: number) {
+  startMotion(duration: number) {
+    this.tweenDuration = duration;
     if (this.isInMotion === true) return;
     this.isInMotion = true;
 
     if (this.tween) {
-      this.tween?.resume();
-
-      if (blockFreeKickBehaviour) return;
-      // Calculate Free Kick Possibility
-      if (this.type !== "defence") {
-        if (getRandomIntNumber(0, 100) > 96) {
-          this.footballers[
-            getRandomIntNumber(0, this.footballers.length - 1)
-          ].startFreeKickBehaviour();
-        }
-      }
-      if (this.type === "defence") {
-        if (getRandomIntNumber(0, 100) > 96) {
-          if (this.footballers.length === 3) {
-            this.footballers[1].startFreeKickBehaviour();
-          }
-          if (this.footballers.length === 4) {
-            this.footballers[getRandomIntNumber(1, 2)].startFreeKickBehaviour();
-          }
-          if (this.footballers.length === 5) {
-            this.footballers[2].startFreeKickBehaviour();
-          }
-        }
-      }
+      this.scene.tweens.add({
+        targets: this.tween,
+        timeScale: 1, // Restore normal speed
+        duration: 150, // Adjust duration for smooth resuming
+        ease: "Linear",
+      });
 
       return;
     }
@@ -243,16 +244,36 @@ export class Column extends Phaser.GameObjects.Container {
           ease: Phaser.Math.Easing.Quadratic.InOut,
           duration: mapToRange(duration, 1200, 600),
           repeat: -1,
+          complete: () => {
+            this.toBottom = true;
+          },
+          onYoyo: () => {
+            this.toBottom = false;
+          },
         });
       },
     });
   }
 
-  stopMotion() {
-    if (this.isInMotion === false) return;
-    this.isInMotion = false;
+  // stopMotion() {
+  //   if (this.isInMotion === false) return;
+  //   this.isInMotion = false;
 
-    this.tween?.pause();
+  //   this.tween?.pause();
+  // }
+
+  stopMotion() {
+    if (this.tween) {
+      this.scene.tweens.add({
+        targets: this.tween,
+        timeScale: 0, // Gradually reduce speed to zero
+        duration: 150, // Adjust the duration to control how slowly it stops
+        ease: "Linear",
+        onComplete: () => {
+          this.isInMotion = false;
+        },
+      });
+    }
   }
 
   public reset() {
@@ -263,7 +284,6 @@ export class Column extends Phaser.GameObjects.Container {
 
     this.footballers.forEach((f) => {
       f.activate();
-      f.isFreeKick = false;
     });
   }
 

@@ -2,7 +2,8 @@ import Match from "..";
 import GamePlay from "../../../scenes/GamePlay";
 
 export default class CollisionDetector {
-  onceForCorner = true;
+  ballAndBordersCollider!: Phaser.Physics.Arcade.Collider;
+  ballAndGoalPostsCollider!: Phaser.Physics.Arcade.Collider;
 
   constructor(public scene: GamePlay, public match: Match) {
     this.init();
@@ -14,58 +15,70 @@ export default class CollisionDetector {
   }
 
   addDetectorForBallAndGoalPosts() {
-    this.scene.physics.add.collider(
+    this.ballAndGoalPostsCollider = this.scene.physics.add.collider(
       this.match.ball,
       [...this.match.stadium.stadiumColliders.goalPostColliders],
       () => {
-        if (this.match.matchManager.isCorner) return;
-        this.scene.soundManager.goalBorder.play();
+        if (
+          this.match.matchManager.matchEvenetManager.matchStatus === "playing"
+        ) {
+          console.log("Goal Posts detect");
+          this.scene.soundManager.goalBorder.play();
+        }
 
-        console.log("Goal Posts detect");
+        if (
+          this.match.matchManager.matchEvenetManager.matchStatus === "isreeKick"
+        ) {
+          this.match.matchManager.freeKick!.stopFreeKick();
+          this.scene.soundManager.goalBorder.play();
+        }
       }
     );
+    this.ballAndGoalPostsCollider.overlapOnly = false;
   }
 
   addDetectorForBallAndStadiumBoards() {
-    this.scene.physics.add.collider(
+    this.ballAndBordersCollider = this.scene.physics.add.collider(
       this.match.ball,
       [...this.match.stadium.stadiumColliders.borderColliders],
       () => {
-        if (this.match.matchManager.isCorner) {
-          if (this.match.matchManager.corner!.cornerAlreadyShoot === false)
-            return;
-          this.match.ball.stop();
-          this.match.hostTeam.boardFootballPlayers.goalKeeper.stopMotion();
-          this.match.guestTeam.boardFootballPlayers.goalKeeper.stopMotion();
-          this.match.matchManager.resumeMatchUfterKFreeKickOrPenalty(
-            this.match.matchManager.corner!.shootSide === "left"
-              ? "host"
-              : "guest"
-          );
-        } else {
+        if (
+          this.match.matchManager.matchEvenetManager.matchStatus === "playing"
+        ) {
           this.scene.soundManager.border.play();
         }
 
-        // console.log("Stadium Border Detect");
-        if (this.match.matchManager.ballGoesForCorner) {
-          // console.log("aaaaaa");
-          if (this.onceForCorner) {
-            this.scene.soundManager.border.play();
-
-            this.onceForCorner = false;
-            this.match.matchManager.makeCorner();
-
-            return;
-          }
+        if (
+          this.match.matchManager.matchEvenetManager.matchStatus ===
+          "CornerIsInProcess"
+        ) {
+          this.match.matchManager.corner!.stopCorner();
+          this.scene.soundManager.border.play();
         }
 
-        if (this.match.matchManager.isCorner) {
-          this.match.matchManager.freeKick?.saveFreeKick();
+        if (
+          this.match.matchManager.matchEvenetManager.matchStatus === "isreeKick"
+        ) {
+          this.match.matchManager.freeKick!.stopFreeKick();
+          this.scene.soundManager.border.play();
         }
-        if (this.match.matchManager.freeKick !== undefined) {
-          this.match.matchManager.freeKick?.saveFreeKick();
+
+        if (
+          this.match.matchManager.matchEvenetManager.matchStatus === "isPenalty"
+        ) {
+          this.match.matchManager.penalty!.stopPenalty();
+          this.scene.soundManager.border.play();
         }
       }
     );
+    this.ballAndBordersCollider.overlapOnly = false;
+  }
+
+  removeColliderforBallAndStadiumBorders() {
+    this.ballAndBordersCollider.overlapOnly = true;
+  }
+
+  removeColliderforBallAndGoalPosts() {
+    this.ballAndGoalPostsCollider.overlapOnly = true;
   }
 }

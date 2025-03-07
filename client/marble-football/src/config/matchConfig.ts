@@ -1,6 +1,6 @@
 import { MatchDataType, MatchInfoType } from "../types/gameTypes";
 
-export const matchDataConfig = {
+export const matchDataConfig: MatchDataType = {
   hostTeamData: {
     name: "Liverpool",
     initials: "LV",
@@ -19,6 +19,27 @@ export const matchDataConfig = {
     shootAccuracy: 100,
     goalKeeperSpeed: 84,
     motionSpeed: 51,
+    comments: {
+      saveBallComments: [
+        "Nice Save",
+        "Great GoalKeeper",
+        "Good Job",
+        "Fantascit Save",
+        "Buffon Is Amazing",
+      ],
+      defenderComments: [
+        "Good Defence",
+        "Chiellinni was good",
+        "Good Chance for CounterAttack",
+      ],
+      shooterComments: [
+        "Great Shoot!",
+        "May it will be Goal",
+        "Look at that, wow !!",
+      ],
+    },
+    freeKiskFrequency: 10, // from 0 to 100
+    penaltyFrequency: 4, // from 0 to 100
   },
   guestTeamData: {
     name: "Manchester City",
@@ -35,13 +56,33 @@ export const matchDataConfig = {
     },
     passSpeed: 100,
     shootSpeed: 100,
-    shootAccuracy: 0,
+    shootAccuracy: 80,
     goalKeeperSpeed: 100,
     motionSpeed: 100,
+    comments: {
+      saveBallComments: [
+        "Nice Save",
+        "Great GoalKeeper",
+        "Good Job",
+        "Fantascit Save",
+        "Buffon Is Amazing",
+      ],
+      defenderComments: [
+        "Good Defence",
+        "Chiellinni was good",
+        "Good Chance for CounterAttack",
+      ],
+      shooterComments: [
+        "Great Shoot!",
+        "May it will be Goal",
+        "Look at that, wow !!",
+      ],
+    },
+    freeKiskFrequency: 10, // from 0 to 100
+    penaltyFrequency: 4, // from 0 to 100
   },
   gameConfig: {
     mode: "marble-football",
-    withExtraTimes: true,
     hostFansCountPercent: 90,
     mathTime: 2, //in minutes,
   },
@@ -53,5 +94,5 @@ export const matchInfo = {
 } as MatchInfoType;
 
 export const stadiumConfig = {
-  spectatorsBackground: 0x000000,
+  spectatorsBackground: 0xfa4e33,
 };

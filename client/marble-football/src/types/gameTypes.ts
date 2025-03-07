@@ -24,19 +24,27 @@ export type TeamDataType = {
   goalKeeperSpeed: number;
   shootAccuracy: number;
   motionSpeed: number;
+  comments: {
+    saveBallComments: Array<string>;
+    defenderComments: Array<string>;
+    shooterComments: Array<string>;
+  };
+  freeKiskFrequency: number;
+  penaltyFrequency: number;
 };
 
 export type GameConfigType = {
-  mode:
-    | "board-football"
-    | "old-style"
-    | "new-style"
-    | "marble-football"
-    | "experimental";
-  withExtraTimes: boolean;
+  mode: GameModeType;
   hostFansCountPercent: number; // her you can set how many host team fans you want on stadium (from 0 to 100)
   mathTime: number;
 };
+
+export type GameModeType =
+  | "board-football"
+  | "old-style"
+  | "new-style"
+  | "marble-football"
+  | "experimental";
 
 export type MatchInfoType = {
   matchTitle: string;
