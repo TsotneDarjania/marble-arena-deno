@@ -6,7 +6,7 @@ export const matchDataConfig: MatchDataType = {
     initials: "LV",
     logoKey: "liverpool",
     formation: "3-4-3",
-    fansColor: 0x205c5c,
+    fansColor: 0xC8102E,
     tactics: {
       formation: {
         defenceLine: "normal",
@@ -38,15 +38,15 @@ export const matchDataConfig: MatchDataType = {
         "Look at that, wow !!",
       ],
     },
-    freeKiskFrequency: 10, // from 0 to 100
-    penaltyFrequency: 4, // from 0 to 100
+    freeKiskFrequency: 100, // from 0 to 100
+    penaltyFrequency: 100, // from 0 to 100
   },
   guestTeamData: {
     name: "Manchester City",
     initials: "MC",
     logoKey: "manchester-city",
     formation: "4-3-3",
-    fansColor: 0xffffff,
+    fansColor: 0x6CABDD,
     tactics: {
       formation: {
         defenceLine: "wide-attack",
@@ -78,13 +78,13 @@ export const matchDataConfig: MatchDataType = {
         "Look at that, wow !!",
       ],
     },
-    freeKiskFrequency: 10, // from 0 to 100
-    penaltyFrequency: 4, // from 0 to 100
+    freeKiskFrequency: 100, // from 0 to 100
+    penaltyFrequency: 100, // from 0 to 100
   },
   gameConfig: {
     mode: "marble-football",
-    hostFansCountPercent: 90,
-    mathTime: 2, //in minutes,
+    hostFansCountPercent: 50,
+    mathTime: 2.5, //in minutes,
   },
 } as MatchDataType;
 
@@ -94,5 +94,5 @@ export const matchInfo = {
 } as MatchInfoType;
 
 export const stadiumConfig = {
-  spectatorsBackground: 0xfa4e33,
+  spectatorsBackground: 0xbac1cc,
 };

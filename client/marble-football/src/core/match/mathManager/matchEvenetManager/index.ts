@@ -97,7 +97,7 @@ export class MatchEventManager {
   calculateFreeKickPossibility() {
     if (this.match.matchManager.teamWhoHasBall === "hostTeam") {
       const random = getRandomIntNumber(0, 100);
-      if (random > this.match.matchData.guestTeamData.penaltyFrequency) {
+      if (random > this.match.matchData.guestTeamData.freeKiskFrequency) {
         return;
       }
       const randomFootballer =
@@ -120,7 +120,7 @@ export class MatchEventManager {
       randomFootballer.startFreeKickBehaviour();
     } else {
       const random = getRandomIntNumber(0, 100);
-      if (random > this.match.matchData.hostTeamData.penaltyFrequency) {
+      if (random > this.match.matchData.hostTeamData.freeKiskFrequency) {
         return;
       }
       const randomFootballer =
@@ -489,7 +489,6 @@ export class MatchEventManager {
 
   makefreeKick(footballer: BoardFootballPlayer) {
     this.match.scene.soundManager.faul.play();
-    this.match.scene.soundManager.referee.play();
 
     this.match.hostTeam.footballers.forEach((f) => {
       f.stopFreeKickBehaviour();
@@ -535,7 +534,6 @@ export class MatchEventManager {
 
   makePenalty(footballer: BoardFootballPlayer) {
     this.match.scene.soundManager.faul.play();
-    this.match.scene.soundManager.referee.play();
 
     this.match.hostTeam.footballers.forEach((f) => {
       f.stopFreeKickBehaviour();

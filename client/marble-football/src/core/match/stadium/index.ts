@@ -68,7 +68,7 @@ export class Stadium extends Phaser.GameObjects.Container {
   addSpectatorsBakcground() {
     const stadiumBck = this.scene.add.image(
       this.scene.game.canvas.width / 2,
-      this.scene.game.canvas.height / 2 + 100,
+      this.scene.game.canvas.height / 2 + 80,
       "stadiumBck"
     );
     stadiumBck.setTint(stadiumConfig.spectatorsBackground);
