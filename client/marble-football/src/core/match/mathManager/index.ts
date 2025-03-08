@@ -4,7 +4,6 @@ import { getRandomIntNumber } from "../../../utils/math";
 import { ComentatorManager } from "../commentatorManager";
 import { Corner } from "../matchEvents/corner";
 import { Freekick } from "../matchEvents/freeKick";
-import { LastPenalties } from "../matchEvents/lastPenalties";
 import { Penalty } from "../matchEvents/penalty";
 import { FootballersMotionManager } from "./footballersMotionManager";
 import { MatchEventManager } from "./matchEvenetManager";
@@ -24,7 +23,6 @@ export default class MatchManager {
   freeKick?: Freekick;
   penalty?: Penalty;
   corner?: Corner;
-  lastPenalties?: LastPenalties;
 
   // Core
   footballersMotionManager!: FootballersMotionManager;
@@ -115,11 +113,13 @@ export default class MatchManager {
     this.match.matchManager.matchEvenetManager.matchStatus = "pause";
     this.match.hostTeam.stopFullMotion();
     this.match.hostTeam.boardFootballPlayers.goalKeeper.stopMotion();
+    this.match.hostTeam.boardFootballPlayers.goalKeeper.stopMotion();
     this.match.hostTeam.footballers.forEach((f) => {
       f.stopFreeKickBehaviour();
     });
 
     this.match.guestTeam.stopFullMotion();
+    this.match.guestTeam.boardFootballPlayers.goalKeeper.stopMotion();
     this.match.guestTeam.boardFootballPlayers.goalKeeper.stopMotion();
     this.match.guestTeam.footballers.forEach((f) => {
       f.stopFreeKickBehaviour();
@@ -156,6 +156,9 @@ export default class MatchManager {
   resumeMatch() {
     this.match.scene.soundManager.referee.play();
     setTimeout(() => {
+      this.match.hostTeam.boardFootballPlayers.goalKeeper.startMotion();
+      this.match.guestTeam.boardFootballPlayers.goalKeeper.startMotion();
+
       this.matchEvenetManager.matchStatus = "playing";
       this.match.matchManager.teamWhoHasBall =
         this.whichTeamHaveToResume === "host" ? "hostTeam" : "guestTeam";

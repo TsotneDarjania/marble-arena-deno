@@ -145,6 +145,7 @@ export class MatchEventManager {
   }
 
   isGoal(whoScored: "host" | "guest") {
+    console.log(this.matchStatus);
     if (this.matchStatus === "playing") {
       this.match.matchTimer.stopTimer();
 
@@ -508,6 +509,11 @@ export class MatchEventManager {
     this.match.ball.startBlinkAnimation();
 
     setTimeout(() => {
+      this.match.hostTeam.stopFullMotion();
+      this.match.hostTeam.boardFootballPlayers.goalKeeper.stopMotion();
+      this.match.guestTeam.stopFullMotion();
+      this.match.guestTeam.boardFootballPlayers.goalKeeper.stopMotion();
+
       const canvasScene = this.match.scene.scene.get(
         "CanvasScene"
       ) as CanvasScene;
@@ -554,6 +560,11 @@ export class MatchEventManager {
     this.match.ball.startBlinkAnimation();
 
     setTimeout(() => {
+      this.match.hostTeam.stopFullMotion();
+      this.match.hostTeam.boardFootballPlayers.goalKeeper.stopMotion();
+      this.match.guestTeam.stopFullMotion();
+      this.match.guestTeam.boardFootballPlayers.goalKeeper.stopMotion();
+
       const canvasScene = this.match.scene.scene.get(
         "CanvasScene"
       ) as CanvasScene;

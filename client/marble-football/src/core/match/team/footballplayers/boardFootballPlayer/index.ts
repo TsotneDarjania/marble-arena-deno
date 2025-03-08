@@ -440,36 +440,28 @@ export default class BoardFootballPlayer extends Phaser.GameObjects.Container {
     if (isfailShoot) {
       const isTop = getRandomIntNumber(0, 100);
       if (isTop > 50) {
-        y =
-          this.scene.match.stadium.stadiumField.getBounds().centerY +
-          getRandomIntNumber(110, 170);
+        y = 473 + getRandomIntNumber(60, 90);
       } else {
-        y =
-          this.scene.match.stadium.stadiumField.getBounds().centerY -
-          getRandomIntNumber(110, 170);
+        y = 473 + getRandomIntNumber(60, 90);
       }
     } else {
       const isTop = getRandomIntNumber(0, 100);
 
       if (isTop > 50) {
-        y =
-          this.scene.match.stadium.stadiumField.getBounds().centerY +
-          getRandomIntNumber(0, 130);
+        y = 473 + getRandomIntNumber(0, 55);
       } else {
-        y =
-          this.scene.match.stadium.stadiumField.getBounds().centerY -
-          getRandomIntNumber(0, 130);
+        y = 473 + getRandomIntNumber(0, 55);
       }
     }
 
     if (this.playerData.who === "hostPlayer") {
       x =
         this.scene.match.guestTeam.boardFootballPlayers.goalKeeper.getBounds()
-          .centerX + 40;
+          .centerX + 10;
     } else {
       x =
         this.scene.match.hostTeam.boardFootballPlayers.goalKeeper.getBounds()
-          .centerX - 40;
+          .centerX - 10;
     }
     this.scene.match.ball.kick(mapToRange(this.teamData.shootSpeed, 250, 500), {
       x,

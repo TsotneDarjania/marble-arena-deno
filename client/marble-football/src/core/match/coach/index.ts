@@ -1,9 +1,11 @@
 import { Tweens } from "phaser";
 import GamePlay from "../../../scenes/GamePlay";
 
-export class Coach extends Phaser.GameObjects.Image {
+export class Coach extends Phaser.GameObjects.Container {
   motionTween: Tweens.Tween;
   lightTween: Tweens.Tween;
+  selector: Phaser.GameObjects.Image;
+  image: Phaser.GameObjects.Image;
 
   constructor(
     public scene: GamePlay,
@@ -12,10 +14,11 @@ export class Coach extends Phaser.GameObjects.Image {
     public key: string,
     public isHostTeamCoach: boolean
   ) {
-    super(scene, x, y, key);
+    super(scene, x, y);
     scene.add.existing(this);
+    this.addSelector();
+    this.addImage();
 
-    this.setScale(0.65);
     this.setDepth(1);
 
     scene.events.on("update", () => {
@@ -29,8 +32,23 @@ export class Coach extends Phaser.GameObjects.Image {
     });
   }
 
+  addImage() {
+    this.image = this.scene.add.image(0, 0, this.key);
+    this.image.setScale(0.72);
+    this.add(this.image);
+  }
+
+  addSelector() {
+    this.selector = this.scene.add.image(0, 0, "circle");
+    this.selector.setTint(0x000000);
+    this.selector.setScale(0.63);
+    this.selector.setAlpha(0.6);
+
+    this.add(this.selector);
+  }
+
   angry() {
-    this.setTint(0xfa471b);
+    this.image.setTint(0xfa471b);
     const tween = this.scene.tweens.add({
       targets: this,
       alpha: 0.2,
@@ -41,7 +59,7 @@ export class Coach extends Phaser.GameObjects.Image {
 
     setTimeout(() => {
       tween.destroy();
-      this.setTint(0xffffff);
+      this.image.setTint(0xffffff);
       this.setAlpha(1);
     }, 1500);
   }

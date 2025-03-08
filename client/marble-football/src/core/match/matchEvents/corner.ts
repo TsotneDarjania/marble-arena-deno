@@ -220,28 +220,28 @@ export class Corner {
     if (isfailShoot) {
       const isTop = getRandomIntNumber(0, 100);
       if (isTop > 50) {
-        y = 473 + getRandomIntNumber(110, 170);
+        y = 473 + getRandomIntNumber(60, 90);
       } else {
-        y = 473 - getRandomIntNumber(110, 170);
+        y = 473 + getRandomIntNumber(60, 90);
       }
     } else {
       const isTop = getRandomIntNumber(0, 100);
 
       if (isTop > 50) {
-        y = 473 + getRandomIntNumber(0, 130);
+        y = 473 + getRandomIntNumber(0, 55);
       } else {
-        y = 473 - getRandomIntNumber(0, 130);
+        y = 473 + getRandomIntNumber(0, 55);
       }
     }
 
     if (this.teamWhoShootCorner === "hostTeam") {
       x =
         this.match.scene.match.guestTeam.boardFootballPlayers.goalKeeper.getBounds()
-          .centerX + 40;
+          .centerX + 10;
     } else {
       x =
         this.match.scene.match.hostTeam.boardFootballPlayers.goalKeeper.getBounds()
-          .centerX - 40;
+          .centerX - 10;
     }
     this.match.scene.match.ball.kick(
       mapToRange(teamData.shootSpeed, 250, 500),
