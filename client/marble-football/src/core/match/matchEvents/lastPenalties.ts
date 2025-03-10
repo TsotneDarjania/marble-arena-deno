@@ -2,6 +2,13 @@
 // import CanvasScene from "../../../scenes/CanvasScene";
 // import { calculatePercentage, getRandomIntNumber } from "../../../utils/math";
 
+import Match from "..";
+import {
+  calculatePercentage,
+  getRandomIntNumber,
+  mapToRange,
+} from "../../../utils/math";
+
 // export class LastPenalties {
 //   shooterFootballer: Phaser.Physics.Arcade.Image;
 //   goalKeeper: Phaser.Physics.Arcade.Image;
@@ -248,3 +255,172 @@
 //     this.resetWithNoGoal();
 //   }
 // }
+
+export class LastPenalties {
+  whosTurn: "host" | "guest" = "host";
+  attacker!: Phaser.GameObjects.Image;
+  canCheckIfIsGoal = true;
+
+  constructor(public match: Match) {
+    this.init();
+  }
+
+  init() {
+    this.match.guestTeam.boardFootballPlayers.goalKeeper.setX(
+      this.match.hostTeam.boardFootballPlayers.goalKeeper.x
+    );
+    this.prepareGoalkeeper();
+    this.prepareAttaker();
+    this.prepareBall();
+
+    setTimeout(() => {
+      this.shoot();
+    }, getRandomIntNumber(2000, 5000));
+  }
+
+  prepareGoalkeeper() {
+    if (this.whosTurn === "host") {
+      this.match.guestTeam.boardFootballPlayers.goalKeeper.setActive(true);
+      this.match.guestTeam.boardFootballPlayers.goalKeeper.activate();
+      this.match.guestTeam.boardFootballPlayers.goalKeeper.setY(0);
+      this.match.guestTeam.boardFootballPlayers.goalKeeper.startMotion();
+    } else {
+      this.match.hostTeam.boardFootballPlayers.goalKeeper.setActive(true);
+      this.match.hostTeam.boardFootballPlayers.goalKeeper.activate();
+      this.match.hostTeam.boardFootballPlayers.goalKeeper.setY(0);
+      this.match.hostTeam.boardFootballPlayers.goalKeeper.startMotion();
+    }
+  }
+
+  prepareAttaker() {
+    this.attacker = new Phaser.GameObjects.Image(
+      this.match.scene,
+      -calculatePercentage(40, this.match.stadium.innerFielddWidth),
+      0,
+      this.whosTurn === "host"
+        ? this.match.matchData.hostTeamData.logoKey
+        : this.match.matchData.guestTeamData.logoKey
+    );
+
+    this.attacker.setScale(0.6);
+    this.attacker.setDepth(100);
+
+    this.match.stadium.add(this.attacker);
+  }
+
+  prepareBall() {
+    this.match.ball.reset();
+    this.match.ball.setPosition(
+      this.attacker.getBounds().centerX - 30,
+      this.match.scene.game.canvas.height / 2
+    );
+  }
+
+  shoot() {
+    this.match.scene.soundManager.shoot.play();
+
+    const teamData =
+      this.whosTurn === "host"
+        ? this.match.matchData.hostTeamData
+        : this.match.matchData.guestTeamData;
+    let x = 0;
+    const isfailShoot =
+      getRandomIntNumber(0, 100) < teamData.shootAccuracy ? false : true;
+
+    let y = 0;
+
+    if (isfailShoot) {
+      const isTop = getRandomIntNumber(0, 100);
+      if (isTop > 50) {
+        y = 473 + getRandomIntNumber(60, 90);
+      } else {
+        y = 473 + getRandomIntNumber(60, 90);
+      }
+    } else {
+      const isTop = getRandomIntNumber(0, 100);
+
+      if (isTop > 50) {
+        y = 473 + getRandomIntNumber(0, 55);
+      } else {
+        y = 473 + getRandomIntNumber(0, 55);
+      }
+    }
+    if (this.whosTurn === "host") {
+      x =
+        this.match.scene.match.guestTeam.boardFootballPlayers.goalKeeper.getBounds()
+          .centerX + 10;
+    } else {
+      x =
+        this.match.scene.match.hostTeam.boardFootballPlayers.goalKeeper.getBounds()
+          .centerX - 10;
+    }
+    this.match.scene.match.ball.kick(
+      mapToRange(teamData.shootSpeed, 250, 500),
+      {
+        x,
+        y,
+      }
+    );
+  }
+
+  save() {
+    this.canCheckIfIsGoal = false;
+
+    this.match.ball.stop();
+    this.match.hostTeam.boardFootballPlayers.goalKeeper.stopMotion();
+    this.match.guestTeam.boardFootballPlayers.goalKeeper.stopMotion();
+
+    setTimeout(() => {
+      this.match.hostTeam.boardFootballPlayers.goalKeeper.setActive(false);
+      this.match.guestTeam.boardFootballPlayers.goalKeeper.setActive(false);
+      this.again();
+    }, 2000);
+  }
+
+  isGoal(teamWhoScored: "host" | "guest") {
+    this.canCheckIfIsGoal = false;
+
+    this.match.stadium.startGoalSelebration(teamWhoScored);
+    this.match.ball.startBlinkAnimation();
+    this.match.ball.stop();
+    this.match.hostTeam.boardFootballPlayers.goalKeeper.stopMotion();
+    this.match.guestTeam.boardFootballPlayers.goalKeeper.stopMotion();
+    this.match.hostTeam.boardFootballPlayers.goalKeeper.deactive();
+    this.match.guestTeam.boardFootballPlayers.goalKeeper.deactive();
+
+    if (teamWhoScored === "host") {
+      this.match.hostTeamCoach.selebration();
+      this.match.guestTeamCoach.angry();
+    } else {
+      this.match.guestTeamCoach.selebration();
+      this.match.hostTeamCoach.angry();
+    }
+
+    setTimeout(() => {
+      this.match.stadium.stopGoalSelebration();
+    }, 3000);
+
+    setTimeout(() => {
+      this.again();
+    }, 4000);
+  }
+
+  again() {
+    console.log("again");
+    this.prepareGoalkeeper();
+    this.prepareAttaker();
+    this.prepareBall();
+    this.canCheckIfIsGoal = true;
+
+    setTimeout(() => {
+      this.shoot();
+    }, getRandomIntNumber(2000, 4000));
+
+    if (this.whosTurn === "host") {
+      this.whosTurn = "guest";
+      return;
+    } else {
+      this.whosTurn = "host";
+    }
+  }
+}

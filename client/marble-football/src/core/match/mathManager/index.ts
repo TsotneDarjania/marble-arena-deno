@@ -4,6 +4,7 @@ import { getRandomIntNumber } from "../../../utils/math";
 import { ComentatorManager } from "../commentatorManager";
 import { Corner } from "../matchEvents/corner";
 import { Freekick } from "../matchEvents/freeKick";
+import { LastPenalties } from "../matchEvents/lastPenalties";
 import { Penalty } from "../matchEvents/penalty";
 import { FootballersMotionManager } from "./footballersMotionManager";
 import { MatchEventManager } from "./matchEvenetManager";
@@ -23,6 +24,7 @@ export default class MatchManager {
   freeKick?: Freekick;
   penalty?: Penalty;
   corner?: Corner;
+  lastPenalties?: LastPenalties;
 
   // Core
   footballersMotionManager!: FootballersMotionManager;
@@ -34,13 +36,18 @@ export default class MatchManager {
   constructor(public match: Match) {}
 
   startMatch() {
-    this.makeFirstKick("host");
+    // this.makeFirstKick("host");
     this.startCamerFollow();
     this.match.matchTimer.startTimer();
     this.createFootballersMotionManager();
     this.createMatchEvenetManager();
     this.createComentatorManager();
     this.teamWhoHasBall = "hostTeam";
+
+    this.match.matchManager.matchEvenetManager.matchStatus = "isLastPenalties";
+    this.match.hostTeam.hideTeam();
+    this.match.guestTeam.hideTeam();
+    this.startLastPenalties();
   }
 
   createComentatorManager() {
@@ -156,15 +163,26 @@ export default class MatchManager {
   resumeMatch() {
     this.match.scene.soundManager.referee.play();
     setTimeout(() => {
-      this.match.hostTeam.boardFootballPlayers.goalKeeper.startMotion();
-      this.match.guestTeam.boardFootballPlayers.goalKeeper.startMotion();
+      if (this.matchEvenetManager.isSecondExtraTimeEnded) {
+        this.startLastPenalties();
+      } else {
+        this.match.hostTeam.boardFootballPlayers.goalKeeper.startMotion();
+        this.match.guestTeam.boardFootballPlayers.goalKeeper.startMotion();
 
-      this.matchEvenetManager.matchStatus = "playing";
-      this.match.matchManager.teamWhoHasBall =
-        this.whichTeamHaveToResume === "host" ? "hostTeam" : "guestTeam";
-      this.makeFirstKick(this.whichTeamHaveToResume);
-      this.match.matchTimer.resumeTimer();
-      this.match.scene.soundManager.pass.play();
+        this.matchEvenetManager.matchStatus = "playing";
+        this.match.matchManager.teamWhoHasBall =
+          this.whichTeamHaveToResume === "host" ? "hostTeam" : "guestTeam";
+        this.makeFirstKick(this.whichTeamHaveToResume);
+        this.match.matchTimer.resumeTimer();
+        this.match.scene.soundManager.pass.play();
+      }
+    }, 2000);
+  }
+
+  startLastPenalties() {
+    setTimeout(() => {
+      this.matchEvenetManager.matchStatus = "isLastPenalties";
+      this.lastPenalties = new LastPenalties(this.match);
     }, 2000);
   }
 }

@@ -196,6 +196,34 @@ export default class BoardFootballPlayer extends Phaser.GameObjects.Container {
 
         if (
           this.scene.match.matchManager.matchEvenetManager.matchStatus ===
+          "isLastPenalties"
+        ) {
+          if (this instanceof BoardGoalKeeper) {
+            if (
+              this.scene.match.matchManager.lastPenalties!.canCheckIfIsGoal ===
+              false
+            )
+              return;
+            if (
+              this.scene.match.matchManager.lastPenalties!.whosTurn ===
+                "host" &&
+              this.playerData.who === "guestPlayer"
+            ) {
+              this.scene.match.matchManager.lastPenalties!.save();
+            }
+
+            if (
+              this.scene.match.matchManager.lastPenalties!.whosTurn ===
+                "guest" &&
+              this.playerData.who === "hostPlayer"
+            ) {
+              this.scene.match.matchManager.lastPenalties!.save();
+            }
+          }
+        }
+
+        if (
+          this.scene.match.matchManager.matchEvenetManager.matchStatus ===
           "CornerIsInProcess"
         ) {
           if (this instanceof BoardGoalKeeper) {

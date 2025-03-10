@@ -30,7 +30,8 @@ export class MatchEventManager {
     | "isreeKick"
     | "finishFreeKick"
     | "isPenalty"
-    | "finishPenalty" = "playing";
+    | "finishPenalty"
+    | "isLastPenalties" = "playing";
 
   footballerWhoHasBall?: BoardFootballPlayer;
   constructor(public match: Match) {
@@ -145,7 +146,12 @@ export class MatchEventManager {
   }
 
   isGoal(whoScored: "host" | "guest") {
-    console.log(this.matchStatus);
+    if (this.matchStatus === "isLastPenalties") {
+      console.log(" aq vaaaar");
+      if (this.match.matchManager.lastPenalties!.canCheckIfIsGoal) {
+        this.match.matchManager.lastPenalties?.isGoal(whoScored);
+      }
+    }
     if (this.matchStatus === "playing") {
       this.match.matchTimer.stopTimer();
 
@@ -216,7 +222,7 @@ export class MatchEventManager {
             .centerX -
             16
         ) {
-          this.isGoal("guest");
+          console.log("GUEST GOAL");
         }
 
         if (
@@ -225,6 +231,11 @@ export class MatchEventManager {
             .centerX +
             16
         ) {
+          if (
+            this.match.matchManager.matchEvenetManager.matchStatus ===
+            "isLastPenalties"
+          )
+            return;
           this.isGoal("host");
         }
       }
@@ -254,7 +265,7 @@ export class MatchEventManager {
     }
 
     if (this.match.matchTimer.time >= 120) {
-      this.isfullTimeEnded = true;
+      this.isSecondExtraTimeEnded = true;
       this.match.matchManager.puaseMatch("host", "secondExtraTimeEnd");
       return;
     }

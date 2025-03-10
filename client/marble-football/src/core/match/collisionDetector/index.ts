@@ -32,6 +32,16 @@ export default class CollisionDetector {
           this.match.matchManager.freeKick!.stopFreeKick();
           this.scene.soundManager.goalBorder.play();
         }
+
+        if (
+          this.match.matchManager.matchEvenetManager.matchStatus ===
+          "isLastPenalties"
+        ) {
+          if (this.match.matchManager.lastPenalties!.canCheckIfIsGoal === false)
+            return;
+          this.match.matchManager.lastPenalties!.save();
+          this.scene.soundManager.border.play();
+        }
       }
     );
     this.ballAndGoalPostsCollider.overlapOnly = false;
@@ -67,6 +77,16 @@ export default class CollisionDetector {
           this.match.matchManager.matchEvenetManager.matchStatus === "isPenalty"
         ) {
           this.match.matchManager.penalty!.stopPenalty();
+          this.scene.soundManager.border.play();
+        }
+
+        if (
+          this.match.matchManager.matchEvenetManager.matchStatus ===
+          "isLastPenalties"
+        ) {
+          if (this.match.matchManager.lastPenalties!.canCheckIfIsGoal === false)
+            return;
+          this.match.matchManager.lastPenalties!.save();
           this.scene.soundManager.border.play();
         }
       }
