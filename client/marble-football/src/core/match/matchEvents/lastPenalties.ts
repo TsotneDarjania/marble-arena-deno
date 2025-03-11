@@ -279,6 +279,9 @@ export class LastPenalties {
   }
 
   prepareGoalkeeper() {
+    this.match.guestTeam.boardFootballPlayers.goalKeeper.stopMotion();
+    this.match.hostTeam.boardFootballPlayers.goalKeeper.stopMotion();
+
     if (this.whosTurn === "host") {
       this.match.guestTeam.boardFootballPlayers.goalKeeper.setActive(true);
       this.match.guestTeam.boardFootballPlayers.goalKeeper.activate();
@@ -317,6 +320,7 @@ export class LastPenalties {
   }
 
   shoot() {
+    console.log("shoot");
     this.match.scene.soundManager.shoot.play();
 
     const teamData =
@@ -406,7 +410,13 @@ export class LastPenalties {
   }
 
   again() {
-    console.log("again");
+    this.whosTurn = this.whosTurn === "host" ? "guest" : "host";
+
+    this.match.hostTeam.boardFootballPlayers.goalKeeper.deactive();
+    this.match.hostTeam.boardFootballPlayers.goalKeeper.setActive(false);
+    this.match.guestTeam.boardFootballPlayers.goalKeeper.deactive();
+    this.match.guestTeam.boardFootballPlayers.goalKeeper.setActive(false);
+
     this.prepareGoalkeeper();
     this.prepareAttaker();
     this.prepareBall();
@@ -415,12 +425,5 @@ export class LastPenalties {
     setTimeout(() => {
       this.shoot();
     }, getRandomIntNumber(2000, 4000));
-
-    if (this.whosTurn === "host") {
-      this.whosTurn = "guest";
-      return;
-    } else {
-      this.whosTurn = "host";
-    }
   }
 }

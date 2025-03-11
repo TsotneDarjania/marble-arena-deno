@@ -26,12 +26,12 @@ export default class CollisionDetector {
           this.scene.soundManager.goalBorder.play();
         }
 
-        if (
-          this.match.matchManager.matchEvenetManager.matchStatus === "isreeKick"
-        ) {
-          this.match.matchManager.freeKick!.stopFreeKick();
-          this.scene.soundManager.goalBorder.play();
-        }
+        // if (
+        //   this.match.matchManager.matchEvenetManager.matchStatus === "isreeKick"
+        // ) {
+        //   this.match.matchManager.freeKick!.stopFreeKick();
+        //   this.scene.soundManager.goalBorder.play();
+        // }
 
         if (
           this.match.matchManager.matchEvenetManager.matchStatus ===
@@ -39,7 +39,7 @@ export default class CollisionDetector {
         ) {
           if (this.match.matchManager.lastPenalties!.canCheckIfIsGoal === false)
             return;
-          this.match.matchManager.lastPenalties!.save();
+          // this.match.matchManager.lastPenalties!.save();
           this.scene.soundManager.border.play();
         }
       }
