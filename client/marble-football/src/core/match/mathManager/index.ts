@@ -36,7 +36,7 @@ export default class MatchManager {
   constructor(public match: Match) {}
 
   startMatch() {
-    // this.makeFirstKick("host");
+    this.makeFirstKick("host");
     this.startCamerFollow();
     this.match.matchTimer.startTimer();
     this.createFootballersMotionManager();
@@ -44,10 +44,10 @@ export default class MatchManager {
     this.createComentatorManager();
     this.teamWhoHasBall = "hostTeam";
 
-    this.match.matchManager.matchEvenetManager.matchStatus = "isLastPenalties";
-    this.match.hostTeam.hideTeam();
-    this.match.guestTeam.hideTeam();
-    this.startLastPenalties();
+    // this.match.matchManager.matchEvenetManager.matchStatus = "isLastPenalties";
+    // this.match.hostTeam.hideTeam();
+    // this.match.guestTeam.hideTeam();
+    // this.startLastPenalties();
   }
 
   createComentatorManager() {
@@ -180,6 +180,8 @@ export default class MatchManager {
   }
 
   startLastPenalties() {
+    this.match.hostTeam.hideTeam();
+    this.match.guestTeam.hideTeam();
     setTimeout(() => {
       this.matchEvenetManager.matchStatus = "isLastPenalties";
       this.lastPenalties = new LastPenalties(this.match);

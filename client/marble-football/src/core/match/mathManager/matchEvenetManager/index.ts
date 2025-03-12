@@ -346,7 +346,7 @@ export class MatchEventManager {
         this.match.matchManager.teamWhoHasBall === "hostTeam"
           ? "left"
           : "right",
-        "Corner Kisk!"
+        "Corner Kick!"
       );
     }, 900);
 

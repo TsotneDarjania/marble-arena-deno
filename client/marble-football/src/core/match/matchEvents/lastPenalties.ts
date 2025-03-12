@@ -262,6 +262,10 @@ export class LastPenalties {
   attacker!: Phaser.GameObjects.Image;
   canCheckIfIsGoal = true;
 
+  hostTeamScore = 0;
+  guestTeamScore = 0;
+  round = 1;
+
   constructor(public match: Match) {
     this.init();
   }
@@ -427,11 +431,23 @@ export class LastPenalties {
 
       this.match.hostTeamCoach.selebration();
       this.match.guestTeamCoach.angry();
+      this.hostTeamScore++;
+
+      this.match.matchManager.hostScore++;
+      canvasScene.hostTeamScoretext.setText(
+        this.match.matchManager.hostScore.toString()
+      );
     } else {
       canvasScene.drawPenaltyDone("right");
 
       this.match.guestTeamCoach.selebration();
       this.match.hostTeamCoach.angry();
+      this.guestTeamScore++;
+
+      this.match.matchManager.guestScore++;
+      canvasScene.guestTeamScoretext.setText(
+        this.match.matchManager.guestScore.toString()
+      );
     }
 
     setTimeout(() => {
@@ -444,6 +460,53 @@ export class LastPenalties {
   }
 
   again() {
+    const maxRounds = 5;
+    const totalShotsTaken = this.round; // Keep track of the shots taken
+    const hostShotsLeft = maxRounds - Math.ceil(totalShotsTaken / 2);
+    const guestShotsLeft = maxRounds - Math.floor(totalShotsTaken / 2);
+
+    // Early win check: Only end if the opponent **CANNOT** catch up
+    if (this.hostTeamScore > this.guestTeamScore + guestShotsLeft) {
+      console.log("Host Team Wins Early!");
+      this.endGame();
+      return;
+    }
+    if (this.guestTeamScore > this.hostTeamScore + hostShotsLeft) {
+      console.log("Guest Team Wins Early!");
+      this.endGame();
+      return;
+    }
+
+    // If both teams have taken 5 shots, determine winner
+    if (totalShotsTaken >= maxRounds * 2) {
+      if (this.hostTeamScore > this.guestTeamScore) {
+        console.log("Host Team Wins!");
+        this.endGame();
+        return;
+      } else if (this.guestTeamScore > this.hostTeamScore) {
+        console.log("Guest Team Wins!");
+        this.endGame();
+        return;
+      } else {
+        console.log("Sudden Death Begins!");
+      }
+    }
+
+    // Sudden Death: Continue until one team scores and the other misses
+    if (
+      totalShotsTaken > maxRounds * 2 &&
+      this.hostTeamScore !== this.guestTeamScore
+    ) {
+      console.log(
+        this.hostTeamScore > this.guestTeamScore
+          ? "Host Team Wins!"
+          : "Guest Team Wins!"
+      );
+      this.endGame();
+      return;
+    }
+
+    // Continue penalty shootout
     this.whosTurn = this.whosTurn === "host" ? "guest" : "host";
 
     this.match.hostTeam.boardFootballPlayers.goalKeeper.deactive();
@@ -458,6 +521,13 @@ export class LastPenalties {
 
     setTimeout(() => {
       this.shoot();
+      this.round++; // Increment round AFTER all conditions
     }, getRandomIntNumber(2000, 4000));
+  }
+
+  endGame() {
+    console.log(
+      `Final Score: Host ${this.hostTeamScore} - ${this.guestTeamScore} Guest`
+    );
   }
 }
