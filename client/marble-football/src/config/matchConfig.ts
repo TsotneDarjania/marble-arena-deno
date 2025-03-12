@@ -16,7 +16,7 @@ export const matchDataConfig: MatchDataType = {
     },
     passSpeed: 70,
     shootSpeed: 90,
-    shootAccuracy: 100,
+    shootAccuracy: 51,
     goalKeeperSpeed: 84,
     motionSpeed: 51,
     comments: {
@@ -56,7 +56,7 @@ export const matchDataConfig: MatchDataType = {
     },
     passSpeed: 100,
     shootSpeed: 100,
-    shootAccuracy: 100,
+    shootAccuracy: 50,
     goalKeeperSpeed: 100,
     motionSpeed: 100,
     comments: {
@@ -84,7 +84,7 @@ export const matchDataConfig: MatchDataType = {
   gameConfig: {
     mode: "marble-football",
     hostFansCountPercent: 50,
-    mathTime: 2.5, //in minutes,
+    mathTime: 0.5, //in minutes,
   },
 } as MatchDataType;
 

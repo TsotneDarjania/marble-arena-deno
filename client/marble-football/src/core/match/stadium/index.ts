@@ -82,7 +82,7 @@ export class Stadium extends Phaser.GameObjects.Container {
       "stadiumLines"
     );
     this.stadiumField.setDisplaySize(
-      this.fieldImageWidth,
+      this.fieldImageWidth, 
       this.fieldImageHeight
     );
   }
