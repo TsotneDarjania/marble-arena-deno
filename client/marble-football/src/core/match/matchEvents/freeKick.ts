@@ -155,7 +155,7 @@ export class Freekick {
       if (isTop > 50) {
         y = 473 + getRandomIntNumber(60, 90);
       } else {
-        y = 473 + getRandomIntNumber(60, 90);
+        y = 473 - getRandomIntNumber(60, 90);
       }
     } else {
       const isTop = getRandomIntNumber(0, 100);
@@ -163,7 +163,7 @@ export class Freekick {
       if (isTop > 50) {
         y = 473 + getRandomIntNumber(0, 55);
       } else {
-        y = 473 + getRandomIntNumber(0, 55);
+        y = 473 - getRandomIntNumber(0, 55);
       }
     }
 
