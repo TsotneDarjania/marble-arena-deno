@@ -146,12 +146,6 @@ export class MatchEventManager {
   }
 
   isGoal(whoScored: "host" | "guest") {
-    if (this.matchStatus === "isLastPenalties") {
-      console.log(" aq vaaaar");
-      if (this.match.matchManager.lastPenalties!.canCheckIfIsGoal) {
-        this.match.matchManager.lastPenalties?.isGoal(whoScored);
-      }
-    }
     if (this.matchStatus === "playing") {
       this.match.matchTimer.stopTimer();
 
@@ -222,7 +216,13 @@ export class MatchEventManager {
             .centerX -
             16
         ) {
-          console.log("GUEST GOAL");
+          if (
+            this.match.matchManager.matchEvenetManager.matchStatus ===
+            "isLastPenalties"
+          ) {
+            return;
+          }
+          this.isGoal("guest");
         }
 
         if (
@@ -231,11 +231,6 @@ export class MatchEventManager {
             .centerX +
             16
         ) {
-          if (
-            this.match.matchManager.matchEvenetManager.matchStatus ===
-            "isLastPenalties"
-          )
-            return;
           this.isGoal("host");
         }
       }

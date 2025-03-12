@@ -3,6 +3,7 @@
 // import { calculatePercentage, getRandomIntNumber } from "../../../utils/math";
 
 import Match from "..";
+import CanvasScene from "../../../scenes/CanvasScene";
 import {
   calculatePercentage,
   getRandomIntNumber,
@@ -272,10 +273,25 @@ export class LastPenalties {
     this.prepareGoalkeeper();
     this.prepareAttaker();
     this.prepareBall();
+    this.listenGoalEvents();
 
     setTimeout(() => {
       this.shoot();
     }, getRandomIntNumber(2000, 5000));
+  }
+
+  listenGoalEvents() {
+    this.match.scene.events.on("update", () => {
+      if (
+        this.match.ball.x <
+        this.match.hostTeam.boardFootballPlayers.goalKeeper.getBounds()
+          .centerX -
+          16
+      ) {
+        if (this.canCheckIfIsGoal === false) return;
+        this.isGoal();
+      }
+    });
   }
 
   prepareGoalkeeper() {
@@ -368,6 +384,16 @@ export class LastPenalties {
   }
 
   save() {
+    const canvasScene = this.match.scene.scene.get(
+      "CanvasScene"
+    ) as CanvasScene;
+
+    if (this.whosTurn === "host") {
+      canvasScene.drawPenaltyFail("left");
+    } else {
+      canvasScene.drawPenaltyFail("right");
+    }
+
     this.canCheckIfIsGoal = false;
 
     this.match.ball.stop();
@@ -381,10 +407,14 @@ export class LastPenalties {
     }, 2000);
   }
 
-  isGoal(teamWhoScored: "host" | "guest") {
+  isGoal() {
     this.canCheckIfIsGoal = false;
 
-    this.match.stadium.startGoalSelebration(teamWhoScored);
+    const canvasScene = this.match.scene.scene.get(
+      "CanvasScene"
+    ) as CanvasScene;
+
+    this.match.stadium.startGoalSelebration(this.whosTurn);
     this.match.ball.startBlinkAnimation();
     this.match.ball.stop();
     this.match.hostTeam.boardFootballPlayers.goalKeeper.stopMotion();
@@ -392,10 +422,14 @@ export class LastPenalties {
     this.match.hostTeam.boardFootballPlayers.goalKeeper.deactive();
     this.match.guestTeam.boardFootballPlayers.goalKeeper.deactive();
 
-    if (teamWhoScored === "host") {
+    if (this.whosTurn === "host") {
+      canvasScene.drawPenaltyDone("left");
+
       this.match.hostTeamCoach.selebration();
       this.match.guestTeamCoach.angry();
     } else {
+      canvasScene.drawPenaltyDone("right");
+
       this.match.guestTeamCoach.selebration();
       this.match.hostTeamCoach.angry();
     }
